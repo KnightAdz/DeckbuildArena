@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
+[ext_resource path="res://Cards/attack.png" type="Texture" id=2]
+
+[resource]
+script = ExtResource( 1 )
+focus_cost = 2
+movement = 1
+attack = 1
+defence = 0
+cards_to_draw = 0
+needs_target = true
+image = ExtResource( 2 )
+text = "Buy time"
+name = "Buy time"
+colour = "RED"
