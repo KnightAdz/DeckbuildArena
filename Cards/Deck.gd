@@ -1,7 +1,7 @@
 extends Node2D
 class_name Deck
 
-onready var player = self.get_parent().get_node("Player")
+onready var player = self.get_parent().get_parent().get_node("Player")
 
 var CardScene = preload("res://Cards/Card.tscn")
 
@@ -11,7 +11,7 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres")	]
-var card_counts = [3,3,3]
+var card_counts = [2,2,2]
 
 var draw_pile = []
 var hand = []
@@ -169,8 +169,9 @@ func draw_hand(new_hand_size=5):
 		if len(draw_pile) == 0:
 			shuffle_discard_into_draw()
 		hand.append(draw_pile.pop_front())
-		reposition_hand_cards()
 		hand.back().is_face_up = true
+		hand.back().ignore_input = false # Only when during a turn
+		reposition_hand_cards()
 
 
 func draw_x_cards(x):
@@ -217,13 +218,6 @@ func _on_card_selected(card):
 func play_card():
 	var draw_cards = 0
 	var hurt_bystanders = 0
-#	for a in selected_card.card_stats.actions:
-#		var returns = null
-#		returns = a.act(closest_target)
-#		draw_cards += returns[0]
-#		hurt_bystanders += returns[1]
-#		if a.damage == 0 and a.defence > 0:
-#			attack_card = false
 	
 	emit_signal("card_played")
 	self.focus -= selected_card.card_stats.focus_cost
@@ -245,6 +239,7 @@ func play_card():
 	if len(hand) == 0:
 		end_turn()
 	else:
+		reposition_hand_cards()
 		self.turn_state = TurnState.SELECT_CARD
 
 
@@ -300,7 +295,6 @@ func _on_DefenceButton_pressed():
 
 
 func add_card_to_discard(card):
-	self.get_parent().remove_child(card)
 	self.add_child(card)
 	card.connect("card_selected", self, "_on_card_selected")
 	discard(card)

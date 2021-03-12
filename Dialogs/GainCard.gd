@@ -20,6 +20,7 @@ func set_card(c):
 
 
 func _on_Keep_pressed():
+	remove_child(card)
 	emit_signal("add_card_to_discard", card)
 	self.queue_free()
 

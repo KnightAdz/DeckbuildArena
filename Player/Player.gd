@@ -68,7 +68,7 @@ func _process(delta):
 func _unhandled_input(event):
 	match state:
 		STATES.AIMING:
-			hit_direction = -(self.position - event.position).normalized()
+			hit_direction = (self.get_local_mouse_position()).normalized()
 			if Input.is_action_just_released("click"):
 				state = STATES.ATTACKING
 
@@ -82,10 +82,8 @@ func move():
 
 
 func attack(damage=1):
-	#state = STATES.ATTACKING
+	$AttackIndicator/Hitbox.damage = damage
 	state = STATES.AIMING
-	#$Tween.interpolate_property(self, "scale", Vector2.ONE, Vector2(1.1,1.1), 0.2, Tween.TRANS_BACK, Tween.EASE_OUT_IN)
-	#$Tween.start()
 
 
 func defend(defence=1):
@@ -113,14 +111,15 @@ func _draw():
 	if move_radius > 0:
 		draw_circle($MoveRadius.position, 
 					$MoveRadius/CollisionShape2D.shape.radius, 
-					Color.green)
+					Color(0,0.9,0.5,0.25))
 
 
 func _on_MoveRadius_input_event(viewport, event, shape_idx):
 	if move_radius > 0 and state == STATES.IDLE:
 		if Input.is_action_just_released("click"):
 			# get coords
-			target_position = event.global_position
+			target_position = self.position + self.get_local_mouse_position()
+			#target_position = event.global_position
 			move_radius = 0
 			state = STATES.MOVING
 

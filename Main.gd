@@ -3,13 +3,14 @@ extends Node2D
 var CardScene = preload("res://Cards/Card.tscn")
 var GainCardDialog = preload("res://Dialogs/GainCard.tscn")
 
-onready var turn_order = [$Deck, $World, $Enemies]
+onready var turn_order = [$CanvasLayer/Deck, $World, $Enemies]
 var turn_idx = 0
 var ready_for_next_turn = true
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
 	take_turn(turn_idx)
 
 
@@ -51,13 +52,13 @@ func _on_Deck_card_played():
 func on_card_collected(card_stats):
 	# Create the card, show it to the player
 	var card_gain_dialog = GainCardDialog.instance()
-	self.add_child(card_gain_dialog)
-	card_gain_dialog.connect("add_card_to_discard", $Deck, "add_card_to_discard")
+	$CanvasLayer.add_child(card_gain_dialog)
+	card_gain_dialog.connect("add_card_to_discard", $CanvasLayer/Deck, "add_card_to_discard")
 	
 	var new_card = CardScene.instance()
 	var centre_position = Vector2(300,300)
 	new_card.global_position = centre_position
-	self.add_child(new_card)
+	$CanvasLayer.add_child(new_card)
 	new_card.set_stats(load(card_stats))
 	new_card.is_face_up = true
 	

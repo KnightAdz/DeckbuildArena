@@ -3,9 +3,10 @@ extends Node2D
 var BatScene = preload("res://Enemies/Bat.tscn")
 var LootScene = preload("res://Loot/Loot.tscn")
 
-onready var DeckNode = get_parent().get_node("Deck")
+onready var DeckNode = get_parent().get_node("CanvasLayer/Deck")
 
 var turn_started = false
+var enemy_health = 1
 
 var loot_options = ["res://Cards/Attack&draw1.tres",
 					"res://Cards/Attack&move.tres",
@@ -42,7 +43,10 @@ func spawn_bat():
 	var new_bat = BatScene.instance()
 	self.add_child(new_bat)
 	new_bat.global_position = Vector2(randi()%500, randi()%500)
-	new_bat.wanderController.update_target_position()
+	new_bat.stats.max_health = enemy_health
+	new_bat.stats.health = enemy_health
+	enemy_health += 1
+	new_bat.wanderController.reset_start_position()
 
 
 func on_enemy_death(position):

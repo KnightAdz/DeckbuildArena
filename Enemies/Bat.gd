@@ -40,6 +40,8 @@ func _ready():
 func take_turn():
 	if player != null:
 		state = CHASE
+	else:
+		state = pick_random_state([IDLE,WANDER])
 	update_wander()
 	emit_signal("turn_taken")
 
@@ -77,9 +79,7 @@ func _physics_process(delta):
 	if state != IDLE and collision != null:
 		if collision != null:
 			state = ATTACKING
-		else:
-			state = IDLE
-		velocity = Vector2.ZERO
+			velocity = Vector2.ZERO
 
 
 func update_wander():
@@ -99,6 +99,7 @@ func pick_random_state(state_list):
 
 func _on_Hurtbox_area_entered(area):
 	stats.health -= area.damage
+	$DamageTaken.text = str(area.damage)
 	knockback_vector = area.knockback_vector*100
 	hurtbox.start_invincibility(0.4)
 	hurtbox.create_effect()
@@ -121,12 +122,14 @@ func _on_Hurtbox_invincibility_ended():
 
 
 func _on_PlayerDetectionZone_body_entered(body):
-	player = body
+	if body.is_in_group("player"):
+		player = body
 
 
 func _on_PlayerDetectionZone_body_exited(body):
-	player = null
-	state = IDLE
+	if body.is_in_group("player"):
+		player = null
+		state = IDLE
 
 
 func attack():
