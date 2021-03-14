@@ -63,4 +63,3 @@ func on_card_collected(card_stats):
 	new_card.is_face_up = true
 	
 	card_gain_dialog.set_card(new_card)
-	

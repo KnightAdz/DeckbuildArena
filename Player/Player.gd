@@ -20,6 +20,8 @@ var move_radius = 0 setget set_move_radius
 var radius_size = 50
 
 var hit_direction = Vector2.RIGHT
+var MELEE_RANGE = 30
+var RANGED_RANGE = 150
 var hit_range = 30
 
 var defence = 0 setget set_defence
@@ -79,9 +81,9 @@ func move():
 func attack(damage=1, ranged=false):
 	$AttackIndicator/Hitbox.damage = damage
 	if ranged:
-		hit_range = 100
+		hit_range = RANGED_RANGE
 	else:
-		hit_range = 30
+		hit_range = MELEE_RANGE
 	state = STATES.AIMING
 	
 

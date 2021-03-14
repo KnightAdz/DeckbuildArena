@@ -2,7 +2,7 @@ extends Area2D
 
 var knockback_vector = Vector2.LEFT
 export var damage = 1
-
+export var active_time = 0.1
 
 func _ready():
 	self.deactivate()
@@ -10,7 +10,7 @@ func _ready():
 
 func activate():
 	self.monitorable = true
-	$Timer.start(0.1)
+	$Timer.start(active_time)
 
 
 func deactivate():

@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 const EnemyDeathEffect = preload("res://Effects/EnemyDeathEffect.tscn")
+const ExclamationEffect = preload("res://Effects/ExclaimationEffect.tscn")
 
 export var ACCELERATION = 300
 export var MAX_SPEED = 5
@@ -35,6 +36,7 @@ func _ready():
 	$AnimationPlayer.play("fly")
 	$Hitbox.deactivate()
 	self.connect("no_health", self.get_parent(), "on_enemy_death")
+	$HealthRemaining.text = str(stats.health)
 
 
 func take_turn():
@@ -99,7 +101,7 @@ func pick_random_state(state_list):
 
 func _on_Hurtbox_area_entered(area):
 	stats.health -= area.damage
-	$DamageTaken.text = str(area.damage)
+	$HealthRemaining.text = str(stats.health)
 	knockback_vector = area.knockback_vector*100
 	hurtbox.start_invincibility(0.4)
 	hurtbox.create_effect()
@@ -124,6 +126,9 @@ func _on_Hurtbox_invincibility_ended():
 func _on_PlayerDetectionZone_body_entered(body):
 	if body.is_in_group("player"):
 		player = body
+		var effect = ExclamationEffect.instance()
+		self.add_child(effect)
+		effect.position = Vector2(0,-30)
 
 
 func _on_PlayerDetectionZone_body_exited(body):

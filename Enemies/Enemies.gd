@@ -44,7 +44,7 @@ func _process(delta):
 func spawn_bat():
 	var new_bat = BatScene.instance()
 	self.add_child(new_bat)
-	new_bat.global_position = Vector2(randi()%500, randi()%500)
+	new_bat.global_position = Vector2(randi()%450+50, randi()%450+50)
 	new_bat.stats.max_health = enemy_health
 	new_bat.stats.health = enemy_health
 	enemy_health += 1
