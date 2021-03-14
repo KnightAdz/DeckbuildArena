@@ -3,7 +3,7 @@ extends Node2D
 var CardScene = preload("res://Cards/Card.tscn")
 var GainCardDialog = preload("res://Dialogs/GainCard.tscn")
 
-onready var turn_order = [$CanvasLayer/Deck, $World, $Enemies]
+onready var turn_order = [$CanvasLayer/Deck, $Enemies]
 var turn_idx = 0
 var ready_for_next_turn = true
 
@@ -58,7 +58,7 @@ func on_card_collected(card_stats):
 	var new_card = CardScene.instance()
 	var centre_position = Vector2(300,300)
 	new_card.global_position = centre_position
-	$CanvasLayer.add_child(new_card)
+	card_gain_dialog.add_child(new_card)
 	new_card.set_stats(load(card_stats))
 	new_card.is_face_up = true
 	

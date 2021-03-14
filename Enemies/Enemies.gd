@@ -10,7 +10,9 @@ var enemy_health = 1
 
 var loot_options = ["res://Cards/Attack&draw1.tres",
 					"res://Cards/Attack&move.tres",
-					"res://Cards/Attack4.tres"]
+					"res://Cards/Attack4.tres",
+					"res://Cards/RangedAttack.tres",
+					"res://Cards/StrongDefend.tres"]
 
 signal turn_taken()
 

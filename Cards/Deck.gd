@@ -5,13 +5,14 @@ onready var player = self.get_parent().get_parent().get_node("Player")
 
 var CardScene = preload("res://Cards/Card.tscn")
 
-enum TurnState {SELECT_CARD, SELECT_TARGET, PLAY_CARD, FINISHED, WAIT}
+enum TurnState {SELECT_CARD, SELECT_TARGET, PLAY_CARD, FINISHED, WAIT, CHOOSE_DISCARD}
 var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres")	]
-var card_counts = [2,2,2]
+						preload("res://Cards/BasicMovement.tres"),
+						preload("res://Cards/StrongDefend.tres")]
+var card_counts = [2,2,2,1]
 
 var draw_pile = []
 var hand = []
@@ -19,7 +20,7 @@ var discard_pile = []
 
 var hand_positions = null
 var closest_target = null setget set_closest_target
-var selected_card = null
+var selected_card = null setget set_selected_card
 
 var focus_level = 3 setget set_focus_level
 var focus = 3 setget set_focus
@@ -87,6 +88,7 @@ func take_turn():
 
 func set_state(new_state):
 	turn_state = new_state
+	$MessageLabel.text = ""
 	match new_state:
 		TurnState.SELECT_CARD:
 			$Turnstate.text = "Select card"
@@ -110,6 +112,9 @@ func set_state(new_state):
 			$Button.visible = false
 		TurnState.WAIT:
 			$Turnstate.text = "Wait"
+		TurnState.CHOOSE_DISCARD:
+			$Turnstate.text = "Choose Discard"
+			$MessageLabel.text = "Choose a card to discard"
 
 
 func end_turn():	
@@ -207,34 +212,32 @@ func shuffle_discard_into_draw():
 
 
 func _on_card_selected(card):
-	selected_card = card
-	if card.card_stats.needs_target:
-		self.turn_state = TurnState.SELECT_TARGET #needs target
-	else:
-		turn_state = TurnState.PLAY_CARD
-		play_card()
+	self.selected_card = card # Invokes the setter function
 
 
 func play_card():
-	var draw_cards = 0
-	var hurt_bystanders = 0
+#	var draw_cards = 0
 	
 	emit_signal("card_played")
-	self.focus -= selected_card.card_stats.focus_cost
+	var stats = selected_card.card_stats
+	self.focus -= stats.focus_cost
 	
-	if selected_card.card_stats.attack > 0:
-		player.attack(selected_card.card_stats.attack)
-	if selected_card.card_stats.defence > 0:
-		player.defend(selected_card.card_stats.defence)
-	if selected_card.card_stats.movement > 0:
-		player.gain_movement(selected_card.card_stats.movement)
-	if selected_card.card_stats.cards_to_draw > 0:
-		draw_x_cards(selected_card.card_stats.cards_to_draw)
-		
+	if stats.attack > 0:
+		player.attack(stats.attack, stats.ranged_attack)
+	if stats.defence > 0:
+		player.defend(stats.defence)
+	if stats.movement > 0:
+		player.gain_movement(stats.movement)
+	if stats.cards_to_draw > 0:
+		draw_x_cards(stats.cards_to_draw)
+	if stats.cards_to_discard > 0:
+		if len(hand) > 1:
+			self.turn_state = TurnState.CHOOSE_DISCARD
+
 	# Remove from hand and add to discard pile
 	discard(selected_card)
 	# Draw more cards 
-	draw_x_cards(draw_cards)
+#	draw_x_cards(draw_cards)
 	# If no cards in hand, draw a new hand
 	if len(hand) == 0:
 		end_turn()
@@ -298,3 +301,20 @@ func add_card_to_discard(card):
 	self.add_child(card)
 	card.connect("card_selected", self, "_on_card_selected")
 	discard(card)
+
+
+func set_selected_card(c):
+	selected_card = c
+	if selected_card:
+		match self.turn_state:
+			TurnState.SELECT_CARD:
+				if selected_card.card_stats.needs_target:
+					self.turn_state = TurnState.SELECT_TARGET #needs target
+				else:
+					turn_state = TurnState.PLAY_CARD
+					play_card()
+
+			TurnState.CHOOSE_DISCARD:
+				discard(selected_card)
+				selected_card = null
+				self.turn_state = TurnState.SELECT_CARD

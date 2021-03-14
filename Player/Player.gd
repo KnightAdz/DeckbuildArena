@@ -1,6 +1,5 @@
 extends KinematicBody2D
 
-onready var world = get_parent().get_node("World")
 
 enum STATES {IDLE, AIMING, ATTACKING, MOVING}
 var state = STATES.IDLE
@@ -18,7 +17,7 @@ var target_position = null
 var TARGET_RANGE = 5
 
 var move_radius = 0 setget set_move_radius
-var radius_size = 46
+var radius_size = 50
 
 var hit_direction = Vector2.RIGHT
 var hit_range = 30
@@ -73,17 +72,18 @@ func _unhandled_input(event):
 				state = STATES.ATTACKING
 
 
-func request_movement_options(cell_distance):
-	world.get_free_cells(position, cell_distance)
-
-
 func move():
 	position.x += 100
 
 
-func attack(damage=1):
+func attack(damage=1, ranged=false):
 	$AttackIndicator/Hitbox.damage = damage
+	if ranged:
+		hit_range = 100
+	else:
+		hit_range = 30
 	state = STATES.AIMING
+	
 
 
 func defend(defence=1):

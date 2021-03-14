@@ -119,6 +119,16 @@ text = "Defence"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MessageLabel" type="Label" parent="."]
+margin_left = 347.0
+margin_top = -275.0
+margin_right = 698.0
+margin_bottom = -216.0
+text = "Message now"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="MovementButton" to="." method="_on_MovementButton_pressed"]
 [connection signal="pressed" from="AttackButton" to="." method="_on_AttackButton_pressed"]
