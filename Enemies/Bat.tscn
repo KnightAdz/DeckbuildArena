@@ -8,13 +8,13 @@
 [ext_resource path="res://Enemies/WanderController.tscn" type="PackedScene" id=9]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 5.54616
+radius = 9.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 7.25009
+radius = 17.0074
 
 [sub_resource type="CircleShape2D" id=3]
-radius = 11.7592
+radius = 16.7519
 
 [sub_resource type="Animation" id=4]
 resource_name = "fly"
@@ -34,22 +34,22 @@ tracks/0/keys = {
 }
 
 [sub_resource type="CircleShape2D" id=5]
-radius = 107.393
+radius = 213.547
 
 [node name="Bat" type="KinematicBody2D" groups=[
 "enemy",
 ]]
-scale = Vector2( 2, 2 )
 collision_layer = 4
 collision_mask = 3
 script = ExtResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
 texture = ExtResource( 2 )
 hframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -4 )
+position = Vector2( -0.5, -5.25 )
 shape = SubResource( 1 )
 
 [node name="Hurtbox" parent="." instance=ExtResource( 3 )]

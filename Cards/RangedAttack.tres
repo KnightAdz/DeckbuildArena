@@ -12,6 +12,7 @@ defence = 0
 ranged_attack = true
 area_attack = false
 cards_to_draw = 0
+cards_to_discard = 0
 needs_target = false
 image = ExtResource( 2 )
 text = "Attack from distance for 1 damage"

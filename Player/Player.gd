@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+const ProjectileScene = preload("res://Effects/Projectile.tscn")
 
 enum STATES {IDLE, AIMING, ATTACKING, MOVING}
 var state = STATES.IDLE
@@ -56,7 +57,13 @@ func _process(delta):
 		STATES.AIMING:
 			update_attack_indicator()
 		STATES.ATTACKING:
-			$AttackIndicator/Hitbox.activate()
+			if hit_range == MELEE_RANGE:
+				$AttackIndicator/Hitbox.activate()
+			else:
+				var proj = ProjectileScene.instance()
+				self.get_parent().add_child(proj)
+				proj.global_position = self.global_position
+				proj.velocity = hit_direction
 			state = STATES.IDLE
 
 	#velocity = move_and_slide(velocity)
@@ -85,7 +92,6 @@ func attack(damage=1, ranged=false):
 	else:
 		hit_range = MELEE_RANGE
 	state = STATES.AIMING
-	
 
 
 func defend(defence=1):

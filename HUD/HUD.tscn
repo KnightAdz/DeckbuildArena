@@ -25,3 +25,16 @@ margin_left = 50.0
 margin_top = 13.0
 margin_right = 50.0
 margin_bottom = 27.0
+
+[node name="Wave" type="Label" parent="HBoxContainer"]
+margin_left = 54.0
+margin_top = 13.0
+margin_right = 147.0
+margin_bottom = 27.0
+text = "Wave number:"
+
+[node name="WaveValue" type="Label" parent="HBoxContainer"]
+margin_left = 151.0
+margin_top = 13.0
+margin_right = 151.0
+margin_bottom = 27.0

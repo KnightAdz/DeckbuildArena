@@ -1,6 +1,6 @@
 extends Node2D
 
-export(int) var wander_range = 50
+export(int) var wander_range = 100
 
 onready var start_position = global_position
 onready var target_position = global_position

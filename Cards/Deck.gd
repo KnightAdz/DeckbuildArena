@@ -11,15 +11,14 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/StrongDefend.tres")]
-var card_counts = [2,2,2,1]
+						preload("res://Cards/RangedAttack.tres")]
+var card_counts = [1,1,1,4] #2,2,2
 
 var draw_pile = []
 var hand = []
 var discard_pile = []
 
 var hand_positions = null
-var closest_target = null setget set_closest_target
 var selected_card = null setget set_selected_card
 
 var focus_level = 3 setget set_focus_level
@@ -38,46 +37,22 @@ func _ready():
 
 
 func _input(event):
-	if Input.is_action_just_released("click"):
-		if turn_state == TurnState.SELECT_TARGET:
-			if closest_target != null:
-				self.turn_state = TurnState.PLAY_CARD
 	if Input.is_action_just_released("rclick"):	
 		for c in hand:
 			c.scale = Vector2(1,1)
 		reposition_hand_cards()
 		selected_card = null
 		self.turn_state = TurnState.SELECT_CARD
-		self.closest_target = null
 
 
 func _process(delta):
 	match self.turn_state:
-		TurnState.SELECT_TARGET:
-			var targets = get_parent().get_targets()
-			# Identify which target the mouse is closest too
-			var mouse_pos = get_global_mouse_position()
-			var closest_dist = 9999
-			for t in targets:
-				var dist = t.global_position.distance_squared_to(mouse_pos)
-				if dist < closest_dist:
-					closest_dist = dist
-					self.closest_target = t
 		TurnState.FINISHED:
 			# Wait for characters to finish acting
 			var all_finished = true
 			if all_finished:
 				emit_signal("turn_taken")
 				self.turn_state = TurnState.WAIT
-
-
-func set_closest_target(value):
-	if closest_target != value:
-		if closest_target != null:
-			closest_target.highlighted = false
-		closest_target = value
-		if closest_target != null:
-			closest_target.highlighted = true
 
 
 func take_turn():
@@ -105,8 +80,6 @@ func set_state(new_state):
 		TurnState.PLAY_CARD:
 			$Turnstate.text = "Play card"
 			play_card()
-			closest_target.highlighted = false
-			closest_target = null
 		TurnState.FINISHED:
 			$Turnstate.text = "Finished"
 			$Button.visible = false
@@ -187,6 +160,8 @@ func draw_x_cards(x):
 
 func reposition_hand_cards():
 	var num_cards_in_hand = len(hand)
+	if num_cards_in_hand == 0:
+		return
 	var hand_spacing = floor(len(hand_positions)*0.5)
 	if num_cards_in_hand > 1:
 		hand_spacing = len(hand_positions)/(num_cards_in_hand-1)
@@ -216,8 +191,6 @@ func _on_card_selected(card):
 
 
 func play_card():
-#	var draw_cards = 0
-	
 	emit_signal("card_played")
 	var stats = selected_card.card_stats
 	self.focus -= stats.focus_cost
@@ -236,14 +209,13 @@ func play_card():
 
 	# Remove from hand and add to discard pile
 	discard(selected_card)
-	# Draw more cards 
-#	draw_x_cards(draw_cards)
+	
 	# If no cards in hand, draw a new hand
-	if len(hand) == 0:
-		end_turn()
-	else:
-		reposition_hand_cards()
-		self.turn_state = TurnState.SELECT_CARD
+	#if len(hand) == 0:
+	#	end_turn()
+	#else:
+	reposition_hand_cards()
+	self.turn_state = TurnState.SELECT_CARD
 
 
 func discard(card):
