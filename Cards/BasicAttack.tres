@@ -15,6 +15,6 @@ cards_to_draw = 0
 cards_to_discard = 0
 needs_target = false
 image = ExtResource( 2 )
-text = "Attack 1"
+text = "Attack for 2 damage"
 name = "Attack"
 colour = "RED"

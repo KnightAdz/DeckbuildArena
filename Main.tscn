@@ -1,9 +1,8 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Cards/Deck.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
-[ext_resource path="res://Enemies/Bat.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Enemies/Enemies.gd" type="Script" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://World/0x72_16x16DungeonTileset.v4.png" type="Texture" id=8]
@@ -228,18 +227,6 @@ tile_data = PoolIntArray( 0, 6, 0, 14, 7, 0, 131072, 6, 0, 131084, 2, 0, 131086,
 
 [node name="Enemies" type="Node2D" parent="."]
 script = ExtResource( 6 )
-
-[node name="Bat" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 852.551, 429.385 )
-
-[node name="Bat2" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 283.218, 158.716 )
-
-[node name="Bat3" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 794.12, 184.373 )
-
-[node name="Bat4" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 213.927, 440.568 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 540.034, 337.757 )

@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const ProjectileScene = preload("res://Effects/Projectile.tscn")
 
-enum STATES {IDLE, AIMING, ATTACKING, MOVING}
+enum STATES {IDLE, AIMING, ATTACKING, AREA_ATTACK, MOVING}
 var state = STATES.IDLE
 
 onready var attackIndicator = $AttackIndicator
@@ -24,6 +24,7 @@ var hit_direction = Vector2.RIGHT
 var MELEE_RANGE = 30
 var RANGED_RANGE = 150
 var hit_range = 30
+var area_attack_degrees = 0
 
 var defence = 0 setget set_defence
 
@@ -48,14 +49,19 @@ func _process(delta):
 		STATES.IDLE:
 			#$AttackIndicator/Hitbox.deactivate()
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
+			$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
+			attackIndicator.position = hit_direction*hit_range
+			
 		STATES.MOVING:
 			if target_position != null:
 				accelerate_towards_point(target_position, delta)
 				if global_position.distance_to(target_position) <= TARGET_RANGE:
 					target_position = null
 					state = STATES.IDLE
+					
 		STATES.AIMING:
 			update_attack_indicator()
+			
 		STATES.ATTACKING:
 			if hit_range == MELEE_RANGE:
 				$AttackIndicator/Hitbox.activate()
@@ -65,7 +71,16 @@ func _process(delta):
 				proj.global_position = self.global_position
 				proj.velocity = hit_direction
 			state = STATES.IDLE
-
+		
+		STATES.AREA_ATTACK:
+			# Bring hitbox to center (ish)
+			attackIndicator.position = hit_direction*1
+			# make radius larger
+			$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 60
+			$AttackIndicator/Hitbox.activate()
+			state = STATES.IDLE
+			
+			
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)
 	if state == STATES.MOVING and collision != null:
@@ -85,13 +100,18 @@ func move():
 	position.x += 100
 
 
-func attack(damage=1, ranged=false):
+func attack(damage=1, ranged=false, area=false):
 	$AttackIndicator/Hitbox.damage = damage
 	if ranged:
 		hit_range = RANGED_RANGE
 	else:
 		hit_range = MELEE_RANGE
-	state = STATES.AIMING
+	
+	if area:
+		state = STATES.AREA_ATTACK
+		area_attack_degrees = 360
+	else:
+		state = STATES.AIMING
 
 
 func defend(defence=1):

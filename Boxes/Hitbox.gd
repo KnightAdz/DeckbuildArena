@@ -8,9 +8,12 @@ func _ready():
 	self.deactivate()
 
 
-func activate():
+func activate(timer_override=null):
 	self.monitorable = true
-	$Timer.start(active_time)
+	if timer_override:
+		$Timer.start(timer_override)
+	else:
+		$Timer.start(active_time)
 
 
 func deactivate():

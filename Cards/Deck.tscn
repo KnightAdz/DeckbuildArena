@@ -31,7 +31,8 @@ centered = false
 region_enabled = true
 region_rect = Rect2( 0, 0, 192, 64 )
 
-[node name="Label2" type="Label" parent="."]
+[node name="FocusLabel" type="Label" parent="."]
+visible = false
 margin_left = 20.4142
 margin_top = -149.23
 margin_right = 101.414
@@ -118,16 +119,6 @@ margin_top = -191.0
 margin_right = 960.0
 margin_bottom = -171.0
 text = "Defence"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MessageLabel" type="Label" parent="."]
-margin_left = 347.0
-margin_top = -275.0
-margin_right = 698.0
-margin_bottom = -216.0
-text = "Message now"
 __meta__ = {
 "_edit_use_anchors_": false
 }

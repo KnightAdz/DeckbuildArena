@@ -11,8 +11,8 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/RangedAttack.tres")]
-var card_counts = [1,1,1,4] #2,2,2
+						preload("res://Cards/AreaAttack.tres")]
+var card_counts = [2,2,2,2] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -63,7 +63,6 @@ func take_turn():
 
 func set_state(new_state):
 	turn_state = new_state
-	$MessageLabel.text = ""
 	match new_state:
 		TurnState.SELECT_CARD:
 			$Turnstate.text = "Select card"
@@ -86,8 +85,7 @@ func set_state(new_state):
 		TurnState.WAIT:
 			$Turnstate.text = "Wait"
 		TurnState.CHOOSE_DISCARD:
-			$Turnstate.text = "Choose Discard"
-			$MessageLabel.text = "Choose a card to discard"
+			$Turnstate.text = "Choose a card to discard"
 
 
 func end_turn():	
@@ -195,8 +193,11 @@ func play_card():
 	var stats = selected_card.card_stats
 	self.focus -= stats.focus_cost
 	
+	# Default next state will be select card but some cards may change this
+	self.turn_state = TurnState.SELECT_CARD
+
 	if stats.attack > 0:
-		player.attack(stats.attack, stats.ranged_attack)
+		player.attack(stats.attack, stats.ranged_attack, stats.area_attack)
 	if stats.defence > 0:
 		player.defend(stats.defence)
 	if stats.movement > 0:
@@ -215,8 +216,6 @@ func play_card():
 	#	end_turn()
 	#else:
 	reposition_hand_cards()
-	self.turn_state = TurnState.SELECT_CARD
-
 
 func discard(card):
 	discard_pile.append(card)

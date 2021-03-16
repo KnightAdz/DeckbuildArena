@@ -18,7 +18,7 @@ radius = 26.5189
 radius = 46.5027
 
 [sub_resource type="CircleShape2D" id=4]
-radius = 25.5196
+radius = 25.0
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",

@@ -15,6 +15,6 @@ cards_to_draw = 0
 cards_to_discard = 0
 needs_target = false
 image = ExtResource( 2 )
-text = "Defend 1"
+text = "Gain 2 defence"
 name = "Defend"
 colour = "BLUE"

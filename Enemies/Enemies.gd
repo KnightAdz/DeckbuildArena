@@ -17,17 +17,23 @@ var loot_options = ["res://Cards/Attack&draw1.tres",
 					"res://Cards/Attack&move.tres",
 					"res://Cards/Attack4.tres",
 					"res://Cards/RangedAttack.tres",
-					"res://Cards/StrongDefend.tres"]
+					"res://Cards/StrongDefend.tres",
+					"res://Cards/AreaAttack.tres"]
 
 signal turn_taken()
 signal wave_changed(wave_number)
+
+
+func _ready():
+	for i in range(4):
+		spawn_bat()
+
 
 func take_turn():
 	turn_started = true
 	var children = get_children()
 	if len(children) == 0:
 		self.wave_count += 1
-		spawn_loot(Vector2(300,300))
 		for i in range(num_enemies+wave_count):
 			spawn_bat(enemy_health, enemy_damage)
 		
@@ -58,12 +64,22 @@ func spawn_bat(health=1, damage=1):
 	new_bat.global_position = Vector2(randi()%800+100, randi()%450+100)
 	new_bat.stats.max_health = health
 	new_bat.stats.health = health
+	new_bat.set_damage(damage)
 	new_bat.wanderController.reset_start_position()
 
 
 func on_enemy_death(position):
-	# spawn some loot
-	pass
+	# spawn some loot with random chance
+	# last enemy always spawns loot
+	var chance = 1
+	var decider = randi()%10 
+	var num_alive_enemies = 0
+	for c in self.get_children():
+		if c.is_in_group("enemy"):
+			num_alive_enemies += 1
+
+	if (decider <= chance) or num_alive_enemies<=1:
+		spawn_loot(position)
 
 
 func spawn_loot(position):

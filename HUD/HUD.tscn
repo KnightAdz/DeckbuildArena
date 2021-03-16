@@ -36,5 +36,6 @@ text = "Wave number:"
 [node name="WaveValue" type="Label" parent="HBoxContainer"]
 margin_left = 151.0
 margin_top = 13.0
-margin_right = 151.0
+margin_right = 159.0
 margin_bottom = 27.0
+text = "1"

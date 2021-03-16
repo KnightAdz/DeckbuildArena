@@ -43,7 +43,8 @@ func take_turn():
 	if player != null:
 		state = CHASE
 	else:
-		state = pick_random_state([IDLE,WANDER])
+		state = WANDER
+		#state = pick_random_state([IDLE,WANDER])
 	update_wander()
 	emit_signal("turn_taken")
 
@@ -141,3 +142,7 @@ func attack():
 	if player != null:
 		player.be_attacked(1)
 		#$Hitbox.activate()
+
+
+func set_damage(value):
+	$Hitbox.damage = value
