@@ -17,7 +17,7 @@ func set_velocity(direction):
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if destroy_self:
 		queue_free()
 	

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/attack.png" type="Texture" id=2]
+[ext_resource path="res://Cards/areaattack.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -11,6 +11,7 @@ attack = 1
 defence = 0
 ranged_attack = false
 area_attack = true
+knockback = 1
 cards_to_draw = 0
 cards_to_discard = 0
 needs_target = false

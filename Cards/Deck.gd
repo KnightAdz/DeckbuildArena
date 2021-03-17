@@ -11,8 +11,9 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/RangedAttack.tres")]
-var card_counts = [2,2,2,2] #2,2,2
+						preload("res://Cards/RangedAttack.tres"),
+						preload("res://Cards/Knockback.tres")]
+var card_counts = [2,2,2,2,2] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -36,7 +37,7 @@ func _ready():
 	draw_hand()
 
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_just_released("rclick"):	
 		for c in hand:
 			c.scale = Vector2(1,1)
@@ -45,7 +46,7 @@ func _input(event):
 		self.turn_state = TurnState.SELECT_CARD
 
 
-func _process(delta):
+func _process(_delta):
 	match self.turn_state:
 		TurnState.FINISHED:
 			# Wait for characters to finish acting
@@ -207,7 +208,10 @@ func play_card():
 	self.turn_state = TurnState.SELECT_CARD
 
 	if stats.attack > 0:
-		player.attack(stats.attack, stats.ranged_attack, stats.area_attack)
+		player.attack(	stats.attack, 
+						stats.ranged_attack, 
+						stats.area_attack, 
+						stats.knockback)
 	if stats.defence > 0:
 		player.defend(stats.defence)
 	if stats.movement > 0:

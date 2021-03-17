@@ -1,7 +1,9 @@
 extends Area2D
 
 var knockback_vector = Vector2.LEFT
+var knockback_strength = 1
 export var damage = 1
+var damage_source = Vector2.ZERO
 export var active_time = 0.1
 
 func _ready():
@@ -22,3 +24,8 @@ func deactivate():
 
 func _on_Timer_timeout():
 	self.deactivate()
+
+
+func set_knockback(source=self.global_position, strength=1):
+	damage_source = source
+	knockback_strength = strength

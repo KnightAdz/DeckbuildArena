@@ -92,7 +92,7 @@ func select_card():
 		emit_signal("card_selected", self)
 
 
-func _on_Area2D_input_event(viewport, event, shape_idx):
+func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if ignore_input == false:
 		if event.is_action_released("click"):
 			select_card()

@@ -14,7 +14,7 @@ func _ready():
 		c.ignore_input = false
 	
 	var to_offer = []
-	for i in range(3):
+	for _i in range(3):
 		var rand_select = randi()%len(loot_options)
 		to_offer.append(loot_options[rand_select])
 	set_cards(to_offer)
@@ -31,7 +31,6 @@ func set_cards(cardstats):
 
 
 func _on_Leave_pressed():
-	var my_cards = $Cards.get_children()
 	emit_signal("turn_taken")
 	queue_free()
 

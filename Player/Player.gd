@@ -25,6 +25,7 @@ var MELEE_RANGE = 30
 var RANGED_RANGE = 150
 var hit_range = 30
 var area_attack_degrees = 0
+var knockback_strength = 1
 
 var defence = 0 setget set_defence
 
@@ -49,13 +50,13 @@ func _process(delta):
 	$Label.text = STATES.keys()[state]
 	match state:
 		STATES.IDLE:
-			#$AttackIndicator/Hitbox.deactivate()
+			$AnimationPlayer.play("Idle")
 			$AttackIndicator.visible = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
-			#$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
 			
 		STATES.MOVING:
 			if target_position != null:
+				$AnimationPlayer.play("Walk")
 				accelerate_towards_point(target_position, delta)
 				if global_position.distance_to(target_position) <= TARGET_RANGE:
 					target_position = null
@@ -68,6 +69,7 @@ func _process(delta):
 			
 		STATES.ATTACKING:
 			emit_signal("player_releases_mouse")
+			$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
 			if hit_range == MELEE_RANGE:
 				$AttackIndicator/Hitbox.activate()
 			else:
@@ -80,6 +82,7 @@ func _process(delta):
 		STATES.AREA_ATTACK:
 			# Bring hitbox to center (ish)
 			attackIndicator.position = hit_direction*1
+			$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
 			# make radius larger
 			$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 60
 			$AttackIndicator/Hitbox.activate()
@@ -88,12 +91,14 @@ func _process(delta):
 			
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)
+	# If we are moving and crash into something
 	if state == STATES.MOVING and collision != null:
+		# Stop moving
 		state = STATES.IDLE
 		velocity = Vector2.ZERO
 
 
-func _unhandled_input(event):
+func _unhandled_input(_event):
 	match state:
 		STATES.AIMING:
 			hit_direction = (self.get_local_mouse_position()).normalized()
@@ -105,7 +110,7 @@ func move():
 	position.x += 100
 
 
-func attack(damage=1, ranged=false, area=false):
+func attack(damage=1, ranged=false, area=false, knockback=1):
 	$AttackIndicator/Hitbox.damage = damage
 	if ranged:
 		hit_range = RANGED_RANGE
@@ -118,9 +123,10 @@ func attack(damage=1, ranged=false, area=false):
 	else:
 		state = STATES.AIMING
 
+	self.knockback_strength = knockback
 
-func defend(defence=1):
-	self.defence += defence
+func defend(defence_new=1):
+	self.defence += defence_new
 	#$Tween.interpolate_property(self, "scale", Vector2(1.1,1.1), Vector2.ONE, 0.2, Tween.TRANS_BACK, Tween.EASE_OUT_IN)
 	#$Tween.start()
 
@@ -178,6 +184,9 @@ func be_attacked(damage):
 
 func _on_Stats_health_changed(value):
 	emit_signal("health_changed", value)
+	if value <= 0:
+		#die
+		pass
 
 
 func _on_Hurtbox_area_entered(area):

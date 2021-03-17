@@ -11,6 +11,7 @@ attack = 0
 defence = 2
 ranged_attack = false
 area_attack = false
+knockback = 1
 cards_to_draw = 0
 cards_to_discard = 0
 needs_target = false

@@ -1,5 +1,6 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
+[ext_resource path="res://Enemies/Boss.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Cards/Deck.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
@@ -206,6 +207,22 @@ mouse_filter = 2
 [node name="Deck" parent="CanvasLayer" instance=ExtResource( 3 )]
 position = Vector2( 9, 589 )
 
+[node name="GameOverScreen" type="RichTextLabel" parent="CanvasLayer"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -135.0
+margin_top = -57.0
+margin_right = 181.0
+margin_bottom = 20.0
+text = "Game Over!
+You made it to wave X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="DungeonTilemap" type="TileMap" parent="."]
 position = Vector2( 0, -41 )
 scale = Vector2( 4, 4 )
@@ -228,6 +245,9 @@ tile_data = PoolIntArray( 0, 6, 0, 14, 7, 0, 131072, 6, 0, 131084, 2, 0, 131086,
 [node name="Enemies" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
+[node name="BasicEnemy" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 238, 264 )
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 540.034, 337.757 )
 
@@ -240,6 +260,7 @@ current = true
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
+[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
 [connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
 [connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]

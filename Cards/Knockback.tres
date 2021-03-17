@@ -1,21 +1,21 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/move.png" type="Texture" id=2]
+[ext_resource path="res://Cards/attack.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
-movement = 2
-attack = 0
+movement = 0
+attack = 1
 defence = 0
 ranged_attack = false
 area_attack = false
-knockback = 1
+knockback = 3
 cards_to_draw = 0
 cards_to_discard = 0
 needs_target = false
 image = ExtResource( 2 )
-text = "Gain 2 movement"
-name = "Move"
-colour = "GREEN"
+text = "Deal 1 damage and push enemy away"
+name = "Knockback"
+colour = "RED"

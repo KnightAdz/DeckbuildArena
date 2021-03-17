@@ -1,6 +1,6 @@
 extends Node2D
 
-var BatScene = preload("res://Enemies/Bat.tscn")
+var BatScene = preload("res://Enemies/BasicEnemy.tscn")
 var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
@@ -20,8 +20,8 @@ signal wave_changed(wave_number)
 
 
 func _ready():
-	for i in range(1):
-		spawn_bat()
+	for _i in range(1):
+		spawn_bat(2)
 
 
 func take_turn():
@@ -30,7 +30,7 @@ func take_turn():
 	if len(children) == 0:
 		offer_cards(3)
 		self.wave_count += 1
-		for i in range(num_enemies+wave_count):
+		for _i in range(num_enemies+wave_count):
 			spawn_bat(enemy_health, enemy_damage)
 		
 		enemy_health += 1
@@ -68,7 +68,7 @@ func on_enemy_death(position):
 	# spawn some loot with random chance
 	var chance = 1
 	var decider = randi()%10 
-	var num_alive_enemies = 0
+	#var num_alive_enemies = 0
 	#for c in self.get_children():
 	#	if c.is_in_group("enemy"):
 	#		num_alive_enemies += 1
@@ -94,7 +94,7 @@ func set_wave_count(value):
 func offer_cards(num_cards):
 	# select 3 random cards
 	var to_offer = []
-	for i in range(num_cards):
+	for _i in range(num_cards):
 		var rand_select = randi()%len(loot_options)
 		to_offer.append(loot_options[rand_select])
 	
@@ -103,3 +103,7 @@ func offer_cards(num_cards):
 	offer_scene.connect("add_card_to_discard", get_parent().get_node("CanvasLayer/Deck"), "add_card_to_discard")
 	offer_scene.connect("turn_taken", get_parent(), "take_next_turn")
 	get_parent().add_to_turn_order(offer_scene)
+
+
+func get_wave():
+	return wave_count

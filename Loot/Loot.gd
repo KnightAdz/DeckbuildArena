@@ -23,7 +23,7 @@ func _process(delta):
 		
 	var direction = global_position.direction_to(player.global_position).normalized()
 	velocity = velocity.move_toward(direction*MAX_SPEED, ACCELERATION*delta)
-	move_and_collide(velocity)
+	var _collision = move_and_collide(velocity)
 
 
 func get_card_stats():

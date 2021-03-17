@@ -43,5 +43,5 @@ func _on_Hurtbox_invincibility_ended():
 	collisionShape.disabled = false
 
 
-func _on_Hurtbox_area_entered(area):
+func _on_Hurtbox_area_entered(_area):
 	create_effect()

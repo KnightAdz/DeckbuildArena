@@ -14,7 +14,7 @@ func _ready():
 	take_turn(turn_idx)
 
 
-func _process(delta):
+func _process(_delta):
 	if ready_for_next_turn:
 		ready_for_next_turn = false
 		take_next_turn()
@@ -71,3 +71,14 @@ func on_card_collected(card_stats):
 
 func add_to_turn_order(node):
 	turn_order.append(node)
+
+
+func _on_Player_health_changed(new_value):
+	if new_value <= 0:
+		game_over()
+		
+
+func game_over():
+	$CanvasLayer/GameOverScreen.visible = true
+	var wave_num = $Enemies.get_wave()
+	$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
