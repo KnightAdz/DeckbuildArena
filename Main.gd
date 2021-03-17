@@ -42,6 +42,10 @@ func take_next_turn():
 	turn_idx += 1
 	if turn_idx >= len(turn_order):
 		turn_idx = 0
+	# Assumes null entries will always be last
+	if turn_order[turn_idx] == null:
+		turn_order.remove(turn_idx)
+		turn_idx = 0
 	take_turn(turn_idx)
 
 
@@ -63,3 +67,7 @@ func on_card_collected(card_stats):
 	new_card.is_face_up = true
 	
 	card_gain_dialog.set_card(new_card)
+
+
+func add_to_turn_order(node):
+	turn_order.append(node)

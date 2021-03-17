@@ -214,7 +214,7 @@ cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 collision_mask = 6
 format = 1
-tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0, 131084, 2, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655375, 0, 0 )
+tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 15, 0, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655375, 0, 0 )
 
 [node name="DarknessTilemap" type="TileMap" parent="."]
 scale = Vector2( 4, 4 )
@@ -241,3 +241,5 @@ current = true
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
+[connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
+[connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]

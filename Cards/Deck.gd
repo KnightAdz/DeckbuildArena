@@ -11,7 +11,7 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/AreaAttack.tres")]
+						preload("res://Cards/RangedAttack.tres")]
 var card_counts = [2,2,2,2] #2,2,2
 
 var draw_pile = []
@@ -57,6 +57,7 @@ func _process(delta):
 
 func take_turn():
 	player.start_turn()
+	gain_control()
 	self.focus = self.focus_level
 	self.turn_state = TurnState.SELECT_CARD
 
@@ -71,6 +72,8 @@ func set_state(new_state):
 			for c in hand:
 				if c.card_stats.focus_cost <= focus:
 					c.ignore_input = false
+			# Update button labels
+			update_button_labels()
 		TurnState.SELECT_TARGET:
 			$Turnstate.text = "Select target"
 			# Set cards in hand to ignore input
@@ -104,9 +107,10 @@ func end_turn():
 		c.ignore_input = true
 	for c in discard_pile:
 		c.ignore_input = true
-	
+
+	lose_control()	
 	self.turn_state = TurnState.FINISHED
-	
+
 
 func add_card_to_deck(card_resource):
 	var card = CardScene.instance()
@@ -144,10 +148,16 @@ func draw_hand(new_hand_size=5):
 		# If no cards to draw from, shuffle the discard pile in
 		if len(draw_pile) == 0:
 			shuffle_discard_into_draw()
-		hand.append(draw_pile.pop_front())
-		hand.back().is_face_up = true
-		hand.back().ignore_input = false # Only when during a turn
-		reposition_hand_cards()
+		
+		if len(draw_pile) > 0:
+			hand.append(draw_pile.pop_front())
+			hand.back().is_face_up = true
+			hand.back().ignore_input = false # Only when during a turn
+			reposition_hand_cards()
+		else:
+			# If still no cards to draw from, we have the whole deck in hand!
+			# Achievement
+			pass
 
 
 func draw_x_cards(x):
@@ -217,6 +227,7 @@ func play_card():
 	#else:
 	reposition_hand_cards()
 
+
 func discard(card):
 	discard_pile.append(card)
 	if hand.find(card) >= 0:
@@ -225,6 +236,7 @@ func discard(card):
 	card.is_face_up = false
 	card.is_selected = false
 	$Label.text = str(len(discard_pile))
+	update_button_labels()
 
 
 func get_name():
@@ -257,9 +269,10 @@ func _on_MovementButton_pressed():
 
 
 func _on_AttackButton_pressed():
+	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
-		player.attack()
+	player.attack(cards_in_hand)
 
 
 func _on_DefenceButton_pressed():
@@ -289,3 +302,31 @@ func set_selected_card(c):
 				discard(selected_card)
 				selected_card = null
 				self.turn_state = TurnState.SELECT_CARD
+
+
+func lose_control():
+	# lower opacity of cards, ignore input
+	for c in hand:
+		c.modulate = Color(1,1,1,0.2)
+		c.ignore_input = true
+		c.z_index = 0
+	$MovementButton.disabled = true
+	$AttackButton.disabled = true
+	$DefenceButton.disabled = true
+
+
+func gain_control():
+	# rest opacity of cards, don't ignore input
+	for c in hand:
+		c.modulate = Color(1,1,1,1)
+		c.ignore_input = false
+	$MovementButton.disabled = false
+	$AttackButton.disabled = false
+	$DefenceButton.disabled = false
+
+
+func update_button_labels():
+	var num_cards = len(hand)
+	$MovementButton.text = str(num_cards) + " Movement"
+	$DefenceButton.text = str(num_cards) + " Defence"
+	$AttackButton.text = "1 Attack for " + str(num_cards) + " damage"

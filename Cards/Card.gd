@@ -56,6 +56,8 @@ func set_stats(stats):
 				$Background.frame = 3
 			'RED':
 				$Background.frame = 5
+		if self.is_face_up:
+			$Background.frame -= 1
 		
 		if card_stats.image is Texture:
 			$Icon.texture = card_stats.image

@@ -94,31 +94,31 @@ __meta__ = {
 }
 
 [node name="MovementButton" type="Button" parent="."]
-margin_left = 880.0
+margin_left = 860.0
 margin_top = -242.0
-margin_right = 961.0
+margin_right = 1009.0
 margin_bottom = -222.0
-text = "Movement"
+text = "5 Movement"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AttackButton" type="Button" parent="."]
-margin_left = 880.0
+margin_left = 859.0
 margin_top = -217.0
-margin_right = 961.0
+margin_right = 1010.0
 margin_bottom = -197.0
-text = "Attack"
+text = "1 Attack for 5 damage"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DefenceButton" type="Button" parent="."]
-margin_left = 879.0
+margin_left = 859.0
 margin_top = -191.0
-margin_right = 960.0
+margin_right = 1008.0
 margin_bottom = -171.0
-text = "Defence"
+text = "5 Defence"
 __meta__ = {
 "_edit_use_anchors_": false
 }

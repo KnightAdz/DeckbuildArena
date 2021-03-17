@@ -29,6 +29,8 @@ var area_attack_degrees = 0
 var defence = 0 setget set_defence
 
 signal health_changed(new_value)
+signal player_controls_mouse()
+signal player_releases_mouse()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -48,9 +50,9 @@ func _process(delta):
 	match state:
 		STATES.IDLE:
 			#$AttackIndicator/Hitbox.deactivate()
+			$AttackIndicator.visible = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
-			$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
-			attackIndicator.position = hit_direction*hit_range
+			#$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
 			
 		STATES.MOVING:
 			if target_position != null:
@@ -60,9 +62,12 @@ func _process(delta):
 					state = STATES.IDLE
 					
 		STATES.AIMING:
+			emit_signal("player_controls_mouse")
+			$AttackIndicator.visible = true
 			update_attack_indicator()
 			
 		STATES.ATTACKING:
+			emit_signal("player_releases_mouse")
 			if hit_range == MELEE_RANGE:
 				$AttackIndicator/Hitbox.activate()
 			else:
