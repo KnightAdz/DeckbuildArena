@@ -20,7 +20,7 @@ radius = 46.5027
 [sub_resource type="CircleShape2D" id=4]
 radius = 25.0
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "Idle"
 length = 0.5
 loop = true
@@ -37,8 +37,7 @@ tracks/0/keys = {
 "values": [ 0.0 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "Walk"
+[sub_resource type="Animation" id=6]
 length = 0.4
 loop = true
 tracks/0/type = "value"
@@ -109,6 +108,7 @@ collision_mask = 5
 shape = SubResource( 4 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = -19.5
 margin_top = 18.5
 margin_right = 20.5
@@ -118,8 +118,8 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Idle = SubResource( 6 )
-anims/Walk = SubResource( 5 )
+anims/Idle = SubResource( 5 )
+anims/Walk = SubResource( 6 )
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]
 [connection signal="health_changed" from="Stats" to="." method="_on_Stats_health_changed"]
 [connection signal="input_event" from="MoveRadius" to="." method="_on_MoveRadius_input_event"]
