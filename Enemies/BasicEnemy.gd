@@ -7,6 +7,7 @@ export var ACCELERATION = 300
 export var MAX_SPEED = 5
 export var FRICTION = 200
 export var WANDER_TARGET_RANGE = 4
+export var MOVE_LIMIT = 1000
 
 enum {
 	IDLE,
@@ -18,6 +19,7 @@ enum {
 
 var velocity = Vector2.ZERO
 var knockback_vector = Vector2.ZERO
+var pos_at_start_of_turn = Vector2.ZERO
 
 var state = IDLE
 
@@ -25,7 +27,7 @@ var player = null
 
 onready var stats = $Stats
 onready var hurtbox = $Hurtbox
-#onready var softCollision = $SoftOverlap
+onready var softCollision = $SoftOverlap
 onready var wanderController = $WanderController
 onready var sprite = $Sprite
 
@@ -38,9 +40,11 @@ func _ready():
 	$Hitbox.deactivate()
 	self.connect("no_health", self.get_parent(), "on_enemy_death")
 	$HealthRemaining.text = str(stats.health)
+	$HealthIndicator.health = stats.health
 
 
 func take_turn():
+	pos_at_start_of_turn = global_position
 	if state == STUNNED:
 		state = IDLE
 	else:
@@ -72,7 +76,8 @@ func _physics_process(delta):
 			
 		CHASE:
 			$Label.text = "CHASE"
-			if player != null:
+			var dist_moved = global_position.distance_to(pos_at_start_of_turn)
+			if player != null and dist_moved < MOVE_LIMIT:
 				accelerate_towards_point(player.global_position, delta)
 			else:
 				state = IDLE
@@ -83,8 +88,9 @@ func _physics_process(delta):
 		
 		STUNNED:
 			$AnimationPlayer.stop()
-#	if softCollision.is_colliding():
-#		velocity += softCollision.get_push_vector() * delta * 400
+
+	if softCollision.is_colliding():
+		velocity += softCollision.get_push_vector() * delta * 400
 	
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)

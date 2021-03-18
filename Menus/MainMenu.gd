@@ -17,8 +17,7 @@ func _ready():
 
 
 func _on_StartGame_pressed():
-	var main_game = preload("res://Main.tscn").instance()
-	get_tree().add_child(main_game)
+	get_tree().change_scene("res://Main.tscn")
 	self.queue_free()
 
 
@@ -27,6 +26,5 @@ func _on_HowToPlay_pressed():
 
 
 func _on_Credits_pressed():
-	var credits = preload("res://Menus/Credits.tscn").instance()
-	get_tree().add_child(credits)
+	get_tree().change_scene("res://Menus/Credits.tscn")
 	self.queue_free()

@@ -12,10 +12,7 @@ bait
 reflect damage taken
 
 
-
-hide cards
-zoom out
 tutorial
-new monsters that are aggressive
 fix 2 card selection bug
-
+health indicators
+Enemy info hover-overs

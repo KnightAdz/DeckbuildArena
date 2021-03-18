@@ -89,8 +89,7 @@ func game_over():
 	#$CanvasLayer/GameOverScreen.visible = true
 	var wave_num = $Enemies.get_wave()
 	#$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
-	var gameoverscreen = preload("res://Menus/GameOverMenu.tscn").instance()
-	get_tree().add_child(gameoverscreen)
+	get_tree().change_scene("res://Menus/GameOverMenu.tscn")
 	self.queue_free()
 
 

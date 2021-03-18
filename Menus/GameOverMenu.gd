@@ -17,12 +17,10 @@ func _ready():
 
 
 func _on_TryAgainButton_pressed():
-	var main_game = preload("res://Main.tscn").instance()
-	get_tree().add_child(main_game)
+	get_tree().change_scene("res://Main.tscn")
 	self.queue_free()
 
 
 func _on_MainMenuButton_pressed():
-	var newscreen = preload("res://Menus/MainMenu.tscn").instance()
-	get_tree().add_child(newscreen)
+	get_tree().change_scene("res://Menus/MainMenu.tscn")
 	self.queue_free

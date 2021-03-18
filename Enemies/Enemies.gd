@@ -1,6 +1,7 @@
 extends Node2D
 
 var BatScene = preload("res://Enemies/BasicEnemy.tscn")
+var WalkyScene = preload("res://Enemies/Walky.tscn")
 var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
@@ -26,18 +27,33 @@ func _ready():
 
 func take_turn():
 	turn_started = true
+		
+	for c in get_children():
+		c.take_turn()
+
 	var children = get_children()
 	if len(children) == 0:
 		offer_cards(3)
 		self.wave_count += 1
-		for _i in range(num_enemies+wave_count):
-			spawn_bat(enemy_health, enemy_damage)
+		spawn_enemies()
 		
-		enemy_health += 1
-		enemy_damage += 1
+		if wave_count > 2:
+			enemy_health += 1
+			enemy_damage += 1
 
-	for c in get_children():
-		c.take_turn()
+
+func spawn_enemies(): 
+	for _i in range(num_enemies+wave_count):
+		if wave_count <= 2:
+			spawn_bat(enemy_health, enemy_damage)
+		elif wave_count == 3:
+			spawn_walky(1,1)
+		else:
+			var rand = randi()%2
+			if rand:
+				spawn_bat(enemy_health, enemy_damage)
+			else:
+				spawn_walky(enemy_health, enemy_damage)
 
 
 func _process(delta):
@@ -65,6 +81,17 @@ func spawn_bat(health=1, damage=1):
 	count_enemies()
 
 
+func spawn_walky(health=1, damage=1):
+	var new_walky = WalkyScene.instance()
+	self.add_child(new_walky)
+	new_walky.global_position = Vector2(randi()%800+100, randi()%450+100)
+	new_walky.stats.max_health = health
+	new_walky.stats.health = health
+	new_walky.set_damage(damage)
+	new_walky.wanderController.reset_start_position()
+	count_enemies()
+
+
 func on_enemy_death(position):
 	# spawn some loot with random chance
 	var chance = 1
@@ -85,6 +112,7 @@ func count_enemies():
 	num_alive_enemies -= 1
 	emit_signal("number_enemies_changed", num_alive_enemies)
 	return num_alive_enemies
+
 
 func spawn_loot(position):
 	var new_loot = LootScene.instance()

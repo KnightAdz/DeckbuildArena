@@ -1,6 +1,5 @@
 extends Control
 
-const MainMenuScreen = preload("res://Menus/MainMenu.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -13,6 +12,5 @@ func _ready():
 
 
 func _on_ToMainMenuButton_pressed():
-	var newscreen = MainMenuScreen.instance()
-	get_tree().add_child(newscreen)
-	self.queue_free
+	get_tree().change_scene("res://Menus/MainMenu.tscn")
+	self.queue_free()

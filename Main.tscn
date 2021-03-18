@@ -1,5 +1,6 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
+[ext_resource path="res://Enemies/Walky.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Cards/Deck.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
@@ -216,8 +217,17 @@ collision_mask = 6
 format = 1
 tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655373, 0, 0 )
 
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 540.034, 337.757 )
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
 [node name="Enemies" type="Node2D" parent="."]
 script = ExtResource( 6 )
+
+[node name="Walky" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 337, 239 )
 
 [node name="DarknessTilemap" type="TileMap" parent="."]
 scale = Vector2( 4, 4 )
@@ -228,12 +238,6 @@ collision_mask = 6
 format = 1
 tile_data = PoolIntArray( 0, 6, 0, 14, 7, 0, 131072, 6, 0, 131086, 7, 0, 196608, 6, 0, 196622, 7, 0, 327680, 6, 0, 327694, 7, 0, 393216, 6, 0, 393230, 7, 0, 524288, 6, 0, 524302, 7, 0 )
 
-[node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 540.034, 337.757 )
-
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
-remote_path = NodePath("../../Camera2D")
-
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 540.034, 337.757 )
 current = true
@@ -242,10 +246,10 @@ current = true
 position = Vector2( 513, 351 )
 zoom = Vector2( 1.1, 1.1 )
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
+[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
+[connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
+[connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
+[connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
-[connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
-[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
-[connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
-[connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]
