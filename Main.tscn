@@ -206,22 +206,6 @@ mouse_filter = 2
 [node name="Deck" parent="CanvasLayer" instance=ExtResource( 3 )]
 position = Vector2( 9, 589 )
 
-[node name="GameOverScreen" type="RichTextLabel" parent="CanvasLayer"]
-visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -135.0
-margin_top = -57.0
-margin_right = 181.0
-margin_bottom = 20.0
-text = "Game Over!
-You made it to wave X"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="DungeonTilemap" type="TileMap" parent="."]
 position = Vector2( 0, -41 )
 scale = Vector2( 4, 4 )

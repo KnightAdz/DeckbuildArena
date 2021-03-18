@@ -86,9 +86,12 @@ func _on_Player_health_changed(new_value):
 		
 
 func game_over():
-	$CanvasLayer/GameOverScreen.visible = true
+	#$CanvasLayer/GameOverScreen.visible = true
 	var wave_num = $Enemies.get_wave()
-	$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
+	#$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
+	var gameoverscreen = preload("res://Menus/GameOverMenu.tscn").instance()
+	get_tree().add_child(gameoverscreen)
+	self.queue_free()
 
 
 func show_overview():

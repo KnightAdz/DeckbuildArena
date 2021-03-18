@@ -11,6 +11,7 @@ extents = Vector2( 88.929, 118.843 )
 script = ExtResource( 2 )
 
 [node name="Highlight" type="Sprite" parent="."]
+visible = false
 modulate = Color( 0.945098, 1, 0.00784314, 1 )
 position = Vector2( 2, -41 )
 scale = Vector2( 3.17188, 4.125 )
