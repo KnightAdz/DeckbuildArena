@@ -16,11 +16,11 @@ func _ready():
 #	pass
 
 
-func _on_TryAgainButton_pressed():
+func _on_StartGame_pressed():
 	get_tree().change_scene("res://Main.tscn")
 	self.queue_free()
 
 
-func _on_MainMenuButton_pressed():
+func _on_ToMainMenuButton_pressed():
 	get_tree().change_scene("res://Menus/MainMenu.tscn")
 	self.queue_free()

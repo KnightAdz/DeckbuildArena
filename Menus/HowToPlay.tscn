@@ -1,0 +1,132 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://m5x7.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Menus/HowToPlay.gd" type="Script" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+outline_color = Color( 0.698039, 0.643137, 0.643137, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
+font_data = ExtResource( 1 )
+
+[node name="HowToPlay" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Controls" type="RichTextLabel" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 188.0
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center] Controls
+Left click: select & play card
+Space bar: zoom out [/center]"
+text = " Controls
+Left click: select & play card
+Space bar: zoom out "
+
+[node name="Aim" type="RichTextLabel" parent="VBoxContainer"]
+margin_top = 192.0
+margin_right = 1024.0
+margin_bottom = 380.0
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center]Aim of the game
+Survive for as long as you can against increasingly difficult waves of enemies, using cards to give you abilities to defeat your opponents. Collect cards to upgrade your deck and become ever stronger[/center]"
+text = "Aim of the game
+Survive for as long as you can against increasingly difficult waves of enemies, using cards to give you abilities to defeat your opponents. Collect cards to upgrade your deck and become ever stronger"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 339.0
+margin_right = 1024.0
+margin_bottom = 572.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Green cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
+margin_right = 338.0
+margin_bottom = 233.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 1 )
+custom_colors/default_color = Color( 0.145098, 0.521569, 0.105882, 1 )
+bbcode_enabled = true
+bbcode_text = "[center] Green cards
+Grant movement which will increase your move radius. Click within the green area to move there [/center]"
+text = " Green cards
+Grant movement which will increase your move radius. Click within the green area to move there "
+
+[node name="Red cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 233.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 1 )
+custom_colors/default_color = Color( 0.929412, 0.0392157, 0.0392157, 1 )
+bbcode_enabled = true
+bbcode_text = "[center] Red cards
+Allow you to attack at varying ranges and levels of damage. Playing one of these will often cause you to enter aiming mode, so use the mouse to set the direction and left click to attack [/center]"
+text = " Red cards
+Allow you to attack at varying ranges and levels of damage. Playing one of these will often cause you to enter aiming mode, so use the mouse to set the direction and left click to attack "
+
+[node name="Blue cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 233.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 1 )
+custom_colors/default_color = Color( 0.160784, 0.384314, 0.858824, 1 )
+bbcode_enabled = true
+bbcode_text = "[center] Blue cards
+Provide other benefits, including Defence (which vanishes at the start of your next turn) and Health [/center]"
+text = " Blue cards
+Provide other benefits, including Defence (which vanishes at the start of your next turn) and Health "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 576.0
+margin_right = 1024.0
+margin_bottom = 596.0
+alignment = 1
+
+[node name="ToMainMenuButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 405.0
+margin_right = 509.0
+margin_bottom = 20.0
+text = "To main menu"
+
+[node name="StartGame" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 513.0
+margin_right = 618.0
+margin_bottom = 20.0
+text = "Start the game"
+
+[node name="GameBy3" type="RichTextLabel" parent="VBoxContainer"]
+margin_top = 600.0
+margin_right = 1024.0
+margin_bottom = 600.0
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ToMainMenuButton" to="." method="_on_ToMainMenuButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]

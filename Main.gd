@@ -104,3 +104,7 @@ func show_player_camera():
 	$Camera2D.current = true
 	$OverviewCamera.current = false
 	$CanvasLayer/Deck.gain_control()
+
+
+func start_next_wave():
+	take_turn(0)

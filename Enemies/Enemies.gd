@@ -6,6 +6,7 @@ var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
 onready var DeckNode = get_parent().get_node("CanvasLayer/Deck")
+onready var player = get_parent().get_node("Player")
 
 var turn_started = false
 var enemy_health = 1
@@ -13,6 +14,7 @@ var enemy_damage = 1
 var num_enemies = 3
 
 var wave_count = 1 setget set_wave_count
+var wave_started = true
 
 var loot_options = Globals.available_cards
 
@@ -20,40 +22,61 @@ signal turn_taken()
 signal wave_changed(wave_number)
 signal number_enemies_changed(number)
 
+
 func _ready():
-	for _i in range(1):
-		spawn_bat(2)
+	pass
 
 
 func take_turn():
+	if wave_started == false:
+		emit_signal("turn_taken")
+		return
+		
 	turn_started = true
 		
 	for c in get_children():
 		c.take_turn()
 
 	var children = get_children()
+	# If all enemies are killed, we've reached the end of the wave
 	if len(children) == 0:
+		wave_started = false
 		offer_cards(3)
-		self.wave_count += 1
-		spawn_enemies()
 		
-		if wave_count > 2:
-			enemy_health += 1
-			enemy_damage += 1
-
 
 func spawn_enemies(): 
+	var placed_pos = []
+	placed_pos.append(player.global_position)
 	for _i in range(num_enemies+wave_count):
+		var safe_position = generate_position(placed_pos)
+		if safe_position == null:
+			break
 		if wave_count <= 2:
-			spawn_bat(enemy_health, enemy_damage)
+			spawn_bat(enemy_health, enemy_damage, safe_position)
 		elif wave_count == 3:
-			spawn_walky(1,1)
+			spawn_walky(1,1, safe_position)
 		else:
 			var rand = randi()%2
 			if rand:
-				spawn_bat(enemy_health, enemy_damage)
+				spawn_bat(enemy_health, enemy_damage, safe_position)
 			else:
-				spawn_walky(enemy_health, enemy_damage)
+				spawn_walky(enemy_health, enemy_damage, safe_position)
+		placed_pos.append(safe_position)
+
+
+# Generate a random position that is far enough away from provided positions
+func generate_position(placed_pos):
+	var safe_dist = 60
+	var tries = 1000
+	for i in range(tries):
+		var new_pos = Vector2(randi()%800+100, randi()%450+100)
+		var safe = true
+		for p in placed_pos:
+			if p.distance_to(new_pos) < safe_dist:
+				safe = false
+		if safe:
+			return new_pos
+	return null
 
 
 func _process(delta):
@@ -70,10 +93,13 @@ func _process(delta):
 		emit_signal("turn_taken")
 
 
-func spawn_bat(health=1, damage=1):
+func spawn_bat(health=1, damage=1, pos=Vector2.ZERO):
 	var new_bat = BatScene.instance()
 	self.add_child(new_bat)
-	new_bat.global_position = Vector2(randi()%800+100, randi()%450+100)
+	if pos == Vector2.ZERO:
+		new_bat.global_position = Vector2(randi()%800+100, randi()%450+100)
+	else:
+		new_bat.global_position = pos
 	new_bat.stats.max_health = health
 	new_bat.stats.health = health
 	new_bat.set_damage(damage)
@@ -81,10 +107,13 @@ func spawn_bat(health=1, damage=1):
 	count_enemies()
 
 
-func spawn_walky(health=1, damage=1):
+func spawn_walky(health=1, damage=1, pos=Vector2.ZERO):
 	var new_walky = WalkyScene.instance()
 	self.add_child(new_walky)
-	new_walky.global_position = Vector2(randi()%800+100, randi()%450+100)
+	if pos == Vector2.ZERO:
+		new_walky.global_position = Vector2(randi()%800+100, randi()%450+100)
+	else:
+		new_walky.global_position = pos
 	new_walky.stats.max_health = health
 	new_walky.stats.health = health
 	new_walky.set_damage(damage)
@@ -138,9 +167,21 @@ func offer_cards(num_cards):
 	var offer_scene = OfferScene.instance()
 	get_parent().get_node("CanvasLayer").call_deferred("add_child", offer_scene)
 	offer_scene.connect("add_card_to_discard", get_parent().get_node("CanvasLayer/Deck"), "add_card_to_discard")
-	offer_scene.connect("turn_taken", get_parent(), "take_next_turn")
+	offer_scene.connect("turn_taken", get_parent(), "start_next_wave")
+	offer_scene.connect("turn_taken", self, "start_next_wave")
 	get_parent().add_to_turn_order(offer_scene)
 
 
 func get_wave():
 	return wave_count
+
+
+func start_next_wave():
+	wave_started = true
+	self.wave_count += 1
+	spawn_enemies()
+	
+	if wave_count > 2:
+		enemy_health += 1
+		enemy_damage += 1
+

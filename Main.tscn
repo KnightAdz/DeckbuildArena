@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://Enemies/Walky.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Cards/Deck.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
@@ -226,8 +226,8 @@ remote_path = NodePath("../../Camera2D")
 [node name="Enemies" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
-[node name="Walky" parent="Enemies" instance=ExtResource( 1 )]
-position = Vector2( 337, 239 )
+[node name="BasicEnemy" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 297, 265 )
 
 [node name="DarknessTilemap" type="TileMap" parent="."]
 scale = Vector2( 4, 4 )
@@ -245,6 +245,44 @@ current = true
 [node name="OverviewCamera" type="Camera2D" parent="."]
 position = Vector2( 513, 351 )
 zoom = Vector2( 1.1, 1.1 )
+
+[node name="SpawnPositions" type="Node2D" parent="."]
+
+[node name="Position2D" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 129, 124 )
+
+[node name="Position2D2" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 879, 137 )
+
+[node name="Position2D3" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 129, 587 )
+
+[node name="Position2D4" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 897, 586 )
+
+[node name="Position2D5" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 893, 370 )
+
+[node name="Position2D6" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 131, 356 )
+
+[node name="Position2D7" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 521, 133 )
+
+[node name="Position2D8" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 525, 567 )
+
+[node name="Position2D9" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 319, 242 )
+
+[node name="Position2D10" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 746, 246 )
+
+[node name="Position2D11" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 762, 465 )
+
+[node name="Position2D12" type="Position2D" parent="SpawnPositions"]
+position = Vector2( 322, 468 )
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]

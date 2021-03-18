@@ -35,7 +35,7 @@ signal turn_taken()
 signal no_health(position)
 
 func _ready():
-	state = WANDER
+	state = IDLE
 	$AnimationPlayer.play("fly")
 	$Hitbox.deactivate()
 	self.connect("no_health", self.get_parent(), "on_enemy_death")

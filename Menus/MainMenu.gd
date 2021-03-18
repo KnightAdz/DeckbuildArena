@@ -22,7 +22,8 @@ func _on_StartGame_pressed():
 
 
 func _on_HowToPlay_pressed():
-	pass # Replace with function body.
+	get_tree().change_scene("res://Menus/HowToPlay.tscn")
+	self.queue_free()
 
 
 func _on_Credits_pressed():
