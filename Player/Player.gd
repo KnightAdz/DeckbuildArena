@@ -110,8 +110,9 @@ func move():
 	position.x += 100
 
 
-func attack(damage=1, ranged=false, area=false, knockback=1):
+func attack(damage=1, ranged=false, area=false, knockback=1, stun=false):
 	$AttackIndicator/Hitbox.damage = damage
+	$AttackIndicator/Hitbox.stun = stun
 	if ranged:
 		hit_range = RANGED_RANGE
 	else:
@@ -124,6 +125,7 @@ func attack(damage=1, ranged=false, area=false, knockback=1):
 		state = STATES.AIMING
 
 	self.knockback_strength = knockback
+
 
 func defend(defence_new=1):
 	self.defence += defence_new
@@ -138,6 +140,10 @@ func set_defence(value):
 
 func gain_movement(radius):
 	self.move_radius += radius
+
+
+func gain_health(value):
+	self.stats.health += value
 
 
 func set_move_radius(value):

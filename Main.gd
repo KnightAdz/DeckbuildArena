@@ -20,6 +20,13 @@ func _process(_delta):
 		take_next_turn()
 
 
+func _input(event):
+	if Input.is_action_pressed("ui_accept"):
+		show_overview()
+	else:
+		show_player_camera()
+
+
 func take_turn(idx):
 	turn_order[idx].take_turn()
 
@@ -82,3 +89,16 @@ func game_over():
 	$CanvasLayer/GameOverScreen.visible = true
 	var wave_num = $Enemies.get_wave()
 	$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
+
+
+func show_overview():
+	$Camera2D.current = false
+	$OverviewCamera.current = true
+	$CanvasLayer/Deck.lose_control()
+	
+
+
+func show_player_camera():
+	$Camera2D.current = true
+	$OverviewCamera.current = false
+	$CanvasLayer/Deck.gain_control()

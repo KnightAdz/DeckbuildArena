@@ -8,4 +8,8 @@ var available_cards =  ["res://Cards/Attack&draw1.tres",
 					"res://Cards/StrongDefend.tres",
 					"res://Cards/AreaAttack.tres",
 					"res://Cards/Draw3.tres",
-					"res://Cards/Knockback.tres"]
+					"res://Cards/Knockback.tres",
+					"res://Cards/HealthPotion.tres",
+					"res://Cards/DefencePotion.tres",
+					"res://Cards/StunAttack.tres",
+					"res://Cards/Sprint.tres"]

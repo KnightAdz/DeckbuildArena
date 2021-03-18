@@ -12,7 +12,8 @@ enum {
 	IDLE,
 	WANDER,
 	CHASE,
-	ATTACKING
+	ATTACKING,
+	STUNNED
 }
 
 var velocity = Vector2.ZERO
@@ -40,12 +41,16 @@ func _ready():
 
 
 func take_turn():
-	if player != null:
-		state = CHASE
+	if state == STUNNED:
+		state = IDLE
 	else:
-		state = WANDER
-		#state = pick_random_state([IDLE,WANDER])
-	update_wander()
+		# Take turn
+		if player != null:
+			state = CHASE
+		else:
+			state = WANDER
+			#state = pick_random_state([IDLE,WANDER])
+		update_wander()
 	emit_signal("turn_taken")
 
 
@@ -57,6 +62,7 @@ func _physics_process(delta):
 		IDLE:
 			$Label.text = "IDLE"
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
+			$AnimationPlayer.play("fly")
 			
 		WANDER:
 			$Label.text = "WANDER"
@@ -70,10 +76,13 @@ func _physics_process(delta):
 				accelerate_towards_point(player.global_position, delta)
 			else:
 				state = IDLE
+		
 		ATTACKING:
 			attack()
 			state = IDLE
-	
+		
+		STUNNED:
+			$AnimationPlayer.stop()
 #	if softCollision.is_colliding():
 #		velocity += softCollision.get_push_vector() * delta * 400
 	
@@ -107,6 +116,8 @@ func _on_Hurtbox_area_entered(area):
 	knockback_vector = area.damage_source.direction_to(self.global_position)
 	knockback_vector = knockback_vector.normalized()
 	knockback_vector *= 100*area.knockback_strength
+	if area.stun:
+		state = STUNNED
 	hurtbox.start_invincibility(0.4)
 	hurtbox.create_effect()
 

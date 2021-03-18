@@ -3,6 +3,7 @@ extends Area2D
 var knockback_vector = Vector2.LEFT
 var knockback_strength = 1
 export var damage = 1
+export var stun = false
 var damage_source = Vector2.ZERO
 export var active_time = 0.1
 

@@ -17,7 +17,7 @@ var loot_options = Globals.available_cards
 
 signal turn_taken()
 signal wave_changed(wave_number)
-
+signal number_enemies_changed(number)
 
 func _ready():
 	for _i in range(1):
@@ -62,20 +62,29 @@ func spawn_bat(health=1, damage=1):
 	new_bat.stats.health = health
 	new_bat.set_damage(damage)
 	new_bat.wanderController.reset_start_position()
+	count_enemies()
 
 
 func on_enemy_death(position):
 	# spawn some loot with random chance
 	var chance = 1
 	var decider = randi()%10 
-	#var num_alive_enemies = 0
-	#for c in self.get_children():
-	#	if c.is_in_group("enemy"):
-	#		num_alive_enemies += 1
+	
+	count_enemies()
 
 	if (decider <= chance):# or num_alive_enemies<=1:
 		spawn_loot(position)
 
+
+func count_enemies():
+	var num_alive_enemies = 0
+	var children = self.get_children()
+	for c in children:
+		if c.is_in_group("enemy"):
+			num_alive_enemies += 1
+	num_alive_enemies -= 1
+	emit_signal("number_enemies_changed", num_alive_enemies)
+	return num_alive_enemies
 
 func spawn_loot(position):
 	var new_loot = LootScene.instance()

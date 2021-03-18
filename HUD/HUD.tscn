@@ -39,3 +39,17 @@ margin_top = 13.0
 margin_right = 159.0
 margin_bottom = 27.0
 text = "1"
+
+[node name="Enemies" type="Label" parent="HBoxContainer"]
+margin_left = 163.0
+margin_top = 13.0
+margin_right = 256.0
+margin_bottom = 27.0
+text = "Enemies alive:"
+
+[node name="EnemyValue" type="Label" parent="HBoxContainer"]
+margin_left = 260.0
+margin_top = 13.0
+margin_right = 268.0
+margin_bottom = 27.0
+text = "1"

@@ -75,6 +75,7 @@ func set_state(new_state):
 					c.ignore_input = false
 			# Update button labels
 			update_button_labels()
+			enable_buttons()
 		TurnState.SELECT_TARGET:
 			$Turnstate.text = "Select target"
 			# Set cards in hand to ignore input
@@ -90,6 +91,7 @@ func set_state(new_state):
 			$Turnstate.text = "Wait"
 		TurnState.CHOOSE_DISCARD:
 			$Turnstate.text = "Choose a card to discard"
+			disable_buttons()
 
 
 func end_turn():	
@@ -211,7 +213,8 @@ func play_card():
 		player.attack(	stats.attack, 
 						stats.ranged_attack, 
 						stats.area_attack, 
-						stats.knockback)
+						stats.knockback,
+						stats.stun_enemy)
 	if stats.defence > 0:
 		player.defend(stats.defence)
 	if stats.movement > 0:
@@ -221,9 +224,14 @@ func play_card():
 	if stats.cards_to_discard > 0:
 		if len(hand) > 1:
 			self.turn_state = TurnState.CHOOSE_DISCARD
+	if stats.healing > 0:
+		player.gain_health(stats.healing)
 
 	# Remove from hand and add to discard pile
-	discard(selected_card)
+	if stats.destroy_after_use:
+		destroy_card(selected_card)
+	else:
+		discard(selected_card)
 	
 	# If no cards in hand, draw a new hand
 	#if len(hand) == 0:
@@ -314,9 +322,7 @@ func lose_control():
 		c.modulate = Color(1,1,1,0.2)
 		c.ignore_input = true
 		c.z_index = 0
-	$MovementButton.disabled = true
-	$AttackButton.disabled = true
-	$DefenceButton.disabled = true
+	disable_buttons()
 
 
 func gain_control():
@@ -324,9 +330,21 @@ func gain_control():
 	for c in hand:
 		c.modulate = Color(1,1,1,1)
 		c.ignore_input = false
+	enable_buttons()
+
+
+func disable_buttons():
+	$MovementButton.disabled = true
+	$AttackButton.disabled = true
+	$DefenceButton.disabled = true
+	$Button.disabled = true
+
+
+func enable_buttons():
 	$MovementButton.disabled = false
 	$AttackButton.disabled = false
 	$DefenceButton.disabled = false
+	$Button.disabled = false
 
 
 func update_button_labels():
@@ -334,3 +352,8 @@ func update_button_labels():
 	$MovementButton.text = str(num_cards) + " Movement"
 	$DefenceButton.text = str(num_cards) + " Defence"
 	$AttackButton.text = "1 Attack for " + str(num_cards) + " damage"
+	
+
+func destroy_card(card):
+	hand.remove(hand.find(card))
+	card.queue_free()
