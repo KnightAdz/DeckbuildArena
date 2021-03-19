@@ -20,6 +20,8 @@ var hand = []
 var discard_pile = []
 
 var hand_positions = null
+# Mouse clicks can select more then 1 card at once
+var clicked_cards = []
 var selected_card = null setget set_selected_card
 
 var focus_level = 3 setget set_focus_level
@@ -47,6 +49,11 @@ func _input(_event):
 
 
 func _process(_delta):
+	# Clear out clicked cards
+	for c in clicked_cards:
+		c.is_selected = false
+	clicked_cards = []
+	
 	match self.turn_state:
 		TurnState.FINISHED:
 			# Wait for characters to finish acting
@@ -111,7 +118,7 @@ func end_turn():
 	for c in discard_pile:
 		c.ignore_input = true
 
-	lose_control()	
+	lose_control()
 	self.turn_state = TurnState.FINISHED
 
 
@@ -198,7 +205,8 @@ func shuffle_discard_into_draw():
 
 
 func _on_card_selected(card):
-	self.selected_card = card # Invokes the setter function
+	self.clicked_cards.append(card)
+	self.selected_card = clicked_cards[0] # Invokes the setter function
 
 
 func play_card():
@@ -300,6 +308,7 @@ func add_card_to_discard(card):
 
 
 func set_selected_card(c):
+	#if different to previous
 	selected_card = c
 	if selected_card:
 		match self.turn_state:
@@ -357,3 +366,7 @@ func update_button_labels():
 func destroy_card(card):
 	hand.remove(hand.find(card))
 	card.queue_free()
+
+
+func _on_Enemies_wave_complete():
+	lose_control()

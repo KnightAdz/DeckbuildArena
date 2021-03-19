@@ -86,25 +86,27 @@ func _on_Player_health_changed(new_value):
 		
 
 func game_over():
-	#$CanvasLayer/GameOverScreen.visible = true
 	var wave_num = $Enemies.get_wave()
-	#$CanvasLayer/GameOverScreen.text = "Game Over!\nYou made it to wave " + str(wave_num)
 	get_tree().change_scene("res://Menus/GameOverMenu.tscn")
 	self.queue_free()
 
 
 func show_overview():
+	if $OverviewCamera.current:
+		return
 	$Camera2D.current = false
 	$OverviewCamera.current = true
 	$CanvasLayer/Deck.lose_control()
-	
 
 
 func show_player_camera():
+	if $Camera2D.current:
+		return
 	$Camera2D.current = true
 	$OverviewCamera.current = false
 	$CanvasLayer/Deck.gain_control()
 
 
 func start_next_wave():
-	take_turn(0)
+	turn_idx = 0
+	take_turn(turn_idx)

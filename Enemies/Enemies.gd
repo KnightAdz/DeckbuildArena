@@ -21,17 +21,14 @@ var loot_options = Globals.available_cards
 signal turn_taken()
 signal wave_changed(wave_number)
 signal number_enemies_changed(number)
+signal wave_complete()
 
 
 func _ready():
 	pass
 
 
-func take_turn():
-	if wave_started == false:
-		emit_signal("turn_taken")
-		return
-		
+func take_turn():		
 	turn_started = true
 		
 	for c in get_children():
@@ -41,8 +38,9 @@ func take_turn():
 	# If all enemies are killed, we've reached the end of the wave
 	if len(children) == 0:
 		wave_started = false
+		emit_signal("wave_complete")
 		offer_cards(3)
-		
+
 
 func spawn_enemies(): 
 	var placed_pos = []

@@ -291,3 +291,4 @@ position = Vector2( 322, 468 )
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
+[connection signal="wave_complete" from="Enemies" to="CanvasLayer/Deck" method="_on_Enemies_wave_complete"]

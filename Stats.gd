@@ -11,6 +11,8 @@ signal max_health_changed(value)
 func set_health(value):
 	health = value
 	emit_signal("health_changed", health)
+	if health > max_health:
+		health = max_health
 	if health <= 0:
 		emit_signal("no_health")
 
