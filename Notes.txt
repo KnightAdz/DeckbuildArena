@@ -16,3 +16,7 @@ tutorial
 fix 2 card selection bug
 health indicators
 Enemy info hover-overs
+
+enemy damage,
+fireball damage
+if char at top, cards at top - or prevent camera from scrolling too far

@@ -1,12 +1,12 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Enemies/WaveClass.gd" type="Script" id=1]
-[ext_resource path="res://Enemies/Wave1.tres" type="Resource" id=2]
+[ext_resource path="res://Enemies/Wave4.tres" type="Resource" id=2]
 
 [resource]
 script = ExtResource( 1 )
-enemies = [ 2 ]
-health_addition = 0
+enemies = [ 0, 1, 2, 0, 1, 2 ]
+health_addition = 1
 damage_addition = 0
 next_wave = ExtResource( 2 )
-wave_number = 0
+wave_number = 3

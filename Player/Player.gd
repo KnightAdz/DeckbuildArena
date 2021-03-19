@@ -28,6 +28,7 @@ var area_attack_degrees = 0
 var knockback_strength = 1
 
 var defence = 0 setget set_defence
+var defence_at_turn_start = 0
 
 signal health_changed(new_value)
 signal player_controls_mouse()
@@ -42,7 +43,7 @@ func _ready():
 func start_turn():
 	state = STATES.IDLE
 	move_radius = 0
-	self.defence = 0
+	defence_at_turn_start = self.defence
 
 
 func _process(delta):
@@ -200,3 +201,9 @@ func _on_Hurtbox_area_entered(area):
 	#knockback_vector = area.knockback_vector*100
 	hurtbox.start_invincibility(0.4)
 	hurtbox.create_effect()
+
+
+func _on_Deck_playing_first_card():
+	pass
+	#if defence > 0:
+		#self.defence = 0

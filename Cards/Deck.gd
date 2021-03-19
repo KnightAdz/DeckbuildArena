@@ -23,13 +23,14 @@ var hand_positions = null
 # Mouse clicks can select more then 1 card at once
 var clicked_cards = []
 var selected_card = null setget set_selected_card
+var last_card_played = null
+var cards_played_this_turn = 0
 
 var focus_level = 3 setget set_focus_level
 var focus = 3 setget set_focus
 
 signal card_played()
 signal turn_taken()
-
 
 func _ready():
 	#set_process(true)
@@ -51,7 +52,8 @@ func _input(_event):
 func _process(_delta):
 	# Clear out clicked cards
 	for c in clicked_cards:
-		c.is_selected = false
+		if c:
+			c.is_selected = false
 	clicked_cards = []
 	
 	match self.turn_state:
@@ -64,6 +66,7 @@ func _process(_delta):
 
 
 func take_turn():
+	cards_played_this_turn = 0
 	player.start_turn()
 	gain_control()
 	self.focus = self.focus_level
@@ -88,9 +91,9 @@ func set_state(new_state):
 			# Set cards in hand to ignore input
 			for c in hand:
 				c.ignore_input = true
-		TurnState.PLAY_CARD:
-			$Turnstate.text = "Play card"
-			play_card()
+		#TurnState.PLAY_CARD:
+		#	$Turnstate.text = "Play card"
+		#	play_card()
 		TurnState.FINISHED:
 			$Turnstate.text = "Finished"
 			$Button.visible = false
@@ -210,6 +213,11 @@ func _on_card_selected(card):
 
 
 func play_card():
+	# Prevent doubel playing when 2 cards are clicked at same time
+	if selected_card == last_card_played:
+		return 
+
+	cards_played_this_turn += 1
 	emit_signal("card_played")
 	var stats = selected_card.card_stats
 	self.focus -= stats.focus_cost
@@ -235,6 +243,8 @@ func play_card():
 	if stats.healing > 0:
 		player.gain_health(stats.healing)
 
+	last_card_played = selected_card
+	
 	# Remove from hand and add to discard pile
 	if stats.destroy_after_use:
 		destroy_card(selected_card)
@@ -364,6 +374,8 @@ func update_button_labels():
 	
 
 func destroy_card(card):
+	if clicked_cards.find(card) >= 0:
+		clicked_cards.remove(clicked_cards.find(card))
 	hand.remove(hand.find(card))
 	card.queue_free()
 

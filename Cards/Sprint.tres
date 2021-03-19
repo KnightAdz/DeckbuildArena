@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
-movement = 5
+movement = 4
 attack = 0
 defence = 0
 healing = 0
@@ -21,6 +21,6 @@ destroy_after_use = false
 one_use_per_wave = false
 needs_target = false
 image = ExtResource( 2 )
-text = "Gain 5 movement"
+text = "Gain 4 movement"
 name = "Sprint"
 colour = "GREEN"

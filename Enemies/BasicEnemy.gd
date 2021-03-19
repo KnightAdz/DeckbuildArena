@@ -160,7 +160,7 @@ func _on_PlayerDetectionZone_body_exited(body):
 
 func attack():
 	if player != null:
-		player.be_attacked(1)
+		player.be_attacked($Hitbox.damage)
 		#$Hitbox.activate()
 
 

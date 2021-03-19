@@ -19,12 +19,19 @@ func take_turn():
 			# Don't chase, just fire projectiles until killed
 			if projectile:
 				launch_projectile()
+				state = ATTACKING
 			else:
 				create_projectile()
 		else:
 			state = WANDER
 			#state = pick_random_state([IDLE,WANDER])
 		update_wander()
+	
+	if projectile:
+		if projectile.velocity != Vector2.ZERO:
+			# Wait for projectile to finish
+			return
+	
 	emit_signal("turn_taken")
 
 
@@ -42,3 +49,8 @@ func create_projectile():
 	new_projectile.global_position = global_position + pos
 	new_projectile.velocity = Vector2.ZERO
 	self.projectile = new_projectile
+
+
+func on_fireball_destroyed():
+	state = IDLE
+	emit_signal("turn_taken")

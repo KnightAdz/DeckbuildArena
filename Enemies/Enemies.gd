@@ -2,6 +2,7 @@ extends Node2D
 
 var BatScene = preload("res://Enemies/BasicEnemy.tscn")
 var WalkyScene = preload("res://Enemies/Walky.tscn")
+var MageScene = preload("res://Enemies/ProjectileEnemy.tscn")
 var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
@@ -15,6 +16,7 @@ var num_enemies = 3
 
 var wave_count = 1 setget set_wave_count
 var wave_started = true
+var next_wave_file = preload("res://Enemies/WaveT1.tres")
 
 var loot_options = Globals.available_cards
 
@@ -25,7 +27,7 @@ signal wave_complete()
 
 
 func _ready():
-	pass
+	load_wave_from_resource(next_wave_file)
 
 
 func take_turn():		
@@ -42,10 +44,11 @@ func take_turn():
 		offer_cards(3)
 
 
-func spawn_enemies(): 
+func spawn_random_enemies(): 
 	var placed_pos = []
 	placed_pos.append(player.global_position)
-	for _i in range(num_enemies+wave_count):
+	var enemies_to_spawn = min(num_enemies+wave_count,10)
+	for _i in range(enemies_to_spawn):
 		var safe_position = generate_position(placed_pos)
 		if safe_position == null:
 			break
@@ -54,11 +57,12 @@ func spawn_enemies():
 		elif wave_count == 3:
 			spawn_walky(1,1, safe_position)
 		else:
-			var rand = randi()%2
-			if rand:
-				spawn_bat(enemy_health, enemy_damage, safe_position)
-			else:
-				spawn_walky(enemy_health, enemy_damage, safe_position)
+			var enemy_scenes = [BatScene, WalkyScene, MageScene]
+			var rand = randi()%len(enemy_scenes)
+			spawn_enemy(enemy_scenes[rand], 
+						enemy_health, 
+						enemy_damage, 
+						safe_position)
 		placed_pos.append(safe_position)
 
 
@@ -116,6 +120,20 @@ func spawn_walky(health=1, damage=1, pos=Vector2.ZERO):
 	new_walky.stats.health = health
 	new_walky.set_damage(damage)
 	new_walky.wanderController.reset_start_position()
+	count_enemies()
+
+
+func spawn_enemy(scene, health=1, damage=1, pos=Vector2.ZERO):
+	var new_enemy = scene.instance()
+	self.add_child(new_enemy)
+	if pos == Vector2.ZERO:
+		new_enemy.global_position = Vector2(randi()%800+100, randi()%450+100)
+	else:
+		new_enemy.global_position = pos
+	new_enemy.stats.max_health = health
+	new_enemy.stats.health = health
+	new_enemy.set_damage(damage)
+	new_enemy.wanderController.reset_start_position()
 	count_enemies()
 
 
@@ -177,9 +195,33 @@ func get_wave():
 func start_next_wave():
 	wave_started = true
 	self.wave_count += 1
-	spawn_enemies()
+	load_wave_from_resource(next_wave_file)
 	
 	if wave_count > 2:
-		enemy_health += 1
-		enemy_damage += 1
+		if wave_count%2:
+			enemy_health += 1
+		else:
+			enemy_damage += 1
 
+
+func load_wave_from_resource(info):
+	if info == null:
+		spawn_random_enemies()
+		return
+	var h = 1 + info.health_addition
+	var d = 1 + info.damage_addition
+	for e in info.enemies:
+		match e:
+			info.EnemyTypes.BAT:
+				spawn_enemy(BatScene,h,d)
+			info.EnemyTypes.WALKY:
+				spawn_enemy(WalkyScene,h,d)
+			info.EnemyTypes.MAGE:
+				spawn_enemy(MageScene,h,d)
+	next_wave_file = info.next_wave
+	self.wave_count = info.wave_number
+
+
+func despawn_enemies():
+	for c in get_children():
+		c.queue_free()

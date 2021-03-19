@@ -29,3 +29,10 @@ func _on_HowToPlay_pressed():
 func _on_Credits_pressed():
 	get_tree().change_scene("res://Menus/Credits.tscn")
 	self.queue_free()
+
+
+func _on_StartTutorial_pressed():
+	var main_scene = load("res://Main.tscn").instance()
+	main_scene.load_tutorial()
+	get_tree().change_scene_to(main_scene)
+	self.queue_free()
