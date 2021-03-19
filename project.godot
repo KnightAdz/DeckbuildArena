@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "Deck",
 "language": "GDScript",
 "path": "res://Cards/Deck.gd"
+}, {
+"base": "Resource",
+"class": "Wave",
+"language": "GDScript",
+"path": "res://Enemies/WaveClass.gd"
 } ]
 _global_script_class_icons={
 "CardStats": "",
-"Deck": ""
+"Deck": "",
+"Wave": ""
 }
 
 [application]
