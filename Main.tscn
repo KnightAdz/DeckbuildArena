@@ -1,9 +1,10 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://PlayerCamera.gd" type="Script" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Cards/Deck.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Main.gd" type="Script" id=4]
+[ext_resource path="res://Dialogs/Tip.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Enemies/Enemies.gd" type="Script" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://World/0x72_16x16DungeonTileset.v4.png" type="Texture" id=8]
@@ -218,6 +219,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Tip" parent="CanvasLayer" instance=ExtResource( 5 )]
+
 [node name="DungeonTilemap" type="TileMap" parent="."]
 position = Vector2( 0, -41 )
 scale = Vector2( 4, 4 )
@@ -268,10 +271,12 @@ position = Vector2( 513, 351 )
 zoom = Vector2( 1.1, 1.1 )
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
-[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
+[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
 [connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
 [connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]
+[connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]
+[connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]

@@ -13,3 +13,8 @@ var available_cards =  ["res://Cards/Attack&draw1.tres",
 					"res://Cards/DefencePotion.tres",
 					"res://Cards/StunAttack.tres",
 					"res://Cards/Sprint.tres"]
+
+var completed_tutorial = false
+
+# Endgame stats
+var wave_number = 0

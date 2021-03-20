@@ -16,6 +16,8 @@ func _ready():
 	var to_offer = []
 	for _i in range(3):
 		var rand_select = randi()%len(loot_options)
+		while loot_options[rand_select] in to_offer:
+			rand_select = randi()%len(loot_options)
 		to_offer.append(loot_options[rand_select])
 	set_cards(to_offer)
 

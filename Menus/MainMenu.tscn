@@ -20,6 +20,7 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_bottom = -1.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -27,17 +28,17 @@ __meta__ = {
 
 [node name="Title" type="RichTextLabel" parent="VBoxContainer"]
 margin_right = 1024.0
-margin_bottom = 227.0
+margin_bottom = 105.0
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center]  Deck the Dungeon [/center]"
-text = "  Deck the Dungeon "
+bbcode_text = "[center] Deckbuild Arena [/center]"
+text = " Deckbuild Arena "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 231.0
+margin_top = 109.0
 margin_right = 1024.0
-margin_bottom = 251.0
+margin_bottom = 129.0
 alignment = 1
 
 [node name="StartGame" type="Button" parent="VBoxContainer/HBoxContainer"]
@@ -59,11 +60,24 @@ margin_bottom = 20.0
 text = "Credits"
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
-margin_top = 255.0
+margin_top = 133.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 489.0
 texture = ExtResource( 3 )
 stretch_mode = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+margin_top = 493.0
+margin_right = 1024.0
+margin_bottom = 599.0
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "[center] A game by KnightAdz.
+Made for Godot Wild Jam #31
+Using the wildcard \"U wot m8: Ignore the theme completely\" [/center]"
+text = " A game by KnightAdz.
+Made for Godot Wild Jam #31
+Using the wildcard \"U wot m8: Ignore the theme completely\" "
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/HowToPlay" to="." method="_on_HowToPlay_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Credits" to="." method="_on_Credits_pressed"]

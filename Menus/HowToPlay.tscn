@@ -53,7 +53,7 @@ text = "Aim of the game
 Survive for as long as you can against increasingly difficult waves of enemies, using cards to give you abilities to defeat your opponents. Collect cards to upgrade your deck and become ever stronger"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 339.0
+margin_top = 384.0
 margin_right = 1024.0
 margin_bottom = 572.0
 size_flags_horizontal = 3
@@ -65,7 +65,7 @@ __meta__ = {
 
 [node name="Green cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_right = 338.0
-margin_bottom = 233.0
+margin_bottom = 188.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
@@ -79,7 +79,7 @@ Grant movement which will increase your move radius. Click within the green area
 [node name="Red cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_left = 342.0
 margin_right = 681.0
-margin_bottom = 233.0
+margin_bottom = 188.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
@@ -93,7 +93,7 @@ Allow you to attack at varying ranges and levels of damage. Playing one of these
 [node name="Blue cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 233.0
+margin_bottom = 188.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )

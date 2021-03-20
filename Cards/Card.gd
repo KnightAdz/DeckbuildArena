@@ -30,7 +30,7 @@ func set_face_up(value):
 			$Icon.visible = true
 			$Label.visible = true
 			$Label2.visible = true
-			$CostLabel.visible = true
+			#$CostLabel.visible = true
 			$Focus2.visible = true
 			self.scale = Vector2(1,1)
 		else:
@@ -38,7 +38,7 @@ func set_face_up(value):
 			$Icon.visible = false
 			$Label.visible = false
 			$Label2.visible = false
-			$CostLabel.visible = false
+			#$CostLabel.visible = false
 			$Focus2.visible = false
 			self.scale = Vector2(0.5,0.5)
 

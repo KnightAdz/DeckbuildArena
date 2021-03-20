@@ -14,7 +14,8 @@ enum {
 	WANDER,
 	CHASE,
 	ATTACKING,
-	STUNNED
+	STUNNED,
+	WAITING
 }
 
 var velocity = Vector2.ZERO

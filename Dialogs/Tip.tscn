@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Dialogs/Tip.gd" type="Script" id=1]
+
+[node name="Tip" type="Control"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -60.0
+margin_bottom = 51.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -434.0
+margin_top = 50.0
+margin_bottom = 142.0
+window_title = "Tip"
+dialog_text = "Once bats spot you, on their turn they will fly close and bite you. Luckily they don't have a great memory so if you can get far enough away they may forget you"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptDialog4" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -434.0
+margin_top = 50.0
+margin_bottom = 142.0
+window_title = "Tip"
+dialog_text = "Press space bar to zoom out and get a view of the whole arena"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptDialog2" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -434.0
+margin_top = 50.0
+margin_bottom = 142.0
+window_title = "Tip"
+dialog_text = "Walkies always know where you are and will advance towards you on their turn. Luckily, they can't move very far in one go."
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AcceptDialog3" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -434.0
+margin_top = 50.0
+margin_bottom = 142.0
+window_title = "Tip"
+dialog_text = "If a Mage spots you it will start a fireball spell on its turn, and then launch it at you on the turn after that. Once you have been spotted, the mage will keep attacking until one of you is dead."
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

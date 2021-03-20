@@ -7,6 +7,8 @@ onready var turn_order = [$CanvasLayer/Deck, $Enemies]
 var turn_idx = 0
 var ready_for_next_turn = true
 
+var tutorial_hidden = false
+
 # Start with the 1st wave as default
 var starting_wave = preload("res://Enemies/Wave1.tres")
 var tutorial_wave = preload("res://Enemies/WaveT1.tres")
@@ -14,6 +16,11 @@ var tutorial_wave = preload("res://Enemies/WaveT1.tres")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	if Globals.completed_tutorial:
+		$Enemies.despawn_enemies()
+		$Enemies.load_wave_from_resource(starting_wave)
+	else:
+		$CanvasLayer/Tip/AcceptDialog.visible = true
 	take_turn(turn_idx)
 
 
@@ -118,4 +125,15 @@ func start_next_wave():
 func _on_SkipTutorialButton_pressed():
 	$Enemies.despawn_enemies()
 	$Enemies.load_wave_from_resource(starting_wave)
+#	hide_tutorial()
+
+
+func _on_Enemies_completed_tutorial():
+	hide_tutorial()
+
+
+func hide_tutorial():
+	if tutorial_hidden:
+		return
 	$CanvasLayer/SkipTutorialButton.queue_free()
+	$CanvasLayer/Tip.queue_free()

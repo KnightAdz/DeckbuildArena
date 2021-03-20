@@ -8,12 +8,10 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	$VBoxContainer/Stats.bbcode_text = "[center]"
+	$VBoxContainer/Stats.bbcode_text += "You reached Wave number " + str(Globals.wave_number) + "!"
+	$VBoxContainer/Stats.bbcode_text += "\nCan you beat that next time?"
+	$VBoxContainer/Stats.bbcode_text += "[/center]"
 
 
 func _on_TryAgainButton_pressed():

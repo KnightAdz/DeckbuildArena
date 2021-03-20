@@ -19,7 +19,7 @@ func take_turn():
 			# Don't chase, just fire projectiles until killed
 			if projectile:
 				launch_projectile()
-				state = ATTACKING
+				state = WAITING
 			else:
 				create_projectile()
 		else:
@@ -27,12 +27,16 @@ func take_turn():
 			#state = pick_random_state([IDLE,WANDER])
 		update_wander()
 	
-	if projectile:
-		if projectile.velocity != Vector2.ZERO:
-			# Wait for projectile to finish
-			return
+	if state == WAITING:
+		# Wait for projectile to finish
+		return
 	
 	emit_signal("turn_taken")
+
+
+func _on_PlayerDetectionZone_body_exited(body):
+	# override parent function so that we don't forget player
+	pass
 
 
 func launch_projectile():

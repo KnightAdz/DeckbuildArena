@@ -37,11 +37,13 @@ signal player_releases_mouse()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	radius_size = $MoveRadius/CollisionShape2D.shape.radius
+	self.defence = 1
 	update_attack_indicator()
 
 
 func start_turn():
 	state = STATES.IDLE
+	self.defence = 0
 	move_radius = 0
 	defence_at_turn_start = self.defence
 

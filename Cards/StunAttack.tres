@@ -21,6 +21,6 @@ destroy_after_use = false
 one_use_per_wave = false
 needs_target = false
 image = ExtResource( 2 )
-text = "Attack for 1 damage and stun the enemy"
+text = "Attack for 1 damage at short range and stun the enemy"
 name = "Stun Attack"
 colour = "RED"

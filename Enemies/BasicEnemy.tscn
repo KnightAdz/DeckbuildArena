@@ -38,7 +38,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="CircleShape2D" id=6]
-radius = 199.304
+radius = 264.002
 
 [node name="BasicEnemy" type="KinematicBody2D" groups=[
 "enemy",

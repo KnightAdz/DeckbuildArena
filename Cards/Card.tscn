@@ -63,6 +63,7 @@ __meta__ = {
 }
 
 [node name="CostLabel" type="Label" parent="."]
+visible = false
 modulate = Color( 1, 1, 1, 0.792157 )
 margin_left = -76.0
 margin_top = -151.0

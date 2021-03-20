@@ -10,8 +10,9 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres")]
-var card_counts = [2,2,2] #2,2,2
+						preload("res://Cards/BasicMovement.tres"),
+						preload("res://Cards/HealthPotion.tres")]
+var card_counts = [2,2,2,1] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -202,6 +203,7 @@ func shuffle_discard_into_draw():
 		draw_pile.append(d)
 	draw_pile.shuffle()
 	discard_pile = []
+	last_card_played = null
 	$Label.text = str(len(discard_pile))
 
 

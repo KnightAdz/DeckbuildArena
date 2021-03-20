@@ -24,6 +24,8 @@ signal turn_taken()
 signal wave_changed(wave_number)
 signal number_enemies_changed(number)
 signal wave_complete()
+signal completed_tutorial()
+signal advance_tutorial()
 
 
 func _ready():
@@ -87,8 +89,9 @@ func _process(delta):
 	
 	var all_enemies_done = true
 	for e in self.get_children():
-		if e.state != 0:
-			all_enemies_done = false
+		if e.is_in_group("enemy"):
+			if e.state != 0:
+				all_enemies_done = false
 	
 	if all_enemies_done:
 		turn_started = false
@@ -170,6 +173,7 @@ func spawn_loot(position):
 
 func set_wave_count(value):
 	wave_count = value
+	Globals.wave_number = value
 	emit_signal("wave_changed", wave_count)
 
 
@@ -220,6 +224,11 @@ func load_wave_from_resource(info):
 				spawn_enemy(MageScene,h,d)
 	next_wave_file = info.next_wave
 	self.wave_count = info.wave_number
+	if wave_count == 0:
+		emit_signal("advance_tutorial")
+	if wave_count == 1:
+		Globals.completed_tutorial = true
+		emit_signal("completed_tutorial")
 
 
 func despawn_enemies():

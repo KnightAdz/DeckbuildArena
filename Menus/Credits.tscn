@@ -33,8 +33,12 @@ margin_bottom = 284.0
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center] A game by KnightAdz [/center]"
-text = " A game by KnightAdz "
+bbcode_text = "[center] A game by KnightAdz.
+Made for Godot Wild Jam #31
+Using the wildcard \"U wot m8: Ignore the theme completely\" [/center]"
+text = " A game by KnightAdz.
+Made for Godot Wild Jam #31
+Using the wildcard \"U wot m8: Ignore the theme completely\" "
 
 [node name="GameBy2" type="RichTextLabel" parent="VBoxContainer"]
 margin_top = 288.0
@@ -47,6 +51,7 @@ bbcode_text = "[center]
 Assets:
 Bat, deatheffect, hiteffect from Heartbeast
 0x72_16x16DungeonTilesfrom 0x72
+Exclamation mark from Kenney
 Rest by KnightAdz
 
 Font: m5x7 by Daniel Linssen[/center]
@@ -58,6 +63,7 @@ text = "
 Assets:
 Bat, deatheffect, hiteffect from Heartbeast
 0x72_16x16DungeonTilesfrom 0x72
+Exclamation mark from Kenney
 Rest by KnightAdz
 
 Font: m5x7 by Daniel Linssen
@@ -65,6 +71,7 @@ Font: m5x7 by Daniel Linssen
 
 
 "
+scroll_active = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 576.0
