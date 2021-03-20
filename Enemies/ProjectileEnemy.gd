@@ -43,7 +43,7 @@ func launch_projectile():
 func create_projectile():
 	var new_projectile = ProjectileScene.instance()
 	self.add_child(new_projectile)
-	var dist = 40
+	var dist = 20
 	var pos = global_position.direction_to(player.global_position)
 	pos = pos.normalized()*dist
 	new_projectile.global_position = global_position + pos

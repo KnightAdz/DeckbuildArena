@@ -10,10 +10,8 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/RangedAttack.tres"),
-						preload("res://Cards/Knockback.tres")]
-var card_counts = [2,2,2,2,2] #2,2,2
+						preload("res://Cards/BasicMovement.tres")]
+var card_counts = [2,2,2] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -91,9 +89,9 @@ func set_state(new_state):
 			# Set cards in hand to ignore input
 			for c in hand:
 				c.ignore_input = true
-		#TurnState.PLAY_CARD:
-		#	$Turnstate.text = "Play card"
-		#	play_card()
+		TurnState.PLAY_CARD:
+			$Turnstate.text = "Play card"
+			play_card()
 		TurnState.FINISHED:
 			$Turnstate.text = "Finished"
 			$Button.visible = false
@@ -207,16 +205,7 @@ func shuffle_discard_into_draw():
 	$Label.text = str(len(discard_pile))
 
 
-func _on_card_selected(card):
-	self.clicked_cards.append(card)
-	self.selected_card = clicked_cards[0] # Invokes the setter function
-
-
 func play_card():
-	# Prevent doubel playing when 2 cards are clicked at same time
-	if selected_card == last_card_played:
-		return 
-
 	cards_played_this_turn += 1
 	emit_signal("card_played")
 	var stats = selected_card.card_stats
@@ -242,8 +231,6 @@ func play_card():
 			self.turn_state = TurnState.CHOOSE_DISCARD
 	if stats.healing > 0:
 		player.gain_health(stats.healing)
-
-	last_card_played = selected_card
 	
 	# Remove from hand and add to discard pile
 	if stats.destroy_after_use:
@@ -317,17 +304,35 @@ func add_card_to_discard(card):
 	discard(card)
 
 
+func _on_card_selected(card):
+	self.clicked_cards.append(card)
+	if card != clicked_cards[0]:
+		card.deselect_card()
+	else:
+		self.selected_card = clicked_cards[0] # Invokes the setter function
+
+
+
 func set_selected_card(c):
+	# Prevent double playing when 2 cards are clicked at same time
+	if c == last_card_played:
+		TurnState.SELECT_CARD
+		selected_card = null
+		clicked_cards = []
+		#last_card_played = null
+		return 
+	
 	#if different to previous
 	selected_card = c
+	last_card_played = selected_card
 	if selected_card:
 		match self.turn_state:
 			TurnState.SELECT_CARD:
 				if selected_card.card_stats.needs_target:
 					self.turn_state = TurnState.SELECT_TARGET #needs target
 				else:
-					turn_state = TurnState.PLAY_CARD
-					play_card()
+					self.turn_state = TurnState.PLAY_CARD
+					#play_card()
 
 			TurnState.CHOOSE_DISCARD:
 				discard(selected_card)

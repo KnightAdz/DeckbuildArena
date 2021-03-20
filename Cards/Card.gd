@@ -96,3 +96,9 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if ignore_input == false:
 		if event.is_action_released("click"):
 			select_card()
+
+
+func deselect_card():
+	self.target_position = self.global_position + Vector2(0,+20)
+	self.scale = Vector2(1,1)
+	is_selected = false
