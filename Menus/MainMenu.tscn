@@ -72,12 +72,8 @@ margin_right = 1024.0
 margin_bottom = 599.0
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "[center] A game by KnightAdz.
-Made for Godot Wild Jam #31
-Using the wildcard \"U wot m8: Ignore the theme completely\" [/center]"
-text = " A game by KnightAdz.
-Made for Godot Wild Jam #31
-Using the wildcard \"U wot m8: Ignore the theme completely\" "
+bbcode_text = "[center] A game by KnightAdz [/center]"
+text = " A game by KnightAdz "
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/HowToPlay" to="." method="_on_HowToPlay_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Credits" to="." method="_on_Credits_pressed"]
