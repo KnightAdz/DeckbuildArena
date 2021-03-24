@@ -25,6 +25,10 @@ var selected_card = null setget set_selected_card
 var last_card_played = null
 var cards_played_this_turn = 0
 
+var hovered_cards = []
+var highlighted_card = null setget set_highlighted_card
+var last_card_highlighted = null
+
 var focus_level = 3 setget set_focus_level
 var focus = 3 setget set_focus
 
@@ -53,6 +57,7 @@ func _process(_delta):
 	for c in clicked_cards:
 		if c:
 			c.is_selected = false
+			unpreview_card_effects()
 	clicked_cards = []
 	
 	match self.turn_state:
@@ -132,8 +137,8 @@ func add_card_to_deck(card_resource):
 	card.is_face_up = true
 	card.is_face_up = false
 	card.connect("card_selected", self, "_on_card_selected")
-	card.connect("card_highlighted", self, "preview_card_effects")
-	card.connect("card_unhighlighted", self, "unpreview_card_effects")
+	card.connect("card_highlighted", self, "_on_card_hovered")
+	card.connect("card_unhighlighted", self, "_on_card_unhovered")
 #	
 #	for a in card.card_stats.actions:
 #		a.connect("draw_x_cards", self, "draw_x_cards")
@@ -207,6 +212,7 @@ func shuffle_discard_into_draw():
 	draw_pile.shuffle()
 	discard_pile = []
 	last_card_played = null
+	last_card_highlighted = null
 	$Label.text = str(len(discard_pile))
 
 
@@ -215,24 +221,23 @@ func send_card_data_to_player(card, undo=false):
 	if undo:
 		modifier = -1
 	
+
+
+func preview_card_effects(card):
 	var stats = card.card_stats
 	if stats.defence > 0:
-		player.defend(stats.defence * modifier)
+		player.defence_preview += stats.defence
 	if stats.movement > 0:
-		player.gain_movement(stats.movement * modifier)
+		player.move_preview += stats.movement
 
 
-# Connected to card highlighted signal
-func preview_card_effects(card):
-	send_card_data_to_player(card)
-
-
-# Connected to card unhighlighted signal
-func unpreview_card_effects(card):
-	send_card_data_to_player(card, true)
+func unpreview_card_effects():
+	player.reset_preview()
 
 
 func play_card():
+	last_card_highlighted = null
+	hovered_cards = []
 	cards_played_this_turn += 1
 	emit_signal("card_played")
 	var stats = selected_card.card_stats
@@ -248,10 +253,10 @@ func play_card():
 						stats.knockback,
 						stats.stun_enemy)
 	# Defence and Movement already passed through the preview
-#	if stats.defence > 0:
-#		player.defend(stats.defence)
-#	if stats.movement > 0:
-#		player.gain_movement(stats.movement)
+	if stats.defence > 0:
+		player.defend(stats.defence)
+	if stats.movement > 0:
+		player.gain_movement(stats.movement)
 	if stats.cards_to_draw > 0:
 		draw_x_cards(stats.cards_to_draw)
 	if stats.cards_to_discard > 0:
@@ -340,7 +345,6 @@ func _on_card_selected(card):
 		self.selected_card = clicked_cards[0] # Invokes the setter function
 
 
-
 func set_selected_card(c):
 	# Prevent double playing when 2 cards are clicked at same time
 	if c == last_card_played:
@@ -366,6 +370,41 @@ func set_selected_card(c):
 				discard(selected_card)
 				selected_card = null
 				self.turn_state = TurnState.SELECT_CARD
+
+
+func set_highlighted_card(c):
+	# Prevent double highlighting when 2 cards are hovered at same time
+	if c == last_card_highlighted:
+		highlighted_card = null
+		clicked_cards = []
+		return 
+	#if different to previous and not null
+	if c != null:
+		highlighted_card = c
+		last_card_highlighted = highlighted_card
+		last_card_highlighted.highlight_card(true)
+		preview_card_effects(highlighted_card)
+	else:
+		unpreview_card_effects()
+
+
+func _on_card_hovered(card):
+	unpreview_card_effects()
+	self.hovered_cards.append(card)
+	if card == hovered_cards[0]:
+		self.highlighted_card = hovered_cards[0] # Invokes the setter function
+
+
+func _on_card_unhovered(card):
+	if highlighted_card == card:
+		unpreview_card_effects()
+		if hovered_cards.find(card) >= 0:
+			hovered_cards.remove(hovered_cards.find(card))
+		if len(hovered_cards) > 0:
+			self.highlighted_card = self.hovered_cards[0]
+			self.hovered_cards = []
+		else:
+			self.last_card_highlighted = null
 
 
 func lose_control():

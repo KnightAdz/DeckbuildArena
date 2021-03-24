@@ -73,14 +73,20 @@ func set_target_position(pos):
 func _on_Area2D_mouse_entered():
 	if is_face_up and !ignore_input:
 		emit_signal("card_highlighted", self)
-		$Highlight.visible = true
-		self.z_index = 1
-		toggle_tool_tips(true)
-
+		
 
 func _on_Area2D_mouse_exited():
 	if is_face_up and !ignore_input:
 		emit_signal("card_unhighlighted", self)
+		highlight_card(false)
+
+
+func highlight_card(bool_value):
+	if bool_value:
+		$Highlight.visible = true
+		self.z_index = 1
+		toggle_tool_tips(true)
+	else:
 		$Highlight.visible = false
 		self.z_index = 0
 		toggle_tool_tips(false)

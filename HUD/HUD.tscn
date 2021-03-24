@@ -26,30 +26,44 @@ margin_top = 13.0
 margin_right = 50.0
 margin_bottom = 27.0
 
-[node name="Wave" type="Label" parent="HBoxContainer"]
+[node name="Out of " type="Label" parent="HBoxContainer"]
 margin_left = 54.0
 margin_top = 13.0
-margin_right = 147.0
+margin_right = 59.0
+margin_bottom = 27.0
+text = "/"
+
+[node name="MaxHealth" type="Label" parent="HBoxContainer"]
+margin_left = 63.0
+margin_top = 13.0
+margin_right = 71.0
+margin_bottom = 27.0
+text = "5"
+
+[node name="Wave" type="Label" parent="HBoxContainer"]
+margin_left = 75.0
+margin_top = 13.0
+margin_right = 168.0
 margin_bottom = 27.0
 text = "Wave number:"
 
 [node name="WaveValue" type="Label" parent="HBoxContainer"]
-margin_left = 151.0
+margin_left = 172.0
 margin_top = 13.0
-margin_right = 159.0
+margin_right = 180.0
 margin_bottom = 27.0
 text = "1"
 
 [node name="Enemies" type="Label" parent="HBoxContainer"]
-margin_left = 163.0
+margin_left = 184.0
 margin_top = 13.0
-margin_right = 256.0
+margin_right = 277.0
 margin_bottom = 27.0
 text = "Enemies alive:"
 
 [node name="EnemyValue" type="Label" parent="HBoxContainer"]
-margin_left = 260.0
+margin_left = 281.0
 margin_top = 13.0
-margin_right = 268.0
+margin_right = 289.0
 margin_bottom = 27.0
 text = "1"

@@ -7,6 +7,8 @@ func _ready():
 	
 
 func update_value(new_value):
+	if $Label.text == "0" and new_value == 0:
+		return
 	if new_value <= 0:
 		if self.visible == true:
 			pop_out()

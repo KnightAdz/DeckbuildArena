@@ -18,6 +18,7 @@ var target_position = null
 var TARGET_RANGE = 5
 
 var move_radius = 0 setget set_move_radius
+var move_preview = 0 setget set_move_preview
 var radius_size = 50
 
 var hit_direction = Vector2.RIGHT
@@ -28,6 +29,7 @@ var area_attack_degrees = 0
 var knockback_strength = 1
 
 var defence = 0 setget set_defence
+var defence_preview = 0 setget set_defence_preview
 var defence_at_turn_start = 0
 
 signal health_changed(new_value)
@@ -139,6 +141,8 @@ func defend(defence_new=1):
 func set_defence(value):
 	defence = value
 	$ShieldIcon.update_value(defence)
+	if defence < 0:
+		defence = 0
 
 
 func gain_movement(radius):
@@ -153,7 +157,8 @@ func set_move_radius(value):
 	move_radius = value
 	if move_radius > 0:
 		$MoveRadius/CollisionShape2D.shape.radius = move_radius*radius_size
-
+	else:
+		move_radius = 0
 
 #func toggle_movement(value):
 #	$MoveRadius.pickable = value
@@ -213,3 +218,20 @@ func _on_Deck_playing_first_card():
 	pass
 	#if defence > 0:
 		#self.defence = 0
+
+
+func set_defence_preview(value):
+	defence_preview = value
+	self.defence += defence_preview
+	
+
+func set_move_preview(value):
+	move_preview = value
+	self.move_radius += move_preview
+
+
+func reset_preview():
+	self.move_radius -= move_preview
+	self.defence -= defence_preview
+	self.move_preview = 0
+	self.defence_preview = 0
