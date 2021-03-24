@@ -132,6 +132,9 @@ func add_card_to_deck(card_resource):
 	card.is_face_up = true
 	card.is_face_up = false
 	card.connect("card_selected", self, "_on_card_selected")
+	card.connect("card_highlighted", self, "preview_card_effects")
+	card.connect("card_unhighlighted", self, "unpreview_card_effects")
+#	
 #	for a in card.card_stats.actions:
 #		a.connect("draw_x_cards", self, "draw_x_cards")
  
@@ -207,6 +210,28 @@ func shuffle_discard_into_draw():
 	$Label.text = str(len(discard_pile))
 
 
+func send_card_data_to_player(card, undo=false):
+	var modifier = 1
+	if undo:
+		modifier = -1
+	
+	var stats = card.card_stats
+	if stats.defence > 0:
+		player.defend(stats.defence * modifier)
+	if stats.movement > 0:
+		player.gain_movement(stats.movement * modifier)
+
+
+# Connected to card highlighted signal
+func preview_card_effects(card):
+	send_card_data_to_player(card)
+
+
+# Connected to card unhighlighted signal
+func unpreview_card_effects(card):
+	send_card_data_to_player(card, true)
+
+
 func play_card():
 	cards_played_this_turn += 1
 	emit_signal("card_played")
@@ -222,10 +247,11 @@ func play_card():
 						stats.area_attack, 
 						stats.knockback,
 						stats.stun_enemy)
-	if stats.defence > 0:
-		player.defend(stats.defence)
-	if stats.movement > 0:
-		player.gain_movement(stats.movement)
+	# Defence and Movement already passed through the preview
+#	if stats.defence > 0:
+#		player.defend(stats.defence)
+#	if stats.movement > 0:
+#		player.gain_movement(stats.movement)
 	if stats.cards_to_draw > 0:
 		draw_x_cards(stats.cards_to_draw)
 	if stats.cards_to_discard > 0:

@@ -155,6 +155,10 @@ func set_move_radius(value):
 		$MoveRadius/CollisionShape2D.shape.radius = move_radius*radius_size
 
 
+#func toggle_movement(value):
+#	$MoveRadius.pickable = value
+
+
 func _draw():
 	if move_radius > 0:
 		draw_circle($MoveRadius.position, 

@@ -10,7 +10,8 @@ var is_selected = false
 var ignore_input = true
 
 signal card_selected(card)
-
+signal card_highlighted(card)
+signal card_unhighlighted(card)
 
 func _ready():
 	self.card_stats = card_type
@@ -71,14 +72,18 @@ func set_target_position(pos):
 
 func _on_Area2D_mouse_entered():
 	if is_face_up and !ignore_input:
+		emit_signal("card_highlighted", self)
 		$Highlight.visible = true
 		self.z_index = 1
+		toggle_tool_tips(true)
 
 
 func _on_Area2D_mouse_exited():
 	if is_face_up and !ignore_input:
+		emit_signal("card_unhighlighted", self)
 		$Highlight.visible = false
 		self.z_index = 0
+		toggle_tool_tips(false)
 
 
 func select_card():
@@ -102,3 +107,10 @@ func deselect_card():
 	self.target_position = self.global_position + Vector2(0,+20)
 	self.scale = Vector2(1,1)
 	is_selected = false
+	
+
+func toggle_tool_tips(value):
+	if value:
+		pass
+	else:
+		pass
