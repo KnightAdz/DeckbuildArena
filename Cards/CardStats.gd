@@ -21,6 +21,9 @@ export(bool) var destroy_after_use = false
 export(bool) var one_use_per_wave = false
 export(bool) var needs_target = false
 
+# Action order, only needed if multiple effects
+export(Array, Resource) var actions = []
+
 export(Texture) var image
 export(String) var text
 export(String) var name

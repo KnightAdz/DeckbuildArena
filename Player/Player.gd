@@ -32,6 +32,10 @@ var defence = 0 setget set_defence
 var defence_preview = 0 setget set_defence_preview
 var defence_at_turn_start = 0
 
+
+var action_queue = []
+
+
 signal health_changed(new_value)
 signal player_controls_mouse()
 signal player_releases_mouse()
@@ -58,6 +62,8 @@ func _process(delta):
 			$AnimationPlayer.play("Idle")
 			$AttackIndicator.visible = false
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
+			if action_queue != []:
+				do_next_action_from_queue()
 			
 		STATES.MOVING:
 			if target_position != null:
@@ -235,3 +241,43 @@ func reset_preview():
 	self.defence -= defence_preview
 	self.move_preview = 0
 	self.defence_preview = 0
+
+
+func queue_actions(actions):
+	for a in actions:
+		action_queue.append(a)
+	do_next_action_from_queue()
+
+
+func do_next_action_from_queue():
+	if action_queue == []:
+		return
+	var a = action_queue[0]
+	action_queue.remove(0)
+	match a.type:
+		a.ActionType.SHORT_ATTACK:
+			attack(	a.attack, 
+					false,#ranged
+					false,#area
+					a.knockback,
+					a.stun_enemy)
+					
+		a.ActionType.DEFEND:
+			defend(a.defence)
+			
+		a.ActionType.MOVE:
+			gain_movement(a.movement)
+		
+		a.ActionType.RANGED_ATTACK:
+			attack(	a.attack, 
+					true,#ranged
+					false,#area
+					a.knockback,
+					a.stun_enemy)
+		
+		a.ActionType.AREA_ATTACK:
+			attack(	a.attack, 
+					false,#ranged
+					true,#area
+					a.knockback,
+					a.stun_enemy)

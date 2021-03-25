@@ -11,7 +11,7 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/HealthPotion.tres")]
+						preload("res://Cards/Attack&move.tres")]
 var card_counts = [2,2,2,1] #2,2,2
 
 var draw_pile = []
@@ -246,17 +246,24 @@ func play_card():
 	# Default next state will be select card but some cards may change this
 	self.turn_state = TurnState.SELECT_CARD
 
-	if stats.attack > 0:
-		player.attack(	stats.attack, 
-						stats.ranged_attack, 
-						stats.area_attack, 
-						stats.knockback,
-						stats.stun_enemy)
-	# Defence and Movement already passed through the preview
-	if stats.defence > 0:
-		player.defend(stats.defence)
-	if stats.movement > 0:
-		player.gain_movement(stats.movement)
+
+	# if the card has a player actions list
+	if stats.actions != []:
+		player.queue_actions(stats.actions)
+	else:
+		if stats.attack > 0:
+			player.attack(	stats.attack, 
+							stats.ranged_attack, 
+							stats.area_attack, 
+							stats.knockback,
+							stats.stun_enemy)
+		# Defence and Movement already passed through the preview
+		if stats.defence > 0:
+			player.defend(stats.defence)
+		if stats.movement > 0:
+			player.gain_movement(stats.movement)
+	
+	# Activate deck actions
 	if stats.cards_to_draw > 0:
 		draw_x_cards(stats.cards_to_draw)
 	if stats.cards_to_discard > 0:
