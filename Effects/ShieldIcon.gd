@@ -1,5 +1,6 @@
 extends Node2D
 
+var current_value = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -7,8 +8,9 @@ func _ready():
 	
 
 func update_value(new_value):
-	if $Label.text == "0" and new_value == 0:
+	if current_value == new_value:
 		return
+	current_value = new_value
 	if new_value <= 0:
 		if self.visible == true:
 			pop_out()

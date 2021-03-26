@@ -10,9 +10,9 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/Attack&move.tres")]
-var card_counts = [2,2,2,1] #2,2,2
+						preload("res://Cards/BasicMovement.tres")
+						]
+var card_counts = [2,2,2,2] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -204,6 +204,26 @@ func reposition_hand_cards():
 		hand[i].rotation = angle
 
 
+func reposition_hand_card(card):
+	var num_cards_in_hand = len(hand)
+	if num_cards_in_hand == 0:
+		return
+	var hand_spacing = floor(len(hand_positions)*0.5)
+	if num_cards_in_hand > 1:
+		hand_spacing = len(hand_positions)/(num_cards_in_hand-1)
+	
+	var idx = hand.find(card)
+	if idx >= 0:
+		var spacing = idx*hand_spacing
+		if spacing >= len(hand_positions)-1:
+			spacing = len(hand_positions)-2 # minus 2 to allow rotation calcs later
+		# Set position
+		hand[idx].target_position = self.position + hand_positions[spacing]
+		# Set rotation
+		var angle = hand_positions[spacing+1].angle_to_point(hand_positions[spacing])
+		hand[idx].rotation = angle
+
+
 func shuffle_discard_into_draw():
 	for d in discard_pile:
 		d.target_position = $DrawPile.global_position
@@ -229,6 +249,12 @@ func preview_card_effects(card):
 		player.defence_preview += stats.defence
 	if stats.movement > 0:
 		player.move_preview += stats.movement
+	if stats.attack > 0:
+		player.set_attack_attribs(stats.attack, 
+								stats.ranged_attack, 
+								stats.area_attack, 
+								stats.knockback,
+								stats.stun_enemy)
 
 
 func unpreview_card_effects():
@@ -341,6 +367,8 @@ func _on_DefenceButton_pressed():
 func add_card_to_discard(card):
 	self.add_child(card)
 	card.connect("card_selected", self, "_on_card_selected")
+	card.connect("card_highlighted", self, "_on_card_hovered")
+	card.connect("card_unhighlighted", self, "_on_card_unhovered")
 	discard(card)
 
 
@@ -461,3 +489,34 @@ func destroy_card(card):
 
 func _on_Enemies_wave_complete():
 	lose_control()
+
+
+func save_state():
+	pass
+	
+
+func _on_MovementButton_mouse_entered():
+	var movement = len(hand)
+	player.move_preview += movement
+	
+
+func _on_MovementButton_mouse_exited():
+	player.reset_preview()
+
+
+func _on_AttackButton_mouse_entered():
+	var damage = len(hand)
+	player.set_attack_attribs(damage)
+
+
+func _on_DefenceButton_mouse_entered():
+	var defence = len(hand)
+	player.defence_preview += defence
+	
+
+func _on_DefenceButton_mouse_exited():
+	player.reset_preview()
+
+
+func _on_AttackButton_mouse_exited():
+	player.reset_preview()

@@ -17,15 +17,18 @@ var velocity = Vector2.ZERO
 var target_position = null
 var TARGET_RANGE = 5
 
+# Movement
 var move_radius = 0 setget set_move_radius
 var move_preview = 0 setget set_move_preview
 var radius_size = 50
 
+# Attack
+var attack_preview_visible = false
 var hit_direction = Vector2.RIGHT
 var MELEE_RANGE = 30
-var RANGED_RANGE = 150
+var RANGED_RANGE = 500
+var AREA_RANGE = 5
 var hit_range = 30
-var area_attack_degrees = 0
 var knockback_strength = 1
 
 var defence = 0 setget set_defence
@@ -76,29 +79,22 @@ func _process(delta):
 		STATES.AIMING:
 			emit_signal("player_controls_mouse")
 			$AttackIndicator.visible = true
+			attack_preview_visible = true
 			update_attack_indicator()
 			
 		STATES.ATTACKING:
 			emit_signal("player_releases_mouse")
 			$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
-			if hit_range == MELEE_RANGE:
+			if hit_range != RANGED_RANGE:
 				$AttackIndicator/Hitbox.activate()
 			else:
 				var proj = ProjectileScene.instance()
 				self.get_parent().add_child(proj)
+				proj.set_stun($AttackIndicator/Hitbox.stun)
 				proj.global_position = self.global_position
 				proj.velocity = hit_direction
+			attack_preview_visible = false
 			state = STATES.IDLE
-		
-		STATES.AREA_ATTACK:
-			# Bring hitbox to center (ish)
-			attackIndicator.position = hit_direction*1
-			$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
-			# make radius larger
-			$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 60
-			$AttackIndicator/Hitbox.activate()
-			state = STATES.IDLE
-			
 			
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)
@@ -121,21 +117,33 @@ func move():
 	position.x += 100
 
 
-func attack(damage=1, ranged=false, area=false, knockback=1, stun=false):
+func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=false):
 	$AttackIndicator/Hitbox.damage = damage
 	$AttackIndicator/Hitbox.stun = stun
+	$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
 	if ranged:
 		hit_range = RANGED_RANGE
 	else:
 		hit_range = MELEE_RANGE
 	
 	if area:
-		state = STATES.AREA_ATTACK
-		area_attack_degrees = 360
-	else:
-		state = STATES.AIMING
+		hit_range = AREA_RANGE
+		# Bring hitbox to center (ish)
+		#attackIndicator.position = hit_direction*1
+		# make radius larger
+		$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 60
 
 	self.knockback_strength = knockback
+	$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
+	update_attack_indicator()
+	attack_preview_visible = true
+
+
+func attack(damage=1, ranged=false, area=false, knockback=1, stun=false):
+	set_attack_attribs(damage, ranged, area, knockback, stun)
+	
+	# Move into a state to perform the attack
+	state = STATES.AIMING
 
 
 func defend(defence_new=1):
@@ -171,10 +179,24 @@ func set_move_radius(value):
 
 
 func _draw():
+	# draw the move radius
 	if move_radius > 0:
 		draw_circle($MoveRadius.position, 
 					$MoveRadius/CollisionShape2D.shape.radius, 
 					Color(0,0.9,0.5,0.25))
+	
+	# draw the attack range
+	if attack_preview_visible:
+		if hit_range != RANGED_RANGE:
+			draw_circle($AttackIndicator.position, 
+						$AttackIndicator/Hitbox/CollisionShape2D.shape.radius, 
+						Color(0.9,0.0,0.0,0.25))
+		else:
+			draw_line(Vector2(0,0), 
+						$AttackIndicator.position,
+						Color(0.9,0.0,0.0,0.25),
+						10,
+						false)
 
 
 func _on_MoveRadius_input_event(viewport, event, shape_idx):
@@ -241,6 +263,7 @@ func reset_preview():
 	self.defence -= defence_preview
 	self.move_preview = 0
 	self.defence_preview = 0
+	self.attack_preview_visible = false
 
 
 func queue_actions(actions):
@@ -281,3 +304,7 @@ func do_next_action_from_queue():
 					true,#area
 					a.knockback,
 					a.stun_enemy)
+
+
+func save_state():
+	pass

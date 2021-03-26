@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=5 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/attack.png" type="Texture" id=2]
+[ext_resource path="res://Cards/retreat.png" type="Texture" id=2]
 [ext_resource path="res://PlayerActions/Move2.tres" type="Resource" id=3]
 [ext_resource path="res://PlayerActions/ShortAttack1.tres" type="Resource" id=4]
 

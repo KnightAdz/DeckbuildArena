@@ -35,10 +35,14 @@ custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
 bbcode_text = "[center] Controls
 Left click: select & play card
-Space bar: zoom out [/center]"
+Space bar: zoom out 
+Right click: view whole card
+[/center]"
 text = " Controls
 Left click: select & play card
-Space bar: zoom out "
+Space bar: zoom out 
+Right click: view whole card
+"
 
 [node name="Aim" type="RichTextLabel" parent="VBoxContainer"]
 margin_top = 192.0

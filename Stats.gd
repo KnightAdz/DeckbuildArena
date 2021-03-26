@@ -25,3 +25,15 @@ func set_max_health(value):
 
 func _ready():
 	self.health = max_health
+
+
+func save():
+    var save_dict = {
+        "filename" : get_filename(),
+        "parent" : get_parent().get_path(),
+        "pos_x" : position.x, # Vector2 is not supported by JSON
+        "pos_y" : position.y,
+        "health" : health,
+        "max_health" : max_health
+    }
+    return save_dict

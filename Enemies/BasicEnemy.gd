@@ -167,3 +167,7 @@ func attack():
 
 func set_damage(value):
 	$Hitbox.damage = value
+
+
+func save_state():
+	pass

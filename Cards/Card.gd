@@ -8,6 +8,7 @@ var target_position = Vector2.ZERO setget set_target_position
 var is_face_up = false setget set_face_up
 var is_selected = false
 var ignore_input = true
+var non_highlighted_position = Vector2.ZERO
 
 signal card_selected(card)
 signal card_highlighted(card)
@@ -20,6 +21,7 @@ func _ready():
 	$Label2.visible = false
 	$CostLabel.visible = false
 	$Focus2.visible = false
+	non_highlighted_position = global_position
 
 
 func set_face_up(value):
@@ -72,8 +74,9 @@ func set_target_position(pos):
 
 func _on_Area2D_mouse_entered():
 	if is_face_up and !ignore_input:
-		emit_signal("card_highlighted", self)
-		
+		emit_signal("card_highlighted", self)		
+		# Will signal to deck and deck will confirm if highlighted
+
 
 func _on_Area2D_mouse_exited():
 	if is_face_up and !ignore_input:
@@ -83,6 +86,7 @@ func _on_Area2D_mouse_exited():
 
 func highlight_card(bool_value):
 	if bool_value:
+		self.non_highlighted_position = global_position
 		$Highlight.visible = true
 		self.z_index = 1
 		toggle_tool_tips(true)
@@ -107,6 +111,8 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 	if ignore_input == false:
 		if event.is_action_released("click"):
 			select_card()
+		if event.is_action_pressed("rclick"):
+			focus_on_card()
 
 
 func deselect_card():
@@ -120,3 +126,7 @@ func toggle_tool_tips(value):
 		pass
 	else:
 		pass
+
+
+func focus_on_card():
+	self.global_position.y = ProjectSettings.get_setting("display/window/size/height") - 90

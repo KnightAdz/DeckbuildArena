@@ -20,6 +20,7 @@ cards_to_discard = 0
 destroy_after_use = false
 one_use_per_wave = false
 needs_target = false
+actions = [  ]
 image = ExtResource( 2 )
 text = "Attack from distance for 1 damage"
 name = "Ranged Attack"

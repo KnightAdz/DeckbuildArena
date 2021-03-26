@@ -51,6 +51,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="AcceptDialog5" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -434.0
+margin_top = 50.0
+margin_bottom = 142.0
+window_title = "Tip"
+dialog_text = "If you can't see all the information on a card,  hold right click over it"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AcceptDialog3" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0

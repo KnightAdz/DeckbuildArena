@@ -34,3 +34,6 @@ func create_effect():
 	main.add_child(effect)
 	effect.global_position = global_position
 
+
+func set_stun(value):
+	$Hitbox.stun = value
