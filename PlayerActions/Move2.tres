@@ -12,3 +12,4 @@ healing = 0
 max_health_change = 0
 knockback = 1
 stun_enemy = false
+attack_duration = 0.1

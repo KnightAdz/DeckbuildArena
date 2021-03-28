@@ -3,6 +3,7 @@ extends Control
 var idx = 0
 onready var order = [$AcceptDialog, $AcceptDialog2, $AcceptDialog3]
 
+
 func _on_Enemies_advance_tutorial():
 	order[idx].visible = true
 	if idx == 1:

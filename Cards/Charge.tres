@@ -1,27 +1,29 @@
-[gd_resource type="Resource" load_steps=3 format=2]
+[gd_resource type="Resource" load_steps=5 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
 [ext_resource path="res://Cards/move.png" type="Texture" id=2]
+[ext_resource path="res://PlayerActions/Move3.tres" type="Resource" id=3]
+[ext_resource path="res://PlayerActions/AreaAttack1w2knockback.tres" type="Resource" id=4]
 
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
-movement = 4
-attack = 0
+movement = 3
+attack = 1
 defence = 0
 healing = 0
 max_health_change = 0
 ranged_attack = false
-area_attack = false
-knockback = 1
+area_attack = true
+knockback = 2
 stun_enemy = false
 cards_to_draw = 0
 cards_to_discard = 0
 destroy_after_use = false
 one_use_per_wave = false
 needs_target = false
-actions = [  ]
+actions = [ ExtResource( 3 ), ExtResource( 4 ) ]
 image = ExtResource( 2 )
-text = "Gain 4 movement and attack"
+text = "Gain 3 movement. Any contact with an enemy will knock them back and deal 1 damage, until another attack card is played"
 name = "Charge"
 colour = "RED"

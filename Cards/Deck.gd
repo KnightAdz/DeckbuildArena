@@ -10,7 +10,8 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres")
+						preload("res://Cards/BasicMovement.tres"),
+						preload("res://Cards/Sprint.tres")
 						]
 var card_counts = [2,2,2,2] #2,2,2
 
@@ -34,6 +35,7 @@ var focus = 3 setget set_focus
 
 signal card_played()
 signal turn_taken()
+signal card_is_hovered(bool_value)
 
 func _ready():
 	#set_process(true)
@@ -266,6 +268,7 @@ func play_card():
 	hovered_cards = []
 	cards_played_this_turn += 1
 	emit_signal("card_played")
+	emit_signal("card_is_hovered", false)
 	var stats = selected_card.card_stats
 	self.focus -= stats.focus_cost
 	
@@ -348,21 +351,26 @@ func _on_MovementButton_pressed():
 	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
+	player.reset_preview()
 	player.gain_movement(cards_in_hand)
+	
 
 
 func _on_AttackButton_pressed():
 	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
+	player.reset_preview()
 	player.attack(cards_in_hand)
 
 
 func _on_DefenceButton_pressed():
+	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
-		player.defend()
-
+	player.reset_preview()
+	player.defend(cards_in_hand)
+	
 
 func add_card_to_discard(card):
 	self.add_child(card)
@@ -428,11 +436,13 @@ func _on_card_hovered(card):
 	self.hovered_cards.append(card)
 	if card == hovered_cards[0]:
 		self.highlighted_card = hovered_cards[0] # Invokes the setter function
+		emit_signal("card_is_hovered", true)
 
 
 func _on_card_unhovered(card):
 	if highlighted_card == card:
 		unpreview_card_effects()
+		emit_signal("card_is_hovered", false)
 		if hovered_cards.find(card) >= 0:
 			hovered_cards.remove(hovered_cards.find(card))
 		if len(hovered_cards) > 0:
@@ -440,6 +450,7 @@ func _on_card_unhovered(card):
 			self.hovered_cards = []
 		else:
 			self.last_card_highlighted = null
+		
 
 
 func lose_control():

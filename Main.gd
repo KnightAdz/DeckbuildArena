@@ -90,11 +90,6 @@ func add_to_turn_order(node):
 	turn_order.append(node)
 
 
-func _on_Player_health_changed(new_value):
-	if new_value <= 0:
-		game_over()
-		
-
 func game_over():
 	var wave_num = $Enemies.get_wave()
 	get_tree().change_scene("res://Menus/GameOverMenu.tscn")

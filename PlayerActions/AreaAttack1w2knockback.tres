@@ -4,12 +4,12 @@
 
 [resource]
 script = ExtResource( 1 )
-type = 2
+type = 4
 movement = 0
 attack = 1
 defence = 0
 healing = 0
 max_health_change = 0
-knockback = 1
+knockback = 2
 stun_enemy = false
-attack_duration = 0.1
+attack_duration = 999.0

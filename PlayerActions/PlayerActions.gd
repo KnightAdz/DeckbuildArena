@@ -14,3 +14,4 @@ export(int) var max_health_change: = 0
 # Attack modifiers
 export(int) var knockback = 1
 export(bool) var stun_enemy = false
+export(float) var attack_duration = 0.1

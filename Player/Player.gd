@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const ProjectileScene = preload("res://Effects/Projectile.tscn")
 
-enum STATES {IDLE, AIMING, ATTACKING, AREA_ATTACK, MOVING}
+enum STATES {IDLE, AIMING, ATTACKING, AREA_ATTACK, MOVING, DEATH}
 var state = STATES.IDLE
 
 onready var attackIndicator = $AttackIndicator
@@ -20,7 +20,8 @@ var TARGET_RANGE = 5
 # Movement
 var move_radius = 0 setget set_move_radius
 var move_preview = 0 setget set_move_preview
-var radius_size = 50
+var radius_size = 75
+var accept_movement = true
 
 # Attack
 var attack_preview_visible = false
@@ -40,6 +41,7 @@ var action_queue = []
 
 
 signal health_changed(new_value)
+signal player_died()
 signal player_controls_mouse()
 signal player_releases_mouse()
 
@@ -51,6 +53,8 @@ func _ready():
 
 
 func start_turn():
+	if state == STATES.DEATH:
+		return
 	state = STATES.IDLE
 	self.defence = 0
 	move_radius = 0
@@ -96,6 +100,9 @@ func _process(delta):
 			attack_preview_visible = false
 			state = STATES.IDLE
 			
+		STATES.DEATH:
+			pass
+			
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)
 	# If we are moving and crash into something
@@ -117,7 +124,8 @@ func move():
 	position.x += 100
 
 
-func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=false):
+func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
+	$AttackIndicator/Hitbox.active_time = attack_duration
 	$AttackIndicator/Hitbox.damage = damage
 	$AttackIndicator/Hitbox.stun = stun
 	$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 25
@@ -139,11 +147,14 @@ func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=fa
 	attack_preview_visible = true
 
 
-func attack(damage=1, ranged=false, area=false, knockback=1, stun=false):
-	set_attack_attribs(damage, ranged, area, knockback, stun)
+func attack(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
+	set_attack_attribs(damage, ranged, area, knockback, stun, attack_duration)
 	
 	# Move into a state to perform the attack
-	state = STATES.AIMING
+	if !area:
+		state = STATES.AIMING
+	else:
+		state = STATES.ATTACKING
 
 
 func defend(defence_new=1):
@@ -200,13 +211,14 @@ func _draw():
 
 
 func _on_MoveRadius_input_event(viewport, event, shape_idx):
-	if move_radius > 0 and state == STATES.IDLE:
-		if Input.is_action_just_released("click"):
-			# get coords
-			target_position = self.position + self.get_local_mouse_position()
-			#target_position = event.global_position
-			move_radius = 0
-			state = STATES.MOVING
+	if accept_movement:
+		if move_radius > 0 and state == STATES.IDLE:
+			if Input.is_action_just_released("click"):
+				# get coords
+				target_position = self.position + self.get_local_mouse_position()
+				#target_position = event.global_position
+				move_radius = 0
+				state = STATES.MOVING
 
 
 func accelerate_towards_point(point, delta):
@@ -231,8 +243,10 @@ func be_attacked(damage):
 func _on_Stats_health_changed(value):
 	emit_signal("health_changed", value)
 	if value <= 0:
-		#die
-		pass
+		state = STATES.DEATH
+		$AnimationPlayer.play("Die")
+		# Will emit player died signal at end of animation
+		
 
 
 func _on_Hurtbox_area_entered(area):
@@ -283,7 +297,8 @@ func do_next_action_from_queue():
 					false,#ranged
 					false,#area
 					a.knockback,
-					a.stun_enemy)
+					a.stun_enemy,
+					a.attack_duration)
 					
 		a.ActionType.DEFEND:
 			defend(a.defence)
@@ -296,15 +311,26 @@ func do_next_action_from_queue():
 					true,#ranged
 					false,#area
 					a.knockback,
-					a.stun_enemy)
+					a.stun_enemy,
+					a.attack_duration)
 		
 		a.ActionType.AREA_ATTACK:
 			attack(	a.attack, 
 					false,#ranged
 					true,#area
 					a.knockback,
-					a.stun_enemy)
+					a.stun_enemy,
+					a.attack_duration)
 
 
 func save_state():
 	pass
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "Die":
+		emit_signal("player_died")
+
+
+func _on_Deck_card_is_hovered(bool_value):
+	self.accept_movement = !bool_value

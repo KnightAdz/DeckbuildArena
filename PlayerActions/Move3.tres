@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource( 1 )
-type = 2
-movement = 0
-attack = 1
+type = 0
+movement = 3
+attack = 0
 defence = 0
 healing = 0
 max_health_change = 0

@@ -269,11 +269,12 @@ position = Vector2( -542.034, 450.243 )
 [node name="OverviewCamera" type="Camera2D" parent="."]
 position = Vector2( 513, 351 )
 zoom = Vector2( 1.1, 1.1 )
+[connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
-[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
 [connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
+[connection signal="player_died" from="Player" to="." method="game_over"]
 [connection signal="player_releases_mouse" from="Player" to="CanvasLayer/Deck" method="gain_control"]
 [connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
