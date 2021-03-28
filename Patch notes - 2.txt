@@ -1,4 +1,5 @@
 
 
-Responded to player feedback:
 - buffed movement distance
+- fixed card selection/movement click bug
+- 

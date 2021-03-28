@@ -1,69 +1,92 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://HUD/HUD.gd" type="Script" id=1]
+[ext_resource path="res://m5x7_32.tres" type="DynamicFont" id=2]
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
 
-[node name="Health" type="Label" parent="HBoxContainer"]
-margin_top = 13.0
-margin_right = 46.0
-margin_bottom = 27.0
+[node name="HealthInfo" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 320.0
+margin_bottom = 26.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Health" type="Label" parent="VBoxContainer/HealthInfo"]
+margin_right = 68.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "Health:"
 
-[node name="HealthValue" type="Label" parent="HBoxContainer"]
-margin_left = 50.0
-margin_top = 13.0
-margin_right = 50.0
-margin_bottom = 27.0
+[node name="HealthValue" type="Label" parent="VBoxContainer/HealthInfo"]
+margin_left = 72.0
+margin_right = 72.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 
-[node name="Out of " type="Label" parent="HBoxContainer"]
-margin_left = 54.0
-margin_top = 13.0
-margin_right = 59.0
-margin_bottom = 27.0
+[node name="Out of " type="Label" parent="VBoxContainer/HealthInfo"]
+margin_left = 76.0
+margin_right = 84.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "/"
 
-[node name="MaxHealth" type="Label" parent="HBoxContainer"]
-margin_left = 63.0
-margin_top = 13.0
-margin_right = 71.0
-margin_bottom = 27.0
+[node name="MaxHealth" type="Label" parent="VBoxContainer/HealthInfo"]
+margin_left = 88.0
+margin_right = 100.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "5"
 
-[node name="Wave" type="Label" parent="HBoxContainer"]
-margin_left = 75.0
-margin_top = 13.0
-margin_right = 168.0
-margin_bottom = 27.0
+[node name="WaveInfo" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 30.0
+margin_right = 320.0
+margin_bottom = 56.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Wave" type="Label" parent="VBoxContainer/WaveInfo"]
+margin_right = 140.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "Wave number:"
 
-[node name="WaveValue" type="Label" parent="HBoxContainer"]
-margin_left = 172.0
-margin_top = 13.0
-margin_right = 180.0
-margin_bottom = 27.0
+[node name="WaveValue" type="Label" parent="VBoxContainer/WaveInfo"]
+margin_left = 144.0
+margin_right = 156.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "1"
 
-[node name="Enemies" type="Label" parent="HBoxContainer"]
-margin_left = 184.0
-margin_top = 13.0
-margin_right = 277.0
-margin_bottom = 27.0
+[node name="EnemyInfo" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 60.0
+margin_right = 320.0
+margin_bottom = 86.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Enemies" type="Label" parent="VBoxContainer/EnemyInfo"]
+margin_right = 144.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "Enemies alive:"
 
-[node name="EnemyValue" type="Label" parent="HBoxContainer"]
-margin_left = 281.0
-margin_top = 13.0
-margin_right = 289.0
-margin_bottom = 27.0
+[node name="EnemyValue" type="Label" parent="VBoxContainer/EnemyInfo"]
+margin_left = 148.0
+margin_right = 160.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 2 )
 text = "1"

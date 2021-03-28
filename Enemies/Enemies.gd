@@ -84,6 +84,7 @@ func generate_position(placed_pos):
 
 
 func _process(delta):
+	count_enemies() #not needed every frame
 	if !turn_started:
 		return
 	
@@ -152,12 +153,7 @@ func on_enemy_death(position):
 
 
 func count_enemies():
-	var num_alive_enemies = 0
-	var children = self.get_children()
-	for c in children:
-		if c.is_in_group("enemy"):
-			num_alive_enemies += 1
-	num_alive_enemies -= 1
+	var num_alive_enemies = get_tree().get_nodes_in_group("enemy").size();
 	emit_signal("number_enemies_changed", num_alive_enemies)
 	return num_alive_enemies
 

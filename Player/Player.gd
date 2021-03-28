@@ -40,6 +40,7 @@ var defence_at_turn_start = 0
 var action_queue = []
 
 
+signal max_health_changed(new_value)
 signal health_changed(new_value)
 signal player_died()
 signal player_controls_mouse()
@@ -334,3 +335,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_Deck_card_is_hovered(bool_value):
 	self.accept_movement = !bool_value
+
+
+func _on_Stats_max_health_changed(value):
+	emit_signal("max_health_changed", value)
