@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Effects/Shield.png" type="Texture" id=1]
+[ext_resource path="res://Effects/ShieldIcon.gd" type="Script" id=2]
+
+[node name="ShieldIcon" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+vframes = 2
+hframes = 2
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Label" type="Label" parent="."]
+margin_left = -21.0
+margin_top = -24.0
+margin_right = 21.0
+margin_bottom = 23.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]

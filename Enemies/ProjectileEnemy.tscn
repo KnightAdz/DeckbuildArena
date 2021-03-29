@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Enemies/Hoody.png" type="Texture" id=2]
+[ext_resource path="res://Enemies/ProjectileEnemy.gd" type="Script" id=3]
+
+[node name="ProjectileEnemy" instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 2 )
+
+[node name="PlayerDetectionZone" parent="." index="9"]
+visible = false
+
+[editable path="SoftOverlap"]
+
+[editable path="Hurtbox"]
+
+[editable path="Hitbox"]

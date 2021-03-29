@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
+[ext_resource path="res://Cards/knockback.png" type="Texture" id=2]
+
+[resource]
+script = ExtResource( 1 )
+focus_cost = 1
+movement = 0
+attack = 1
+defence = 0
+healing = 0
+max_health_change = 0
+ranged_attack = false
+area_attack = false
+knockback = 3
+stun_enemy = false
+cards_to_draw = 0
+cards_to_discard = 0
+destroy_after_use = false
+one_use_per_wave = false
+needs_target = false
+actions = [  ]
+image = ExtResource( 2 )
+text = "Deal 1 damage at short range and push enemy away"
+name = "Knockback"
+colour = "RED"

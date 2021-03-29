@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://PlayerActions/PlayerActions.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+type = 2
+movement = 0
+attack = 1
+defence = 0
+healing = 0
+max_health_change = 0
+knockback = 1
+stun_enemy = false
+attack_duration = 0.1

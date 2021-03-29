@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Dialogs/CardOffer.gd" type="Script" id=1]
+[ext_resource path="res://Cards/Card.tscn" type="PackedScene" id=2]
+
+[node name="CardOffer" type="Control"]
+anchor_left = 0.000976563
+anchor_right = 0.000976563
+anchor_bottom = 0.0216667
+margin_left = 256.0
+margin_top = 150.0
+margin_right = 768.0
+margin_bottom = 450.0
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -122.0
+margin_right = 110.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.0980392, 0.278431, 0.494118, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 12.0
+margin_top = 6.0
+margin_right = 501.0
+margin_bottom = 20.0
+text = "You survived the wave of enemies!
+Choose which card you'd like to add to your deck:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Leave" type="Button" parent="."]
+margin_left = 202.0
+margin_top = 310.0
+margin_right = 334.0
+margin_bottom = 330.0
+text = "None, thanks!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cards" type="Node2D" parent="."]
+z_index = 1
+
+[node name="Card" parent="Cards" instance=ExtResource( 2 )]
+position = Vector2( 12, 209 )
+
+[node name="Card2" parent="Cards" instance=ExtResource( 2 )]
+position = Vector2( 490, 210 )
+
+[node name="Card3" parent="Cards" instance=ExtResource( 2 )]
+position = Vector2( 264, 211 )
+[connection signal="pressed" from="Leave" to="." method="_on_Leave_pressed"]
+[connection signal="card_selected" from="Cards/Card" to="." method="_on_card_selected"]
+[connection signal="card_selected" from="Cards/Card2" to="." method="_on_card_selected"]
+[connection signal="card_selected" from="Cards/Card3" to="." method="_on_card_selected"]

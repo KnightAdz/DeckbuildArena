@@ -1,0 +1,22 @@
+Bugs:
+Can select 2 cards at once
+
+
+Cards to add:
+Sneak 1
+Sneak all
+Force push
+Force pull
+counter attack
+bait
+reflect damage taken
+
+
+tutorial
+fix 2 card selection bug
+health indicators
+Enemy info hover-overs
+
+enemy damage,
+fireball damage
+if char at top, cards at top - or prevent camera from scrolling too far

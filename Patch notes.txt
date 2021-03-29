@@ -1,0 +1,6 @@
+
+
+Responded to player feedback:
+- preview of card effects before playing them
+- unique artwork for each card	
+- lowered volume of sound effects

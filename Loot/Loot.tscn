@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Cards/cards.png" type="Texture" id=1]
+[ext_resource path="res://Loot/Loot.gd" type="Script" id=2]
+[ext_resource path="res://Shadows/SmallShadow.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.3784
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 9.34039
+
+[sub_resource type="Animation" id=3]
+resource_name = "Idle"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -50 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.0567879, 0.0558059 ), Vector2( 0.01, 0.056 ), Vector2( 0.0567879, 0.0558059 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Shadow:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1, 1 ) ]
+}
+
+[node name="Loot" type="KinematicBody2D"]
+script = ExtResource( 2 )
+
+[node name="Shadow" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -7.39098e-06, -8.13173 )
+scale = Vector2( 0.0330133, 0.0559045 )
+texture = ExtResource( 1 )
+offset = Vector2( 0, -25.4068 )
+vframes = 3
+hframes = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.353561, -6.01041 )
+shape = SubResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 2147483650
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, -6.01041 )
+shape = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Idle = SubResource( 3 )
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
