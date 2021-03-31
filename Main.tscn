@@ -270,6 +270,7 @@ position = Vector2( -542.034, 450.243 )
 position = Vector2( 513, 351 )
 zoom = Vector2( 1.1, 1.1 )
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
@@ -281,5 +282,6 @@ zoom = Vector2( 1.1, 1.1 )
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
+[connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
 [connection signal="wave_complete" from="Enemies" to="CanvasLayer/Deck" method="_on_Enemies_wave_complete"]

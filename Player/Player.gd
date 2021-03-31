@@ -1,9 +1,11 @@
 extends KinematicBody2D
 
+
 const ProjectileScene = preload("res://Effects/Projectile.tscn")
+const PlayerCopyScene = preload("res://Player/PlayerCopy.tscn")
 
 enum STATES {IDLE, AIMING, ATTACKING, AREA_ATTACK, MOVING, DEATH}
-var state = STATES.IDLE
+var state = STATES.IDLE setget set_state
 
 onready var attackIndicator = $AttackIndicator
 onready var stats = $Stats
@@ -20,8 +22,10 @@ var TARGET_RANGE = 5
 # Movement
 var move_radius = 0 setget set_move_radius
 var move_preview = 0 setget set_move_preview
-var radius_size = 75
+var radius_size = 1 # This gets set in the ready function
 var accept_movement = true
+var last_known_position = Vector2.ZERO
+var in_stealth = false setget set_stealth
 
 # Attack
 var attack_preview_visible = false
@@ -45,21 +49,30 @@ signal health_changed(new_value)
 signal player_died()
 signal player_controls_mouse()
 signal player_releases_mouse()
+signal is_idle()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	radius_size = $MoveRadius/CollisionShape2D.shape.radius
 	self.defence = 1
 	update_attack_indicator()
+	last_known_position = global_position
 
 
 func start_turn():
 	if state == STATES.DEATH:
 		return
-	state = STATES.IDLE
+	self.state = STATES.IDLE
 	self.defence = 0
 	move_radius = 0
 	defence_at_turn_start = self.defence
+
+
+func set_state(new_state):
+	state = new_state
+	match state:
+		STATES.IDLE:
+			emit_signal("is_idle")
 
 
 func _process(delta):
@@ -72,6 +85,8 @@ func _process(delta):
 			velocity = velocity.move_toward(Vector2.ZERO, FRICTION*delta)
 			if action_queue != []:
 				do_next_action_from_queue()
+			if !in_stealth:
+				last_known_position = global_position
 			
 		STATES.MOVING:
 			if target_position != null:
@@ -79,7 +94,7 @@ func _process(delta):
 				accelerate_towards_point(target_position, delta)
 				if global_position.distance_to(target_position) <= TARGET_RANGE:
 					target_position = null
-					state = STATES.IDLE
+					self.state = STATES.IDLE
 					
 		STATES.AIMING:
 			emit_signal("player_controls_mouse")
@@ -90,6 +105,7 @@ func _process(delta):
 		STATES.ATTACKING:
 			emit_signal("player_releases_mouse")
 			$AttackIndicator/Hitbox.set_knockback(self.global_position, knockback_strength)
+			self.in_stealth = false
 			if hit_range != RANGED_RANGE:
 				$AttackIndicator/Hitbox.activate()
 			else:
@@ -99,17 +115,17 @@ func _process(delta):
 				proj.global_position = self.global_position
 				proj.velocity = hit_direction
 			attack_preview_visible = false
-			state = STATES.IDLE
+			self.state = STATES.IDLE
 			
 		STATES.DEATH:
 			pass
-			
+	
 	#velocity = move_and_slide(velocity)
 	var collision = move_and_collide(velocity)
 	# If we are moving and crash into something
 	if state == STATES.MOVING and collision != null:
 		# Stop moving
-		state = STATES.IDLE
+		self.state = STATES.IDLE
 		velocity = Vector2.ZERO
 
 
@@ -118,7 +134,7 @@ func _unhandled_input(_event):
 		STATES.AIMING:
 			hit_direction = (self.get_local_mouse_position()).normalized()
 			if Input.is_action_just_released("click"):
-				state = STATES.ATTACKING
+				self.state = STATES.ATTACKING
 
 
 func move():
@@ -153,9 +169,9 @@ func attack(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_
 	
 	# Move into a state to perform the attack
 	if !area:
-		state = STATES.AIMING
+		self.state = STATES.AIMING
 	else:
-		state = STATES.ATTACKING
+		self.state = STATES.ATTACKING
 
 
 func defend(defence_new=1):
@@ -171,9 +187,10 @@ func set_defence(value):
 		defence = 0
 
 
-func gain_movement(radius):
+func gain_movement(radius, stealth=false):
 	self.move_radius += radius
-
+	self.in_stealth = stealth
+	
 
 func gain_health(value):
 	self.stats.health += value
@@ -219,7 +236,7 @@ func _on_MoveRadius_input_event(viewport, event, shape_idx):
 				target_position = self.position + self.get_local_mouse_position()
 				#target_position = event.global_position
 				move_radius = 0
-				state = STATES.MOVING
+				self.state = STATES.MOVING
 
 
 func accelerate_towards_point(point, delta):
@@ -244,7 +261,7 @@ func be_attacked(damage):
 func _on_Stats_health_changed(value):
 	emit_signal("health_changed", value)
 	if value <= 0:
-		state = STATES.DEATH
+		self.state = STATES.DEATH
 		$AnimationPlayer.play("Die")
 		# Will emit player died signal at end of animation
 		
@@ -339,3 +356,20 @@ func _on_Deck_card_is_hovered(bool_value):
 
 func _on_Stats_max_health_changed(value):
 	emit_signal("max_health_changed", value)
+
+
+func set_stealth(value):
+	if in_stealth == false and value == true:
+		last_known_position = self.global_position
+		var copy = PlayerCopyScene.instance()
+		get_parent().add_child(copy)
+		copy.global_position = last_known_position
+		in_stealth = value
+	elif in_stealth == true and value == false:
+		#set_collision_mask_bit(2,true)
+		in_stealth = value
+		get_parent().kill_player_copy()
+
+
+func on_new_wave(wave_num):
+	self.in_stealth = false

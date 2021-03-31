@@ -8,6 +8,9 @@ export(int) var defence: = 0
 export(int) var healing: = 0
 export(int) var max_health_change: = 0
 
+# Movement modifiers
+export(bool) var stealth = false
+
 # Attack modifiers
 export(bool) var ranged_attack: = false
 export(bool) var area_attack: = false

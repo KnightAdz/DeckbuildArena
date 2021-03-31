@@ -14,6 +14,7 @@ signal card_selected(card)
 signal card_highlighted(card)
 signal card_unhighlighted(card)
 
+
 func _ready():
 	self.card_stats = card_type
 	$Icon.visible = false
@@ -130,3 +131,7 @@ func toggle_tool_tips(value):
 
 func focus_on_card():
 	self.global_position.y = ProjectSettings.get_setting("display/window/size/height") - 90
+
+
+func get_name():
+	return card_stats.name

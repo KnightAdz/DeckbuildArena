@@ -11,6 +11,7 @@ attack = 0
 defence = 2
 healing = 0
 max_health_change = 0
+stealth = false
 ranged_attack = false
 area_attack = false
 knockback = 1

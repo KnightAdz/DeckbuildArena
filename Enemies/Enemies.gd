@@ -13,6 +13,7 @@ var turn_started = false
 var enemy_health = 1
 var enemy_damage = 1
 var num_enemies = 3
+var last_enemy_count = 0
 
 var wave_count = 1 setget set_wave_count
 var wave_started = true

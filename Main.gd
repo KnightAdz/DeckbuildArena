@@ -156,3 +156,13 @@ func save_state():
 		# Store the save dictionary as a new line in the save file.
 		save_game.store_line(to_json(node_data))
 	save_game.close()
+
+
+func kill_player_copy():
+	for c in get_children():
+		if c.is_in_group("player_copy"):
+			c.queue_free()
+	for e in $Enemies.get_children():
+		if e.is_in_group("enemy"):
+			e.perceived_player_position = null
+			e.check_for_player()

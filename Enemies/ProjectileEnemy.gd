@@ -16,6 +16,10 @@ func take_turn():
 	else:
 		# Take turn
 		if player != null:
+			if !player.in_stealth:
+				perceived_player_position = player.global_position
+			else:
+				perceived_player_position = player.last_known_position
 			# Don't chase, just fire projectiles until killed
 			if projectile:
 				launch_projectile()
@@ -34,13 +38,16 @@ func take_turn():
 	emit_signal("turn_taken")
 
 
-func _on_PlayerDetectionZone_body_exited(body):
-	# override parent function so that we don't forget player
-	pass
+func lose_player():
+	# Override lose player so that we don't lose player, 
+	# but are affected by stealth
+	#player = null
+	#perceived_player_position = null
+	state = IDLE
 
 
 func launch_projectile():
-	projectile.velocity = global_position.direction_to(player.global_position)
+	projectile.velocity = global_position.direction_to(perceived_player_position)
 	projectile.velocity = projectile.velocity.normalized()
 
 
@@ -48,7 +55,7 @@ func create_projectile():
 	var new_projectile = ProjectileScene.instance()
 	self.add_child(new_projectile)
 	var dist = 20
-	var pos = global_position.direction_to(player.global_position)
+	var pos = global_position.direction_to(perceived_player_position)
 	pos = pos.normalized()*dist
 	new_projectile.global_position = global_position + pos
 	new_projectile.velocity = Vector2.ZERO

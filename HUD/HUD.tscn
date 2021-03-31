@@ -17,7 +17,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="HealthInfo" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 320.0
+margin_right = 160.0
 margin_bottom = 26.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -44,14 +44,14 @@ text = "/"
 
 [node name="MaxHealth" type="Label" parent="VBoxContainer/HealthInfo"]
 margin_left = 88.0
-margin_right = 100.0
+margin_right = 112.0
 margin_bottom = 26.0
 custom_fonts/font = ExtResource( 2 )
-text = "5"
+text = "10"
 
 [node name="WaveInfo" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 30.0
-margin_right = 320.0
+margin_right = 160.0
 margin_bottom = 56.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -72,7 +72,7 @@ text = "1"
 
 [node name="EnemyInfo" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 60.0
-margin_right = 320.0
+margin_right = 160.0
 margin_bottom = 86.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -90,3 +90,38 @@ margin_right = 160.0
 margin_bottom = 26.0
 custom_fonts/font = ExtResource( 2 )
 text = "1"
+
+[node name="TurnMessage" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -55.2131
+margin_top = -13.0
+margin_right = 64.7869
+margin_bottom = 13.0
+custom_fonts/font = ExtResource( 2 )
+text = "Player Turn"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionMessage" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -55.2131
+margin_top = -13.0
+margin_right = 64.7869
+margin_bottom = 13.0
+custom_fonts/font = ExtResource( 2 )
+text = "Player Turn"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]

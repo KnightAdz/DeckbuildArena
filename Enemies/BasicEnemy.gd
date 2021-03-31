@@ -25,6 +25,7 @@ var pos_at_start_of_turn = Vector2.ZERO
 var state = IDLE
 
 var player = null
+var perceived_player_position = null
 
 onready var stats = $Stats
 onready var hurtbox = $Hurtbox
@@ -51,6 +52,10 @@ func take_turn():
 	else:
 		# Take turn
 		if player != null:
+			if !player.in_stealth:
+				perceived_player_position = player.global_position
+			else:
+				perceived_player_position = player.last_known_position
 			state = CHASE
 		else:
 			state = WANDER
@@ -78,8 +83,10 @@ func _physics_process(delta):
 		CHASE:
 			$Label.text = "CHASE"
 			var dist_moved = global_position.distance_to(pos_at_start_of_turn)
-			if player != null and dist_moved < MOVE_LIMIT:
-				accelerate_towards_point(player.global_position, delta)
+			if perceived_player_position != null and dist_moved < MOVE_LIMIT:
+				accelerate_towards_point(perceived_player_position, delta)
+				if global_position.distance_to(perceived_player_position) < 10:
+					state = IDLE
 			else:
 				state = IDLE
 		
@@ -148,20 +155,43 @@ func _on_Hurtbox_invincibility_ended():
 func _on_PlayerDetectionZone_body_entered(body):
 	if body.is_in_group("player"):
 		player = body
-		var effect = ExclamationEffect.instance()
-		self.add_child(effect)
-		effect.position = Vector2(0,-30)
+		if !player.in_stealth:
+			perceived_player_position = player.global_position
+			var effect = ExclamationEffect.instance()
+			self.add_child(effect)
+			effect.position = Vector2(0,-30)
+		else:
+			player = null
+			#perceived_player_position = player.last_known_position
+			perceived_player_position = null
 
 
 func _on_PlayerDetectionZone_body_exited(body):
 	if body.is_in_group("player"):
-		player = null
-		state = IDLE
+		lose_player()
+
+
+func lose_player():
+	player = null
+	perceived_player_position = null
+	state = IDLE
+
+
+func check_for_player():
+	var bodies = $PlayerDetectionZone.get_overlapping_bodies()
+	var found_player = false
+	for b in bodies:
+		if b.is_in_group("player"):
+			_on_PlayerDetectionZone_body_entered(b)
+			found_player = true
+	if found_player == false:
+		lose_player()
 
 
 func attack():
 	if player != null:
-		player.be_attacked($Hitbox.damage)
+		if player.global_position.distance_to(global_position) < 30:
+			player.be_attacked($Hitbox.damage)
 		#$Hitbox.activate()
 
 

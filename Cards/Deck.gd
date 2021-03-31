@@ -3,6 +3,7 @@ class_name Deck
 
 onready var player = self.get_parent().get_parent().get_node("Player")
 
+var DeckviewScene = preload("res://Menus/DeckView.tscn")
 var CardScene = preload("res://Cards/Card.tscn")
 
 enum TurnState {SELECT_CARD, SELECT_TARGET, PLAY_CARD, FINISHED, WAIT, CHOOSE_DISCARD}
@@ -10,8 +11,7 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/Sprint.tres")
+						preload("res://Cards/BasicMovement.tres")
 						]
 var card_counts = [2,2,2,2] #2,2,2
 
@@ -52,6 +52,9 @@ func _input(_event):
 		reposition_hand_cards()
 		selected_card = null
 		self.turn_state = TurnState.SELECT_CARD
+	if Input.is_action_just_pressed("viewdeck"):
+		#show_whole_deck()	
+		pass
 
 
 func _process(_delta):
@@ -115,6 +118,9 @@ func end_turn():
 	# yes for now as easier to manage card positions
 	for c in hand:
 		discard(c)
+	
+	last_card_highlighted = null
+	hovered_cards = []
 	
 	# draw new hand
 	draw_hand()	
@@ -290,7 +296,7 @@ func play_card():
 		if stats.defence > 0:
 			player.defend(stats.defence)
 		if stats.movement > 0:
-			player.gain_movement(stats.movement)
+			player.gain_movement(stats.movement, stats.stealth)
 	
 	# Activate deck actions
 	if stats.cards_to_draw > 0:
@@ -531,3 +537,18 @@ func _on_DefenceButton_mouse_exited():
 
 func _on_AttackButton_mouse_exited():
 	player.reset_preview()
+
+
+func list_cardstats_in_deck():
+	var cardstats = []
+	for c in self.get_children():
+		if c.is_in_group("card"):
+			cardstats.append(c.card_stats)
+	return cardstats
+	
+
+func show_whole_deck():
+	var deckview = DeckviewScene.instance()
+	self.get_parent().add_child(deckview)
+	deckview.add_list_of_cards(list_cardstats_in_deck())
+	
