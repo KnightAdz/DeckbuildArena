@@ -2,4 +2,5 @@
 
 - buffed movement distance
 - fixed card selection/movement click bug
-- 
+- added sneak card
+- minor UI tweaks

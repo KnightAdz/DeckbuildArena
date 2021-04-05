@@ -4,6 +4,7 @@
 [ext_resource path="res://Effects/Shield.png" type="Texture" id=2]
 
 [node name="ShieldEffect" instance=ExtResource( 1 )]
+z_index = 1
 
 [node name="Sprite" parent="." index="0"]
 position = Vector2( 0, -1 )

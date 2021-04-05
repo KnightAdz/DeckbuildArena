@@ -56,7 +56,6 @@ func _input(_event):
 		#show_whole_deck()	
 		pass
 
-
 func _process(_delta):
 	# Clear out clicked cards
 	for c in clicked_cards:
@@ -147,10 +146,7 @@ func add_card_to_deck(card_resource):
 	card.connect("card_selected", self, "_on_card_selected")
 	card.connect("card_highlighted", self, "_on_card_hovered")
 	card.connect("card_unhighlighted", self, "_on_card_unhovered")
-#	
-#	for a in card.card_stats.actions:
-#		a.connect("draw_x_cards", self, "draw_x_cards")
- 
+
 	draw_pile.append(card)
 
 
@@ -321,9 +317,9 @@ func play_card():
 
 
 func discard(card):
-	discard_pile.append(card)
 	if hand.find(card) >= 0:
 		hand.remove(hand.find(card))
+	discard_pile.append(card)
 	card.target_position = $DiscardPile.global_position
 	card.is_face_up = false
 	card.is_selected = false
@@ -448,7 +444,6 @@ func _on_card_hovered(card):
 func _on_card_unhovered(card):
 	if highlighted_card == card:
 		unpreview_card_effects()
-		emit_signal("card_is_hovered", false)
 		if hovered_cards.find(card) >= 0:
 			hovered_cards.remove(hovered_cards.find(card))
 		if len(hovered_cards) > 0:
@@ -456,6 +451,8 @@ func _on_card_unhovered(card):
 			self.hovered_cards = []
 		else:
 			self.last_card_highlighted = null
+			emit_signal("card_is_hovered", false)
+
 		
 
 
@@ -495,7 +492,7 @@ func update_button_labels():
 	$MovementButton.text = str(num_cards) + " Movement"
 	$DefenceButton.text = str(num_cards) + " Defence"
 	$AttackButton.text = "1 Attack for " + str(num_cards) + " damage"
-	
+
 
 func destroy_card(card):
 	if clicked_cards.find(card) >= 0:
@@ -509,7 +506,42 @@ func _on_Enemies_wave_complete():
 
 
 func save_state():
-	pass
+	var save_dict = {
+		"node" : "deck",
+		"hand_cards" : list_cardstats_in_array(hand),
+		"draw_pile_cards" : list_cardstats_in_array(draw_pile),
+		"discard_pile_cards" : list_cardstats_in_array(discard_pile)
+	}
+	return save_dict
+	
+
+func load_state(save_dict):
+	var hand_cardstats = save_dict["hand_cards"]
+	var discard_cardstats = save_dict["discard_pile_cards"]
+	var draw_cardstats = save_dict["draw_pile_cards"]
+	
+	# Clear existing arrays
+	for c in hand:
+		c.queue_free()
+	hand = []
+	for c in draw_pile:
+		c.queue_free()
+	draw_pile = []
+	for c in discard_pile:
+		c.queue_free()
+	discard_pile = []
+	
+	# Recreate
+	for c in discard_cardstats:
+		add_card_to_deck(load(c))
+		discard(draw_pile.back())
+
+	for c in hand_cardstats:
+		add_card_to_deck(load(c))
+		draw_hand(len(hand_cardstats))
+	
+	for c in draw_cardstats:
+		add_card_to_deck(load(c))
 	
 
 func _on_MovementButton_mouse_entered():
@@ -545,7 +577,15 @@ func list_cardstats_in_deck():
 		if c.is_in_group("card"):
 			cardstats.append(c.card_stats)
 	return cardstats
-	
+
+
+func list_cardstats_in_array(array_name):
+	var cardstats = []
+	for c in array_name:
+		if c.is_in_group("card"):
+			cardstats.append(c.card_stats.resource_path)
+	return cardstats
+
 
 func show_whole_deck():
 	var deckview = DeckviewScene.instance()

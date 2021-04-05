@@ -27,13 +27,13 @@ func _ready():
 	self.health = max_health
 
 
-func save():
+func save_state():
     var save_dict = {
-        "filename" : get_filename(),
+        "node" : "stats",
         "parent" : get_parent().get_path(),
-        "pos_x" : position.x, # Vector2 is not supported by JSON
-        "pos_y" : position.y,
         "health" : health,
         "max_health" : max_health
     }
     return save_dict
+
+

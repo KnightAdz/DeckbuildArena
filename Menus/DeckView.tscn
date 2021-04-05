@@ -1,11 +1,24 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Menus/DeckView.gd" type="Script" id=1]
+[ext_resource path="res://Menus/cross.png" type="Texture" id=2]
 
 [node name="DeckView" type="Control"]
-margin_right = 1022.0
-margin_bottom = 383.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+color = Color( 0.0980392, 0.278431, 0.494118, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -26,3 +39,16 @@ columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" type="TextureButton" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -71.0
+margin_top = 20.0
+margin_right = -21.0
+margin_bottom = 70.0
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="CloseButton" to="." method="_on_CloseButton_pressed"]

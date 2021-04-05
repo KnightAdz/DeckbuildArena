@@ -7,7 +7,6 @@ var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
 onready var DeckNode = get_parent().get_node("CanvasLayer/Deck")
-onready var player = get_parent().get_node("Player")
 
 var turn_started = false
 var enemy_health = 1
@@ -49,6 +48,7 @@ func take_turn():
 
 func spawn_random_enemies(): 
 	var placed_pos = []
+	var player = get_parent().get_node("Player")
 	placed_pos.append(player.global_position)
 	var enemies_to_spawn = min(num_enemies+wave_count,10)
 	for _i in range(enemies_to_spawn):

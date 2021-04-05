@@ -35,9 +35,19 @@ func _input(event):
 		show_overview()
 	else:
 		show_player_camera()
+	
+	if Input.is_action_just_pressed("load"):
+		load_state()
 
 
 func take_turn(idx):
+	save_state()
+	var turn_text = null	
+	match idx:
+		0: turn_text = "Player turn"
+		1: turn_text = "Enemy turn"
+		2: turn_text = "??? turn"
+	$CanvasLayer/HUD.turn_message_animation(turn_text)
 	turn_order[idx].take_turn()
 
 
@@ -158,6 +168,27 @@ func save_state():
 	save_game.close()
 
 
+# Note: This can be called from anywhere inside the tree. This function
+# is path independent.
+func load_state():
+	var save_game = File.new()
+	if not save_game.file_exists(Globals.save_locaton):
+		return # Error! We don't have a save to load.
+	
+	# Load the file line by line and process that dictionary to restore
+	# the object it represents.
+	save_game.open(Globals.save_locaton, File.READ)
+	while save_game.get_position() < save_game.get_len():
+		# Get the saved dictionary from the next line in the save file
+		var node_data = parse_json(save_game.get_line())
+		if node_data:
+			match node_data["node"]:
+				"deck" : $CanvasLayer/Deck.load_state(node_data)
+				"player" : $Player.load_state(node_data)
+
+	save_game.close()
+
+
 func kill_player_copy():
 	for c in get_children():
 		if c.is_in_group("player_copy"):
@@ -166,3 +197,10 @@ func kill_player_copy():
 		if e.is_in_group("enemy"):
 			e.perceived_player_position = null
 			e.check_for_player()
+
+
+func _on_MusicButton_toggled(button_pressed):
+	if button_pressed:
+		$AudioStreamPlayer.stop()
+	else:
+		$AudioStreamPlayer.play()

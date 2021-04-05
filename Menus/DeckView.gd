@@ -37,3 +37,7 @@ func add_list_of_cards(cardstats_filelist):
 func on_card_clicked(event, card):
 	if Input.is_action_just_released("click"):
 		emit_signal("card_clicked", card.get_node("Card").card_stats)
+
+
+func _on_CloseButton_pressed():
+	self.queue_free()

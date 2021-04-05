@@ -77,7 +77,7 @@ func set_state(new_state):
 
 func _process(delta):
 	update() # Needed for drawing circles
-	$Label.text = STATES.keys()[state]
+	#$Label.text = STATES.keys()[state]
 	match state:
 		STATES.IDLE:
 			$AnimationPlayer.play("Idle")
@@ -137,10 +137,6 @@ func _unhandled_input(_event):
 				self.state = STATES.ATTACKING
 
 
-func move():
-	position.x += 100
-
-
 func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
 	$AttackIndicator/Hitbox.active_time = attack_duration
 	$AttackIndicator/Hitbox.damage = damage
@@ -153,8 +149,6 @@ func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=fa
 	
 	if area:
 		hit_range = AREA_RANGE
-		# Bring hitbox to center (ish)
-		#attackIndicator.position = hit_direction*1
 		# make radius larger
 		$AttackIndicator/Hitbox/CollisionShape2D.shape.radius = 60
 
@@ -166,7 +160,6 @@ func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=fa
 
 func attack(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
 	set_attack_attribs(damage, ranged, area, knockback, stun, attack_duration)
-	
 	# Move into a state to perform the attack
 	if !area:
 		self.state = STATES.AIMING
@@ -342,7 +335,23 @@ func do_next_action_from_queue():
 
 
 func save_state():
-	pass
+	var save_dict = {
+		"node" : "player",
+		"global_position.x" : global_position.x,
+		"global_position.y" : global_position.y,
+		"defence" : defence,
+		"health" : stats.health,
+		"max_health" : stats.max_health
+	}
+	return save_dict
+
+
+func load_state(data):
+	self.global_position.x = data["global_position.x"]
+	self.global_position.y = data["global_position.y"]
+	self.defence = data["defence"]
+	stats.health = data["health"]
+	stats.max_health = data["max_health"]
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
@@ -352,6 +361,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_Deck_card_is_hovered(bool_value):
 	self.accept_movement = !bool_value
+	$Label.text = str(bool_value)
 
 
 func _on_Stats_max_health_changed(value):
@@ -371,5 +381,5 @@ func set_stealth(value):
 		get_parent().kill_player_copy()
 
 
-func on_new_wave(wave_num):
+func on_new_wave(_wave_num):
 	self.in_stealth = false
