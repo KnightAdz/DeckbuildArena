@@ -76,8 +76,8 @@ func action_message(text):
 
 func reset_action_message():
 	$ActionMessage.visible = false
-	$ActionMessage.position = Vector2(	$ActionMessage.rect_position.x,
-										$ActionMessage.rect_position.y + 30)
+	#$ActionMessage.position = Vector2(	$ActionMessage.rect_position.x,
+	#									$ActionMessage.rect_position.y + 30)
 
 
 func _on_Tween_tween_all_completed():

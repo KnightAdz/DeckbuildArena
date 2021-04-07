@@ -35,6 +35,7 @@ onready var sprite = $Sprite
 
 signal turn_taken()
 signal no_health(position)
+signal took_damage(position)
 
 func _ready():
 	state = IDLE
@@ -125,6 +126,8 @@ func pick_random_state(state_list):
 
 func _on_Hurtbox_area_entered(area):
 	stats.health -= area.damage
+	if area.damage > 0:
+		emit_signal("took_damage", self.global_position)
 	$HealthRemaining.text = str(stats.health)
 	#knockback_vector = area.knockback_vector*100*area.knockback_strength
 	knockback_vector = area.damage_source.direction_to(self.global_position)
@@ -199,5 +202,12 @@ func set_damage(value):
 	$Hitbox.damage = value
 
 
-func save_state():
-	pass
+func get_save_info():
+	var save_dict = {
+		"filename" : filename,
+		"global_position.x" : global_position.x,
+		"global_position.y" : global_position.y,
+		"damage" : $Hitbox.damage,
+		"health" : stats.health
+	}
+	return save_dict

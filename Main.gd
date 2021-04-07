@@ -150,11 +150,6 @@ func save_state():
 
 	var save_nodes = get_tree().get_nodes_in_group("persist")
 	for node in save_nodes:
-		# Check the node is an instanced scene so it can be instanced again during load.
-		if node.filename.empty():
-			print("persistent node '%s' is not an instanced scene, skipped" % node.name)
-			continue
-
 		# Check the node has a save function.
 		if !node.has_method("save_state"):
 			print("persistent node '%s' is missing a save() function, skipped" % node.name)
@@ -185,6 +180,7 @@ func load_state():
 			match node_data["node"]:
 				"deck" : $CanvasLayer/Deck.load_state(node_data)
 				"player" : $Player.load_state(node_data)
+				"enemies" : $Enemies.load_state(node_data)
 
 	save_game.close()
 

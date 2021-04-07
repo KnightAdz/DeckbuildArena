@@ -26,7 +26,7 @@ signal number_enemies_changed(number)
 signal wave_complete()
 signal completed_tutorial()
 signal advance_tutorial()
-
+signal enemy_killed(position)
 
 func _ready():
 	load_wave_from_resource(next_wave_file)
@@ -146,7 +146,7 @@ func on_enemy_death(position):
 	# spawn some loot with random chance
 	var chance = 1
 	var decider = randi()%10 
-	
+	emit_signal("enemy_killed", position)
 	count_enemies()
 
 	if (decider <= chance):# or num_alive_enemies<=1:
@@ -230,4 +230,40 @@ func load_wave_from_resource(info):
 
 func despawn_enemies():
 	for c in get_children():
-		c.queue_free()
+		if c.is_in_group("enemy"):
+			c.queue_free()
+
+
+func save_state():
+	var n_enemies = count_enemies()
+	var save_dict = {
+		"node" : "enemies",
+		"num_enemies" : n_enemies,
+		"enemy_data" : save_enemies()
+	}
+	return save_dict
+
+
+func save_enemies():
+	var idx = 0
+	var save_dict = {}
+	for c in get_children():
+		if c.is_in_group("enemy"):
+			save_dict["enemy"+str(idx)] = c.get_save_info()
+			idx+=1
+	return save_dict
+
+
+func load_state(data):
+	despawn_enemies()
+	var enemy_data = data["enemy_data"]
+	var n_enemies = data["num_enemies"]
+	for i in range(0,n_enemies):
+		var this_enemy = enemy_data["enemy"+str(i)] 
+		spawn_enemy(load(this_enemy["filename"]),
+					this_enemy["health"],
+					this_enemy["damage"],
+					Vector2(this_enemy["global_position.x"],
+							this_enemy["global_position.y"]))
+
+

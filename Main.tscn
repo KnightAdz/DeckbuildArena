@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://PlayerCamera.gd" type="Script" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Music and Sounds/BGM07battle.wav" type="AudioStream" id=9]
 [ext_resource path="res://HUD/musicOn.png" type="Texture" id=10]
 [ext_resource path="res://HUD/musicOff.png" type="Texture" id=11]
+[ext_resource path="res://Effects/EventManager.tscn" type="PackedScene" id=12]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 48, 0, 48, 32, 0, 32 )
@@ -248,7 +249,9 @@ collision_mask = 6
 format = 1
 tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655373, 0, 0 )
 
-[node name="Enemies" type="Node2D" parent="."]
+[node name="Enemies" type="Node2D" parent="." groups=[
+"persist",
+]]
 script = ExtResource( 6 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
@@ -265,6 +268,8 @@ cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 collision_mask = 6
 format = 1
 tile_data = PoolIntArray( 0, 6, 0, 14, 7, 0, 131072, 6, 0, 131086, 7, 0, 196608, 6, 0, 196622, 7, 0, 327680, 6, 0, 327694, 7, 0, 393216, 6, 0, 393230, 7, 0, 524288, 6, 0, 524302, 7, 0 )
+
+[node name="EventManager" parent="." instance=ExtResource( 12 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 540.034, 337.757 )
@@ -291,12 +296,14 @@ zoom = Vector2( 1.1, 1.1 )
 stream = ExtResource( 9 )
 bus = "Music"
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
 [connection signal="toggled" from="CanvasLayer/MusicButton" to="." method="_on_MusicButton_toggled"]
 [connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
+[connection signal="enemy_killed" from="Enemies" to="EventManager" method="on_enemy_killed"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]

@@ -42,7 +42,6 @@ radius = 264.002
 
 [node name="BasicEnemy" type="KinematicBody2D" groups=[
 "enemy",
-"persist",
 ]]
 collision_layer = 4
 collision_mask = 3
