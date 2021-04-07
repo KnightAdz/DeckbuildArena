@@ -52,10 +52,10 @@ position = Vector2( 971, -7 )
 position = Vector2( 28, -4 )
 
 [node name="Turnstate" type="Label" parent="."]
-margin_left = 19.0
-margin_top = -171.0
-margin_right = 104.0
-margin_bottom = -151.0
+margin_left = 9.0
+margin_top = -140.0
+margin_right = 94.0
+margin_bottom = -120.0
 text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -67,10 +67,10 @@ scale = Vector2( 1.57036, 0.827215 )
 curve = SubResource( 1 )
 
 [node name="Button" type="Button" parent="."]
-margin_left = 886.369
-margin_top = -137.321
-margin_right = 964.369
-margin_bottom = -113.321
+margin_left = 892.369
+margin_top = -112.321
+margin_right = 970.369
+margin_bottom = -88.321
 text = "End turn"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -87,20 +87,20 @@ __meta__ = {
 }
 
 [node name="DiscardFor" type="Label" parent="."]
-margin_left = 836.0
-margin_top = -263.0
-margin_right = 1012.0
-margin_bottom = -249.0
+margin_left = 841.0
+margin_top = -213.0
+margin_right = 1017.0
+margin_bottom = -199.0
 text = "Discard remaining hand for:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MovementButton" type="Button" parent="."]
-margin_left = 860.0
-margin_top = -245.0
-margin_right = 1009.0
-margin_bottom = -222.0
+margin_left = 865.0
+margin_top = -195.0
+margin_right = 1014.0
+margin_bottom = -172.0
 theme = ExtResource( 2 )
 text = "5 Movement"
 __meta__ = {
@@ -108,20 +108,20 @@ __meta__ = {
 }
 
 [node name="AttackButton" type="Button" parent="."]
-margin_left = 859.0
-margin_top = -217.0
-margin_right = 1010.0
-margin_bottom = -197.0
+margin_left = 864.0
+margin_top = -167.0
+margin_right = 1015.0
+margin_bottom = -147.0
 text = "1 Attack for 5 damage"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DefenceButton" type="Button" parent="."]
-margin_left = 859.0
-margin_top = -191.0
-margin_right = 1008.0
-margin_bottom = -171.0
+margin_left = 864.0
+margin_top = -141.0
+margin_right = 1013.0
+margin_bottom = -121.0
 text = "5 Defence"
 __meta__ = {
 "_edit_use_anchors_": false

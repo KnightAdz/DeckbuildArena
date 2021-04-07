@@ -42,3 +42,7 @@ func _on_card_selected(card):
 	emit_signal("turn_taken")
 	emit_signal("add_card_to_discard", card)
 	queue_free()
+
+
+func _on_card_highlighted(card):
+	card.animate_sheen()

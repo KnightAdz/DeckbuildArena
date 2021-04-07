@@ -42,6 +42,7 @@ func _ready():
 	$AnimationPlayer.play("fly")
 	$Hitbox.deactivate()
 	self.connect("no_health", self.get_parent(), "on_enemy_death")
+	self.connect("took_damage", self.get_parent(), "on_enemy_hurt")
 	$HealthRemaining.text = str(stats.health)
 	$HealthIndicator.health = stats.health
 

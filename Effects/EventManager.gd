@@ -45,9 +45,17 @@ func count_events(array, type):
 
 
 func _on_Timer_timeout():
-	var enemies_killed = count_events(events_this_card, GameEvent.EventType.KILL)
-	if enemies_killed[0] > 1:
-		create_message(str(enemies_killed[0]) + " in 1", enemies_killed[1])
+	var kill_data = count_events(events_this_card, GameEvent.EventType.KILL)
+	var enemies_killed = kill_data[0]
+	var pos = kill_data[1]
+	if enemies_killed > 1:
+		create_message(str(enemies_killed) + " KILL!", pos)
+	else:
+		var hurt_data = count_events(events_this_card, GameEvent.EventType.HURT)
+		var enemies_hurt = hurt_data[0]
+		pos = hurt_data[1]
+		if enemies_hurt > 1:
+			create_message(str(enemies_hurt) + " in 1", pos)
 
 
 func create_message(text, position):
@@ -55,3 +63,26 @@ func create_message(text, position):
 	self.add_child(new_msg)
 	new_msg.set_text(text)
 	new_msg.global_position = position
+
+
+func _on_Enemies_enemy_hurt(position):
+	on_enemy_hurt(position)
+
+
+func on_turn_ended():
+	var pos = Vector2(ProjectSettings.get_setting("display/window/size/width")*0.9,100)
+	var kill_data = count_events(events_this_turn, GameEvent.EventType.KILL)
+	var enemies_killed = kill_data[0]
+	
+	if enemies_killed > 1:
+		create_message(str(enemies_killed) + " killed in 1 turn", pos)
+	else:
+		var hurt_data = count_events(events_this_turn, GameEvent.EventType.HURT)
+		var enemies_hurt = hurt_data[0]
+		if enemies_hurt > 1:
+			create_message(str(enemies_hurt) + " in 1 turn", pos)
+	events_this_turn = []
+
+
+func _on_Deck_turn_taken():
+	on_turn_ended()

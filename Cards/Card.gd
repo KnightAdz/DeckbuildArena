@@ -91,6 +91,7 @@ func highlight_card(bool_value):
 		$Highlight.visible = true
 		self.z_index = 1
 		toggle_tool_tips(true)
+		animate_sheen()
 	else:
 		$Highlight.visible = false
 		self.z_index = 0
@@ -135,3 +136,13 @@ func focus_on_card():
 
 func get_name():
 	return card_stats.name
+
+
+func animate_sheen():
+	$SheenAnimation.visible = true
+	$SheenAnimation.frame = 0
+	$SheenAnimation.play("default")
+
+
+func _on_SheenAnimation_animation_finished():
+	$SheenAnimation.visible = false

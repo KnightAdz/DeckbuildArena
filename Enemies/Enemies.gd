@@ -27,6 +27,7 @@ signal wave_complete()
 signal completed_tutorial()
 signal advance_tutorial()
 signal enemy_killed(position)
+signal enemy_hurt(position)
 
 func _ready():
 	load_wave_from_resource(next_wave_file)
@@ -267,3 +268,5 @@ func load_state(data):
 							this_enemy["global_position.y"]))
 
 
+func on_enemy_hurt(position):
+	emit_signal("enemy_hurt",position)
