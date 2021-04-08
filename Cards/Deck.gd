@@ -13,7 +13,7 @@ var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
 						preload("res://Cards/BasicMovement.tres")
 						]
-var card_counts = [2,2,2,2] #2,2,2
+var card_counts = [2,2,2,2,2] #2,2,2
 
 var draw_pile = []
 var hand = []
@@ -36,6 +36,7 @@ var focus = 3 setget set_focus
 signal card_played()
 signal turn_taken()
 signal card_is_hovered(bool_value)
+signal button_pressed()
 
 func _ready():
 	#set_process(true)
@@ -288,11 +289,13 @@ func play_card():
 							stats.area_attack, 
 							stats.knockback,
 							stats.stun_enemy)
-		# Defence and Movement already passed through the preview
 		if stats.defence > 0:
 			player.defend(stats.defence)
 		if stats.movement > 0:
 			player.gain_movement(stats.movement, stats.stealth)
+		if stats.damage_multiplier > 1:
+			player.add_damage_multiplier(stats.damage_multiplier, 
+										stats.damage_multiplier_duration)
 	
 	# Activate deck actions
 	if stats.cards_to_draw > 0:
@@ -319,7 +322,10 @@ func play_card():
 func discard(card):
 	if hand.find(card) >= 0:
 		hand.remove(hand.find(card))
+	last_card_highlighted = null
+	hovered_cards = []
 	discard_pile.append(card)
+	card.show_discard_indicator(false)
 	card.target_position = $DiscardPile.global_position
 	card.is_face_up = false
 	card.is_selected = false
@@ -350,15 +356,16 @@ func set_focus(value):
 
 
 func _on_MovementButton_pressed():
+	emit_signal("button_pressed")
 	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
 	player.reset_preview()
 	player.gain_movement(cards_in_hand)
-	
 
 
 func _on_AttackButton_pressed():
+	emit_signal("button_pressed")
 	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
@@ -367,6 +374,7 @@ func _on_AttackButton_pressed():
 
 
 func _on_DefenceButton_pressed():
+	emit_signal("button_pressed")
 	var cards_in_hand = len(hand)
 	while len(hand):
 		discard(hand.back())
@@ -427,7 +435,8 @@ func set_highlighted_card(c):
 	if c != null:
 		highlighted_card = c
 		last_card_highlighted = highlighted_card
-		last_card_highlighted.highlight_card(true)
+		var discarding = self.turn_state == TurnState.CHOOSE_DISCARD
+		last_card_highlighted.highlight_card(true, discarding)
 		preview_card_effects(highlighted_card)
 	else:
 		unpreview_card_effects()

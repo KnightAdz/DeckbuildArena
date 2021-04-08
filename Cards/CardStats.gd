@@ -24,6 +24,10 @@ export(bool) var destroy_after_use = false
 export(bool) var one_use_per_wave = false
 export(bool) var needs_target = false
 
+# Buffs
+export(int) var damage_multiplier = 1
+export(int) var damage_multiplier_duration = 1 #num_of_attacks
+
 # Action order, only needed if multiple effects
 export(Array, Resource) var actions = []
 

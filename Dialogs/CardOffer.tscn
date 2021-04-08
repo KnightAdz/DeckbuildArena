@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Dialogs/CardOffer.gd" type="Script" id=1]
 [ext_resource path="res://Cards/Card.tscn" type="PackedScene" id=2]
+[ext_resource path="res://m5x7_32.tres" type="DynamicFont" id=3]
 
 [node name="CardOffer" type="Control"]
 anchor_left = 0.000976563
@@ -36,6 +37,7 @@ margin_left = 12.0
 margin_top = 6.0
 margin_right = 501.0
 margin_bottom = 20.0
+custom_fonts/font = ExtResource( 3 )
 text = "You survived the wave of enemies!
 Choose which card you'd like to add to your deck:"
 __meta__ = {
@@ -43,26 +45,27 @@ __meta__ = {
 }
 
 [node name="Leave" type="Button" parent="."]
-margin_left = 202.0
-margin_top = 310.0
-margin_right = 334.0
-margin_bottom = 330.0
+margin_left = 186.0
+margin_top = 326.0
+margin_right = 318.0
+margin_bottom = 346.0
 text = "None, thanks!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Cards" type="Node2D" parent="."]
+position = Vector2( -1, 24 )
 z_index = 1
 
 [node name="Card" parent="Cards" instance=ExtResource( 2 )]
-position = Vector2( 12, 209 )
+position = Vector2( 15, 210 )
 
 [node name="Card2" parent="Cards" instance=ExtResource( 2 )]
 position = Vector2( 490, 210 )
 
 [node name="Card3" parent="Cards" instance=ExtResource( 2 )]
-position = Vector2( 264, 211 )
+position = Vector2( 253, 210 )
 [connection signal="pressed" from="Leave" to="." method="_on_Leave_pressed"]
 [connection signal="card_highlighted" from="Cards/Card" to="." method="_on_card_highlighted"]
 [connection signal="card_selected" from="Cards/Card" to="." method="_on_card_selected"]

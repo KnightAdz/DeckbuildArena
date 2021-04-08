@@ -36,3 +36,7 @@ func _process(_delta):
 
 func set_stun(value):
 	$Hitbox.stun = value
+
+
+func set_damage(value):
+	$Hitbox.damage = value

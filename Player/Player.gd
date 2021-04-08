@@ -36,10 +36,14 @@ var AREA_RANGE = 5
 var hit_range = 30
 var knockback_strength = 1
 
+# Defence
 var defence = 0 setget set_defence
 var defence_preview = 0 setget set_defence_preview
 var defence_at_turn_start = 0
 
+# Buffs
+var damage_multipliers = []
+var damage_multiplier_durations = [] #in num of attacks
 
 var action_queue = []
 
@@ -54,7 +58,7 @@ signal is_idle()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	radius_size = $MoveRadius/CollisionShape2D.shape.radius
-	self.defence = 1
+	self.defence = 2
 	update_attack_indicator()
 	last_known_position = global_position
 
@@ -112,6 +116,7 @@ func _process(delta):
 				var proj = ProjectileScene.instance()
 				self.get_parent().add_child(proj)
 				proj.set_stun($AttackIndicator/Hitbox.stun)
+				proj.set_damage($AttackIndicator/Hitbox.damage)
 				proj.global_position = self.global_position
 				proj.velocity = hit_direction
 			attack_preview_visible = false
@@ -159,7 +164,13 @@ func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=fa
 
 
 func attack(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
-	set_attack_attribs(damage, ranged, area, knockback, stun, attack_duration)
+	#Apply damage multipliers
+	var total_damage = damage
+	for m in damage_multipliers:
+		if total_damage < 99999:
+			total_damage*=m
+	set_attack_attribs(total_damage, ranged, area, knockback, stun, attack_duration)
+	decrement_damage_multipliers()
 	# Move into a state to perform the attack
 	if !area:
 		self.state = STATES.AIMING
@@ -341,9 +352,30 @@ func save_state():
 		"global_position.y" : global_position.y,
 		"defence" : defence,
 		"health" : stats.health,
-		"max_health" : stats.max_health
+		"max_health" : stats.max_health,
+		"in_stealth" : in_stealth,
+		"last_known_position.x" : last_known_position.x,
+		"last_known_position.y" : last_known_position.y,
+		"damage_multipliers" : save_damage_multipliers(),
+		"damage_multiplier_durations" : save_damage_durations()
 	}
 	return save_dict
+
+
+func save_damage_multipliers():
+	# Assume they are all single digits
+	var multipliers = ""
+	for m in damage_multipliers:
+		multipliers += str(m)
+	return multipliers
+
+
+func save_damage_durations():
+	# Assume they are all single digits
+	var multipliers = ""
+	for m in damage_multiplier_durations:
+		multipliers += str(m)
+	return multipliers
 
 
 func load_state(data):
@@ -352,6 +384,22 @@ func load_state(data):
 	self.defence = data["defence"]
 	stats.health = data["health"]
 	stats.max_health = data["max_health"]
+	in_stealth = data["in_stealth"]
+	last_known_position.x = data["last_known_position.x"]
+	last_known_position.y = data["last_known_position.y"]
+	
+	# Set stealth properly
+	get_parent().kill_player_copy()
+	if in_stealth:
+		create_player_copy()
+	
+	# Set damage multipliers
+	self.damage_multipliers = []
+	self.damage_multiplier_durations = []
+	for m in data["damage_multipliers"]:
+		self.damage_multipliers.append(int(m))
+	for d in data["damage_multiplier_durations"]:
+		self.damage_multiplier_durations.append(int(d))
 
 
 func _on_AnimationPlayer_animation_finished(anim_name):
@@ -371,9 +419,7 @@ func _on_Stats_max_health_changed(value):
 func set_stealth(value):
 	if in_stealth == false and value == true:
 		last_known_position = self.global_position
-		var copy = PlayerCopyScene.instance()
-		get_parent().add_child(copy)
-		copy.global_position = last_known_position
+		create_player_copy()
 		in_stealth = value
 	elif in_stealth == true and value == false:
 		#set_collision_mask_bit(2,true)
@@ -381,5 +427,27 @@ func set_stealth(value):
 		get_parent().kill_player_copy()
 
 
+func create_player_copy():
+	var copy = PlayerCopyScene.instance()
+	get_parent().add_child(copy)
+	copy.global_position = last_known_position
+
+
 func on_new_wave(_wave_num):
 	self.in_stealth = false
+
+
+func add_damage_multiplier(multiplier, duration):
+	self.damage_multipliers.append(multiplier)
+	self.damage_multiplier_durations.append(duration)
+
+
+func decrement_damage_multipliers():
+	var idx = 0
+	while idx < len(damage_multipliers):
+		damage_multiplier_durations[idx] -= 1
+		if damage_multiplier_durations[idx] <= 0:
+			damage_multiplier_durations.remove(idx)
+			damage_multipliers.remove(idx)
+		else:
+			idx += 1

@@ -85,17 +85,19 @@ func _on_Area2D_mouse_exited():
 		highlight_card(false)
 
 
-func highlight_card(bool_value):
+func highlight_card(bool_value, discard=false):
 	if bool_value:
 		self.non_highlighted_position = global_position
 		$Highlight.visible = true
 		self.z_index = 1
 		toggle_tool_tips(true)
 		animate_sheen()
+		show_discard_indicator(discard)
 	else:
 		$Highlight.visible = false
 		self.z_index = 0
 		toggle_tool_tips(false)
+		show_discard_indicator(discard)
 
 
 func select_card():
@@ -146,3 +148,7 @@ func animate_sheen():
 
 func _on_SheenAnimation_animation_finished():
 	$SheenAnimation.visible = false
+
+
+func show_discard_indicator(value):
+	$DiscardIndicator.visible = value

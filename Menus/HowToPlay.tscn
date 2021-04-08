@@ -37,11 +37,13 @@ bbcode_text = "[center] Controls
 Left click: select & play card
 Space bar: zoom out 
 Right click: view whole card
+F5: Revert to start of turn
 [/center]"
 text = " Controls
 Left click: select & play card
 Space bar: zoom out 
 Right click: view whole card
+F5: Revert to start of turn
 "
 
 [node name="Aim" type="RichTextLabel" parent="VBoxContainer"]

@@ -294,7 +294,9 @@ zoom = Vector2( 1.1, 1.1 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
+autoplay = true
 bus = "Music"
+[connection signal="button_pressed" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_button_pressed"]
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
