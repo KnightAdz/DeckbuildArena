@@ -294,7 +294,6 @@ zoom = Vector2( 1.1, 1.1 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
-autoplay = true
 bus = "Music"
 [connection signal="button_pressed" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_button_pressed"]
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
@@ -308,6 +307,7 @@ bus = "Music"
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
 [connection signal="enemy_hurt" from="Enemies" to="EventManager" method="_on_Enemies_enemy_hurt"]
 [connection signal="enemy_killed" from="Enemies" to="EventManager" method="on_enemy_killed"]
+[connection signal="new_wave_loaded" from="Enemies" to="." method="_on_Enemies_new_wave_loaded"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
 [connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]

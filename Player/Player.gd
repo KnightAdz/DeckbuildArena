@@ -18,6 +18,7 @@ export var FRICTION = 200
 var velocity = Vector2.ZERO
 var target_position = null
 var TARGET_RANGE = 5
+var prev_mouse_position = Vector2.ZERO
 
 # Movement
 var move_radius = 0 setget set_move_radius
@@ -137,8 +138,20 @@ func _process(delta):
 func _unhandled_input(_event):
 	match state:
 		STATES.AIMING:
-			hit_direction = (self.get_local_mouse_position()).normalized()
+			var mouse_pos = self.get_local_mouse_position()
+			if mouse_pos != prev_mouse_position:
+				hit_direction = mouse_pos.normalized()
+				prev_mouse_position = mouse_pos
+			else:
+				var rotate_speed = 0.5
+				if Input.is_action_pressed("ui_right"):
+					hit_direction = hit_direction.rotated(rotate_speed)
+				elif Input.is_action_pressed("ui_left"):
+					hit_direction = hit_direction.rotated(-rotate_speed)
+			
 			if Input.is_action_just_released("click"):
+				self.state = STATES.ATTACKING
+			if Input.is_action_just_pressed("ui_accept"):
 				self.state = STATES.ATTACKING
 
 
@@ -280,10 +293,8 @@ func _on_Hurtbox_area_entered(area):
 
 func _on_Deck_playing_first_card():
 	pass
-	#if defence > 0:
-		#self.defence = 0
-
-
+	
+	
 func set_defence_preview(value):
 	defence_preview = value
 	self.defence += defence_preview
@@ -379,6 +390,7 @@ func save_damage_durations():
 
 
 func load_state(data):
+	$AnimationPlayer.play("Idle")
 	self.global_position.x = data["global_position.x"]
 	self.global_position.y = data["global_position.y"]
 	self.defence = data["defence"]

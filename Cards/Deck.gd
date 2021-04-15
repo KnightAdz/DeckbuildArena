@@ -30,9 +30,6 @@ var hovered_cards = []
 var highlighted_card = null setget set_highlighted_card
 var last_card_highlighted = null
 
-var focus_level = 3 setget set_focus_level
-var focus = 3 setget set_focus
-
 signal card_played()
 signal turn_taken()
 signal card_is_hovered(bool_value)
@@ -56,6 +53,30 @@ func _input(_event):
 	if Input.is_action_just_pressed("viewdeck"):
 		#show_whole_deck()	
 		pass
+		
+	# Keyboard input controls
+	# If cards are eligible to be selected (assume if first hand card is, all are)
+	if len(hand) > 0:
+		if !hand[0].ignore_input:
+			if Input.is_action_just_pressed("ui_left"):
+				change_highlighted_card(-1)
+				for b in $Buttons.get_children():
+					b.release_focus()
+			if Input.is_action_just_pressed("ui_right"):
+				change_highlighted_card(1)
+				for b in $Buttons.get_children():
+					b.release_focus()
+			if Input.is_action_just_released("ui_focus_next"):
+				if highlighted_card:
+					var discarding = (self.turn_state == TurnState.CHOOSE_DISCARD)
+					highlighted_card.highlight_card(false, discarding)
+					_on_card_unhovered(highlighted_card)
+				self.highlighted_card = null
+				$Buttons/EndTurnButton.grab_focus()
+			if Input.is_action_just_released("ui_accept"):
+				if self.highlighted_card:
+					_on_card_selected(self.highlighted_card)
+
 
 func _process(_delta):
 	# Clear out clicked cards
@@ -78,20 +99,17 @@ func take_turn():
 	cards_played_this_turn = 0
 	player.start_turn()
 	gain_control()
-	self.focus = self.focus_level
 	self.turn_state = TurnState.SELECT_CARD
 
 
 func set_state(new_state):
 	turn_state = new_state
+	for c in hand:
+		c.modulate = Color.white
 	match new_state:
 		TurnState.SELECT_CARD:
 			$Turnstate.text = "Select card"
-			$Button.visible = true	
-			# Set cards in hand to accept input if we have enough focus to spend them
-			for c in hand:
-				if c.card_stats.focus_cost <= focus:
-					c.ignore_input = false
+			$Buttons/EndTurnButton.visible = true	
 			# Update button labels
 			update_button_labels()
 			enable_buttons()
@@ -105,11 +123,13 @@ func set_state(new_state):
 			play_card()
 		TurnState.FINISHED:
 			$Turnstate.text = "Finished"
-			$Button.visible = false
+			$Buttons/EndTurnButton.visible = false
 		TurnState.WAIT:
 			$Turnstate.text = "Wait"
 		TurnState.CHOOSE_DISCARD:
 			$Turnstate.text = "Choose a card to discard"
+			for c in hand:
+				c.modulate = Color.red
 			disable_buttons()
 
 
@@ -273,7 +293,6 @@ func play_card():
 	emit_signal("card_played")
 	emit_signal("card_is_hovered", false)
 	var stats = selected_card.card_stats
-	self.focus -= stats.focus_cost
 	
 	# Default next state will be select card but some cards may change this
 	self.turn_state = TurnState.SELECT_CARD
@@ -312,16 +331,14 @@ func play_card():
 	else:
 		discard(selected_card)
 	
-	# If no cards in hand, draw a new hand
-	#if len(hand) == 0:
-	#	end_turn()
-	#else:
 	reposition_hand_cards()
 
 
 func discard(card):
 	if hand.find(card) >= 0:
 		hand.remove(hand.find(card))
+	if draw_pile.find(card) >= 0:
+		draw_pile.remove(draw_pile.find(card))
 	last_card_highlighted = null
 	hovered_cards = []
 	discard_pile.append(card)
@@ -329,6 +346,7 @@ func discard(card):
 	card.target_position = $DiscardPile.global_position
 	card.is_face_up = false
 	card.is_selected = false
+	card.modulate = Color.white
 	$Label.text = str(len(discard_pile))
 	update_button_labels()
 
@@ -343,16 +361,6 @@ func _on_Button_pressed():
 	if self.turn_state == TurnState.WAIT:
 		return
 	end_turn()
-
-
-func set_focus_level(value):
-	focus_level = value
-	$FocusLevel.region_rect = Rect2(0, 0, focus_level*64, 64) 
-
-
-func set_focus(value):
-	focus = clamp(value, 0, focus_level)
-	$Focus.region_rect = Rect2(0, 0, focus*64, 64) 
 
 
 func _on_MovementButton_pressed():
@@ -433,9 +441,11 @@ func set_highlighted_card(c):
 		return 
 	#if different to previous and not null
 	if c != null:
+		var discarding = (self.turn_state == TurnState.CHOOSE_DISCARD)
+		if highlighted_card:
+			highlighted_card.highlight_card(false, discarding)
 		highlighted_card = c
 		last_card_highlighted = highlighted_card
-		var discarding = self.turn_state == TurnState.CHOOSE_DISCARD
 		last_card_highlighted.highlight_card(true, discarding)
 		preview_card_effects(highlighted_card)
 	else:
@@ -462,8 +472,6 @@ func _on_card_unhovered(card):
 			self.last_card_highlighted = null
 			emit_signal("card_is_hovered", false)
 
-		
-
 
 func lose_control():
 	# lower opacity of cards, ignore input
@@ -483,24 +491,20 @@ func gain_control():
 
 
 func disable_buttons():
-	$MovementButton.disabled = true
-	$AttackButton.disabled = true
-	$DefenceButton.disabled = true
-	$Button.disabled = true
+	for b in $Buttons.get_children():
+		b.disabled = true
 
 
 func enable_buttons():
-	$MovementButton.disabled = false
-	$AttackButton.disabled = false
-	$DefenceButton.disabled = false
-	$Button.disabled = false
+	for b in $Buttons.get_children():
+		b.disabled = false
 
 
 func update_button_labels():
 	var num_cards = len(hand)
-	$MovementButton.text = str(num_cards) + " Movement"
-	$DefenceButton.text = str(num_cards) + " Defence"
-	$AttackButton.text = "1 Attack for " + str(num_cards) + " damage"
+	$Buttons/MovementButton.text = str(num_cards) + " Movement"
+	$Buttons/DefenceButton.text = str(num_cards) + " Defence"
+	$Buttons/AttackButton.text = "1 Attack for " + str(num_cards) + " damage"
 
 
 func destroy_card(card):
@@ -543,17 +547,20 @@ func load_state(save_dict):
 	# Recreate
 	for c in discard_cardstats:
 		add_card_to_deck(load(c))
-		discard(draw_pile.back())
-
-	for c in hand_cardstats:
-		add_card_to_deck(load(c))
-		draw_hand(len(hand_cardstats))
 	
-	for c in draw_cardstats:
-		add_card_to_deck(load(c))
+	for c in draw_pile:
+		discard(c)
+
+	for d in hand_cardstats:
+		add_card_to_deck(load(d))
+	draw_hand(len(hand_cardstats))
+	
+	for e in draw_cardstats:
+		add_card_to_deck(load(e))
 	
 
 func _on_MovementButton_mouse_entered():
+	# Also focus entered
 	var movement = len(hand)
 	player.move_preview += movement
 	
@@ -563,11 +570,13 @@ func _on_MovementButton_mouse_exited():
 
 
 func _on_AttackButton_mouse_entered():
+	# Also focus entered
 	var damage = len(hand)
 	player.set_attack_attribs(damage)
 
 
 func _on_DefenceButton_mouse_entered():
+	# Also focus entered
 	var defence = len(hand)
 	player.defence_preview += defence
 	
@@ -577,6 +586,7 @@ func _on_DefenceButton_mouse_exited():
 
 
 func _on_AttackButton_mouse_exited():
+	# Also focus entered
 	player.reset_preview()
 
 
@@ -601,3 +611,17 @@ func show_whole_deck():
 	self.get_parent().add_child(deckview)
 	deckview.add_list_of_cards(list_cardstats_in_deck())
 	
+
+func change_highlighted_card(idx_change):
+	if highlighted_card == null:
+		if len(hand) > 0:
+			self.highlighted_card = hand[0]
+			return
+	else:
+		_on_card_unhovered(highlighted_card)
+		var current_idx = hand.find(highlighted_card)
+		var new_idx = current_idx+idx_change
+		new_idx = clamp(new_idx, 0, len(hand)-1)
+		var card = hand[new_idx]
+		self.highlighted_card = card
+

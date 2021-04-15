@@ -26,7 +26,8 @@ var completed_tutorial = false
 # Endgame stats
 var wave_number = 0
 
-var save_locaton = "user://savegame.save"
+var save_location = "user://savegame.save"
+var wave_checkpoint_save = "user://wavecheckpoint.save"
 
 # all possible cards
 var all_cards =  [	"res://Cards/BasicAttack.tres",
@@ -47,3 +48,5 @@ var all_cards =  [	"res://Cards/BasicAttack.tres",
 					"res://Cards/StunDart.tres",
 					"res://Cards/Sneak.tres",
 					"res://Cards/DoubleDamage2.tres"]
+
+var load_wave = false

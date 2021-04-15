@@ -6,7 +6,7 @@ func _ready():
 	$AnimationPlayer.connect("animation_finished", self, "_on_animation_finished")
 
 
-func _on_animation_finished(anim):
+func _on_animation_finished(_anim):
 	queue_free()
 
 

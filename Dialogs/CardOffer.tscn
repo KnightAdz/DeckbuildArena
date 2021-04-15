@@ -61,15 +61,15 @@ z_index = 1
 [node name="Card" parent="Cards" instance=ExtResource( 2 )]
 position = Vector2( 15, 210 )
 
-[node name="Card2" parent="Cards" instance=ExtResource( 2 )]
-position = Vector2( 490, 210 )
-
 [node name="Card3" parent="Cards" instance=ExtResource( 2 )]
 position = Vector2( 253, 210 )
+
+[node name="Card2" parent="Cards" instance=ExtResource( 2 )]
+position = Vector2( 490, 210 )
 [connection signal="pressed" from="Leave" to="." method="_on_Leave_pressed"]
 [connection signal="card_highlighted" from="Cards/Card" to="." method="_on_card_highlighted"]
 [connection signal="card_selected" from="Cards/Card" to="." method="_on_card_selected"]
-[connection signal="card_highlighted" from="Cards/Card2" to="." method="_on_card_highlighted"]
-[connection signal="card_selected" from="Cards/Card2" to="." method="_on_card_selected"]
 [connection signal="card_highlighted" from="Cards/Card3" to="." method="_on_card_highlighted"]
 [connection signal="card_selected" from="Cards/Card3" to="." method="_on_card_selected"]
+[connection signal="card_highlighted" from="Cards/Card2" to="." method="_on_card_highlighted"]
+[connection signal="card_selected" from="Cards/Card2" to="." method="_on_card_selected"]

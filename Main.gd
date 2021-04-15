@@ -5,6 +5,7 @@ var GainCardDialog = preload("res://Dialogs/GainCard.tscn")
 
 onready var turn_order = [$CanvasLayer/Deck, $Enemies]
 var turn_idx = 0
+var turns_this_wave = 0
 var ready_for_next_turn = true
 
 var tutorial_hidden = false
@@ -12,6 +13,7 @@ var tutorial_hidden = false
 # Start with the 1st wave as default
 var starting_wave = preload("res://Enemies/Wave1.tres")
 var tutorial_wave = preload("res://Enemies/WaveT1.tres")
+var wave_saved = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,6 +23,14 @@ func _ready():
 		$Enemies.load_wave_from_resource(starting_wave)
 	else:
 		$CanvasLayer/Tip/AcceptDialog.visible = true
+	
+	if Globals.load_wave:
+		Globals.load_wave = false
+		load_state(Globals.wave_checkpoint_save)
+		turn_idx = 0
+		#wave_saved = true
+		#load_state(Globals.save_location)
+
 	take_turn(turn_idx)
 
 
@@ -31,23 +41,24 @@ func _process(_delta):
 
 
 func _input(event):
-	if Input.is_action_pressed("ui_accept"):
+	if Input.is_action_pressed("ui_select"):
 		show_overview()
 	else:
 		show_player_camera()
 	
 	if Input.is_action_just_pressed("load"):
-		load_state()
+		load_state(Globals.save_location)
 
 
 func take_turn(idx):
-	save_state()
+	save_state(Globals.save_location)
 	var turn_text = null	
 	match idx:
-		0: turn_text = "Player turn"
+		0: turn_text = "Player turn" 
 		1: turn_text = "Enemy turn"
 		2: turn_text = "??? turn"
 	$CanvasLayer/HUD.turn_message_animation(turn_text)
+	
 	turn_order[idx].take_turn()
 
 
@@ -102,7 +113,11 @@ func add_to_turn_order(node):
 
 func game_over():
 	var wave_num = $Enemies.get_wave()
-	get_tree().change_scene("res://Menus/GameOverMenu.tscn")
+	var game_over_screen = preload("res://Menus/GameOverMenu.tscn").instance()
+	get_tree().get_root().add_child(game_over_screen)
+	#game_over_screen.main_scene = self
+	#get_tree().get_root().remove_child(self)
+	
 	self.queue_free()
 
 
@@ -124,6 +139,8 @@ func show_player_camera():
 
 func start_next_wave():
 	turn_idx = 0
+	turns_this_wave = 0
+	wave_saved = false
 	take_turn(turn_idx)
 
 
@@ -144,9 +161,9 @@ func hide_tutorial():
 	$CanvasLayer/Tip.queue_free()
 
 
-func save_state():
+func save_state(file_location):
 	var save_game = File.new()
-	save_game.open(Globals.save_locaton, File.WRITE)
+	save_game.open(file_location, File.WRITE)
 
 	var save_nodes = get_tree().get_nodes_in_group("persist")
 	for node in save_nodes:
@@ -165,14 +182,14 @@ func save_state():
 
 # Note: This can be called from anywhere inside the tree. This function
 # is path independent.
-func load_state():
+func load_state(file_location):
 	var save_game = File.new()
-	if not save_game.file_exists(Globals.save_locaton):
+	if not save_game.file_exists(file_location):
 		return # Error! We don't have a save to load.
 	
 	# Load the file line by line and process that dictionary to restore
 	# the object it represents.
-	save_game.open(Globals.save_locaton, File.READ)
+	save_game.open(file_location, File.READ)
 	while save_game.get_position() < save_game.get_len():
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(save_game.get_line())
@@ -181,7 +198,8 @@ func load_state():
 				"deck" : $CanvasLayer/Deck.load_state(node_data)
 				"player" : $Player.load_state(node_data)
 				"enemies" : $Enemies.load_state(node_data)
-
+	turns_this_wave = 0
+	ready_for_next_turn = false
 	save_game.close()
 
 
@@ -200,3 +218,10 @@ func _on_MusicButton_toggled(button_pressed):
 		$AudioStreamPlayer.stop()
 	else:
 		$AudioStreamPlayer.play()
+
+
+func _on_Enemies_new_wave_loaded():
+	#if !wave_saved and $Enemies.count_enemies() > 0:
+	#Save a checkpoint
+	save_state(Globals.wave_checkpoint_save)
+	#	wave_saved = true

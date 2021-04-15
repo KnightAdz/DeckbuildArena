@@ -24,6 +24,7 @@ signal turn_taken()
 signal wave_changed(wave_number)
 signal number_enemies_changed(number)
 signal wave_complete()
+signal new_wave_loaded()
 signal completed_tutorial()
 signal advance_tutorial()
 signal enemy_killed(position)
@@ -74,7 +75,7 @@ func spawn_random_enemies():
 func generate_position(placed_pos):
 	var safe_dist = 60
 	var tries = 1000
-	for i in range(tries):
+	for _i in range(tries):
 		var new_pos = Vector2(randi()%800+100, randi()%450+100)
 		var safe = true
 		for p in placed_pos:
@@ -85,7 +86,7 @@ func generate_position(placed_pos):
 	return null
 
 
-func _process(delta):
+func _process(_delta):
 	count_enemies() #not needed every frame
 	if !turn_started:
 		return
@@ -194,6 +195,7 @@ func get_wave():
 	return wave_count
 
 
+# Triggered by offer scene close signal
 func start_next_wave():
 	wave_started = true
 	self.wave_count += 1
@@ -204,6 +206,8 @@ func start_next_wave():
 			enemy_health += 1
 		else:
 			enemy_damage += 1
+	
+	emit_signal("new_wave_loaded")
 
 
 func load_wave_from_resource(info):
@@ -239,6 +243,8 @@ func save_state():
 	var n_enemies = count_enemies()
 	var save_dict = {
 		"node" : "enemies",
+		"wave_number" : wave_count,
+		"next_wave_file" : next_wave_file.get_path(),
 		"num_enemies" : n_enemies,
 		"enemy_data" : save_enemies()
 	}
@@ -247,7 +253,7 @@ func save_state():
 
 func save_enemies():
 	var idx = 0
-	var save_dict = {}
+	var save_dict = { }
 	for c in get_children():
 		if c.is_in_group("enemy"):
 			save_dict["enemy"+str(idx)] = c.get_save_info()
@@ -266,6 +272,8 @@ func load_state(data):
 					this_enemy["damage"],
 					Vector2(this_enemy["global_position.x"],
 							this_enemy["global_position.y"]))
+	self.wave_count = data["wave_number"]
+	self.next_wave_file = load(data["next_wave_file"])
 
 
 func on_enemy_hurt(position):

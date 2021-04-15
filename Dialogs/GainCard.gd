@@ -12,6 +12,7 @@ func _ready():
 	card_pos = panel.rect_global_position
 	card_pos.x += panel.rect_size.x*0.5
 	card_pos.y += panel.rect_size.y*0.67 
+	$HBoxContainer/VBoxContainer/Keep.grab_focus()
 
 
 func set_card(c):
