@@ -12,7 +12,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog" type="AcceptDialog" parent="."]
+[node name="BasicTip1" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -890.0
+margin_top = 30.0
+margin_right = -456.0
+margin_bottom = 122.0
+window_title = "Tip"
+dialog_text = "That bat just bit you, and you lost 1 health! Click on a red attack card to give yourself an opportunity to hit back"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BasicTip2" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -464.0
+margin_top = 220.0
+margin_right = -30.0
+margin_bottom = 312.0
+window_title = "Tip"
+dialog_text = "Now aim you can aim your attack. Make sure the bat is in the red area then click left mouse button."
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BasicTip3" type="AcceptDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -464.0
+margin_top = 218.0
+margin_right = -30.0
+margin_bottom = 310.0
+window_title = "Tip"
+dialog_text = "Cards are discarded once played, and will stay in the discard pile until there are no more cards left in the draw pile. Then the discard pile will be shuffled and become the draw pile"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyTip1" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -434.0
@@ -25,7 +67,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog4" type="AcceptDialog" parent="."]
+[node name="ControlTip1" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -434.0
@@ -38,7 +80,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog2" type="AcceptDialog" parent="."]
+[node name="EnemyTip2" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -434.0
@@ -51,7 +93,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog5" type="AcceptDialog" parent="."]
+[node name="ControlTip2" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -434.0
@@ -64,7 +106,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog3" type="AcceptDialog" parent="."]
+[node name="EnemyTip3" type="AcceptDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -434.0

@@ -4,7 +4,7 @@ extends KinematicBody2D
 var ACCELERATION = 300
 var MAX_SPEED = 50
 var card_stats_file = "res://Cards/Attack4.tres"
-var protected_time = 1
+var protected_time = 0.2
 var picked_up = false
 var player = null
 var velocity = Vector2.ZERO

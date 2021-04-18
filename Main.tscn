@@ -254,6 +254,22 @@ tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0
 ]]
 script = ExtResource( 6 )
 
+[node name="Blindness" type="ColorRect" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -154.0
+margin_top = -74.0
+margin_right = 1346.0
+margin_bottom = 1426.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.109804, 0.0666667, 0.0901961, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 540.034, 337.757 )
 
@@ -297,8 +313,11 @@ stream = ExtResource( 9 )
 bus = "Music"
 [connection signal="button_pressed" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_button_pressed"]
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
-[connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/Tip" method="_on_Deck_card_played"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
+[connection signal="player_blinded" from="CanvasLayer/Deck" to="." method="_on_player_blinded"]
+[connection signal="player_unblinded" from="CanvasLayer/Deck" to="." method="_on_player_unblinded"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_turn_taken"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
@@ -306,14 +325,16 @@ bus = "Music"
 [connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
 [connection signal="enemy_hurt" from="Enemies" to="EventManager" method="_on_Enemies_enemy_hurt"]
+[connection signal="enemy_killed" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_enemy_killed"]
 [connection signal="enemy_killed" from="Enemies" to="EventManager" method="on_enemy_killed"]
 [connection signal="new_wave_loaded" from="Enemies" to="." method="_on_Enemies_new_wave_loaded"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
-[connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]
 [connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
+[connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]
 [connection signal="wave_complete" from="Enemies" to="CanvasLayer/Deck" method="_on_Enemies_wave_complete"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
+[connection signal="health_reduced" from="Player" to="CanvasLayer/Tip" method="_on_Player_health_reduced"]
 [connection signal="max_health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_max_health_changed"]
 [connection signal="player_controls_mouse" from="Player" to="CanvasLayer/Deck" method="lose_control"]
 [connection signal="player_died" from="Player" to="." method="game_over"]

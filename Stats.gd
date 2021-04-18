@@ -6,9 +6,11 @@ var health = max_health setget set_health
 signal no_health
 signal health_changed(value)
 signal max_health_changed(value)
-
+signal health_reduced()
 
 func set_health(value):
+	if value < health:
+		emit_signal("health_reduced")
 	health = value
 	if health > max_health:
 		health = max_health

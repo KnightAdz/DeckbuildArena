@@ -30,10 +30,12 @@ var hovered_cards = []
 var highlighted_card = null setget set_highlighted_card
 var last_card_highlighted = null
 
-signal card_played()
+signal card_played(card)
 signal turn_taken()
 signal card_is_hovered(bool_value)
 signal button_pressed()
+signal player_blinded()
+signal player_unblinded()
 
 func _ready():
 	#set_process(true)
@@ -103,6 +105,11 @@ func take_turn():
 
 
 func set_state(new_state):
+	# if coming out of discard, reset indicators 
+	if turn_state == TurnState.CHOOSE_DISCARD:
+		if new_state != turn_state:
+			remove_all_discard_indicators()
+	# Set new state
 	turn_state = new_state
 	for c in hand:
 		c.modulate = Color.white
@@ -134,10 +141,15 @@ func set_state(new_state):
 
 
 func end_turn():	
-	# Discard any cards in hand?
-	# yes for now as easier to manage card positions
+	emit_signal("player_unblinded")
+	# Discard any cards in hand
+	# and check for corruption cards
 	for c in hand:
-		discard(c)
+		if c.card_stats.colour == "PURPLE":
+			selected_card = c
+			play_card()
+		else:
+			discard(c)
 	
 	last_card_highlighted = null
 	hovered_cards = []
@@ -290,13 +302,12 @@ func play_card():
 	last_card_highlighted = null
 	hovered_cards = []
 	cards_played_this_turn += 1
-	emit_signal("card_played")
+	emit_signal("card_played", selected_card)
 	emit_signal("card_is_hovered", false)
 	var stats = selected_card.card_stats
 	
 	# Default next state will be select card but some cards may change this
 	self.turn_state = TurnState.SELECT_CARD
-
 
 	# if the card has a player actions list
 	if stats.actions != []:
@@ -324,6 +335,10 @@ func play_card():
 			self.turn_state = TurnState.CHOOSE_DISCARD
 	if stats.healing > 0:
 		player.gain_health(stats.healing)
+	
+	# Debuffs and statuses
+	if stats.blind:
+		emit_signal("player_blinded")
 	
 	# Remove from hand and add to discard pile
 	if stats.destroy_after_use:
@@ -407,6 +422,10 @@ func _on_card_selected(card):
 
 
 func set_selected_card(c):
+	# Can't play corruption cards
+	if c.card_stats.colour == 'PURPLE':
+		return
+		
 	# Prevent double playing when 2 cards are clicked at same time
 	if c == last_card_played:
 		TurnState.SELECT_CARD
@@ -504,7 +523,7 @@ func update_button_labels():
 	var num_cards = len(hand)
 	$Buttons/MovementButton.text = str(num_cards) + " Movement"
 	$Buttons/DefenceButton.text = str(num_cards) + " Defence"
-	$Buttons/AttackButton.text = "1 Attack for " + str(num_cards) + " damage"
+	$Buttons/AttackButton.text = str(num_cards) + " Damage"
 
 
 func destroy_card(card):
@@ -625,3 +644,11 @@ func change_highlighted_card(idx_change):
 		var card = hand[new_idx]
 		self.highlighted_card = card
 
+
+func remove_all_discard_indicators():
+	for c in draw_pile:
+		c.show_discard_indicator(false)
+	for c in hand:
+		c.show_discard_indicator(false)
+	for c in discard_pile:
+		c.show_discard_indicator(false)

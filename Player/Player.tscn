@@ -138,6 +138,7 @@ anims/Idle = SubResource( 6 )
 anims/Walk = SubResource( 7 )
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]
 [connection signal="health_changed" from="Stats" to="." method="_on_Stats_health_changed"]
+[connection signal="health_reduced" from="Stats" to="." method="_on_Stats_health_reduced"]
 [connection signal="max_health_changed" from="Stats" to="." method="_on_Stats_max_health_changed"]
 [connection signal="input_event" from="MoveRadius" to="." method="_on_MoveRadius_input_event"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

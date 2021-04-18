@@ -55,6 +55,7 @@ signal player_died()
 signal player_controls_mouse()
 signal player_releases_mouse()
 signal is_idle()
+signal health_reduced()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -267,9 +268,9 @@ func update_attack_indicator():
 
 func be_attacked(damage):
 	if defence > 0:
+		if damage > defence:
+			stats.health -= damage - defence
 		self.defence -= damage
-		if defence < 0:
-			stats.health += defence
 	else:
 		stats.health -= damage
 	hurtbox.create_effect()
@@ -281,7 +282,6 @@ func _on_Stats_health_changed(value):
 		self.state = STATES.DEATH
 		$AnimationPlayer.play("Die")
 		# Will emit player died signal at end of animation
-		
 
 
 func _on_Hurtbox_area_entered(area):
@@ -463,3 +463,7 @@ func decrement_damage_multipliers():
 			damage_multipliers.remove(idx)
 		else:
 			idx += 1
+
+
+func _on_Stats_health_reduced():
+	emit_signal("health_reduced")

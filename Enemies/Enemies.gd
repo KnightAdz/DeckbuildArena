@@ -241,10 +241,14 @@ func despawn_enemies():
 
 func save_state():
 	var n_enemies = count_enemies()
+	var wave_file = ""
+	if next_wave_file:
+		wave_file = next_wave_file.get_path()
+	
 	var save_dict = {
 		"node" : "enemies",
 		"wave_number" : wave_count,
-		"next_wave_file" : next_wave_file.get_path(),
+		"next_wave_file" : wave_file,
 		"num_enemies" : n_enemies,
 		"enemy_data" : save_enemies()
 	}
@@ -273,8 +277,16 @@ func load_state(data):
 					Vector2(this_enemy["global_position.x"],
 							this_enemy["global_position.y"]))
 	self.wave_count = data["wave_number"]
-	self.next_wave_file = load(data["next_wave_file"])
-
+	if data["next_wave_file"] != "":
+		self.next_wave_file = load(data["next_wave_file"])
+	else:
+		self.next_wave_file = null
 
 func on_enemy_hurt(position):
 	emit_signal("enemy_hurt",position)
+
+
+func _on_player_blinded():
+	for e in self.get_children():
+		if e.is_in_group("enemy"):
+			e.visible = false

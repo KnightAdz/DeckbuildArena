@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Cards/Card.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Cards/WhiteRect.png" type="Texture" id=4]
 [ext_resource path="res://Cards/sheen.png" type="Texture" id=5]
 [ext_resource path="res://Cards/Discard.png" type="Texture" id=6]
+[ext_resource path="res://m5x7_32.tres" type="DynamicFont" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 88.929, 118.843 )
@@ -92,7 +93,7 @@ texture = ExtResource( 4 )
 [node name="Background" type="Sprite" parent="."]
 position = Vector2( 1.92899, -41.632 )
 texture = ExtResource( 3 )
-vframes = 3
+vframes = 5
 hframes = 2
 
 [node name="Icon" type="Sprite" parent="."]
@@ -107,10 +108,11 @@ scale = Vector2( 0.5, 0.5 )
 
 [node name="Label" type="Label" parent="."]
 modulate = Color( 1, 1, 1, 0.792157 )
-margin_left = -67.0
-margin_top = -148.0
-margin_right = 69.0
+margin_left = -81.0
+margin_top = -152.0
+margin_right = 79.0
 margin_bottom = -48.0
+custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Cardname"
 align = 1

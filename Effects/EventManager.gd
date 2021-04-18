@@ -8,7 +8,7 @@ var events_this_card = []
 var events_this_turn = []
 
 
-func _on_Deck_card_played():
+func _on_Deck_card_played(_card):
 	events_this_card = []
 	total_cards_played += 1
 

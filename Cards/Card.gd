@@ -60,6 +60,8 @@ func set_stats(stats):
 				$Background.frame = 3
 			'RED':
 				$Background.frame = 5
+			'PURPLE':
+				$Background.frame = 7
 		if self.is_face_up:
 			$Background.frame -= 1
 		
@@ -152,3 +154,7 @@ func _on_SheenAnimation_animation_finished():
 
 func show_discard_indicator(value):
 	$DiscardIndicator.visible = value
+
+
+func play_card_animation(final_pos):
+	pass

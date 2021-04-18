@@ -57,11 +57,11 @@ script = ExtResource( 2 )
 texture = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( -7.39098e-06, -8.13173 )
-scale = Vector2( 0.0330133, 0.0559045 )
+position = Vector2( -0.176784, -5.48008 )
+scale = Vector2( 0.033, 0.033 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -25.4068 )
-vframes = 3
+vframes = 5
 hframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -44,7 +44,7 @@ func _on_Player_max_health_changed(new_value):
 		max_health_value_label.text = str(new_value)
 
 
-func _on_Deck_card_played():
+func _on_Deck_card_played(_card):
 	# keep track of enemies as cards are played 
 	# so that we can make the player feel good
 	last_cards_played = cards_played

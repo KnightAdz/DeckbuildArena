@@ -19,7 +19,8 @@ var available_cards =  ["res://Cards/Attack&draw1.tres",
 					"res://Cards/Sprint.tres",
 					"res://Cards/StunDart.tres",
 					"res://Cards/Sneak.tres",
-					"res://Cards/DoubleDamage2.tres"]
+					"res://Cards/DoubleDamage2.tres",
+					"res://Cards/AbsorbHealth.tres"]
 
 var completed_tutorial = false
 
@@ -47,6 +48,8 @@ var all_cards =  [	"res://Cards/BasicAttack.tres",
 					"res://Cards/Sprint.tres",
 					"res://Cards/StunDart.tres",
 					"res://Cards/Sneak.tres",
-					"res://Cards/DoubleDamage2.tres"]
+					"res://Cards/DoubleDamage2.tres",
+					"res://Cards/Blind.tres",
+					"res://Cards/AbsorbHealth.tres"]
 
 var load_wave = false

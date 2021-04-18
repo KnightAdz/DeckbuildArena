@@ -1,32 +1,30 @@
-[gd_resource type="Resource" load_steps=3 format=2]
+[gd_resource type="Resource" load_steps=2 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/attack.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
 movement = 0
-attack = 2
+attack = 0
 defence = 0
 healing = 0
 max_health_change = 0
-stealth = false
+stealth = true
 ranged_attack = false
 area_attack = false
 knockback = 1
 stun_enemy = false
 cards_to_draw = 0
 cards_to_discard = 0
-destroy_after_use = false
+destroy_after_use = true
 one_use_per_wave = false
 needs_target = false
 damage_multiplier = 1
 damage_multiplier_duration = 1
-blind = false
+blind = true
 paralyze = 0
 actions = [  ]
-image = ExtResource( 2 )
-text = "Close range attack for 2 damage"
-name = "Attack"
-colour = "RED"
+text = "Cannot be played. Can no longer see enemies, if still in hand by end of turn"
+name = "Blind"
+colour = "PURPLE"

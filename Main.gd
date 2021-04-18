@@ -21,16 +21,12 @@ func _ready():
 	if Globals.completed_tutorial:
 		$Enemies.despawn_enemies()
 		$Enemies.load_wave_from_resource(starting_wave)
-	else:
-		$CanvasLayer/Tip/AcceptDialog.visible = true
 	
 	if Globals.load_wave:
 		Globals.load_wave = false
 		load_state(Globals.wave_checkpoint_save)
 		turn_idx = 0
-		#wave_saved = true
-		#load_state(Globals.save_location)
-
+	
 	take_turn(turn_idx)
 
 
@@ -225,3 +221,10 @@ func _on_Enemies_new_wave_loaded():
 	#Save a checkpoint
 	save_state(Globals.wave_checkpoint_save)
 	#	wave_saved = true
+
+
+func _on_player_blinded():
+	$Blindness.visible = true
+
+func _on_player_unblinded():
+	$Blindness.visible = false
