@@ -64,7 +64,7 @@ func spawn_random_enemies():
 		elif wave_count == 3:
 			spawn_walky(1,1, safe_position)
 		else:
-			var enemy_scenes = [BatScene, WalkyScene, MageScene]
+			var enemy_scenes = [BatScene, WalkyScene, MageScene, SlimeScene]
 			var rand = randi()%len(enemy_scenes)
 			spawn_enemy(enemy_scenes[rand], 
 						enemy_health, 

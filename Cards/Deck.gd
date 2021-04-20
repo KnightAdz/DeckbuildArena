@@ -11,8 +11,7 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres"),
-						preload("res://Cards/Blind.tres")
+						preload("res://Cards/BasicMovement.tres")
 						]
 var card_counts = [2,2,2,2,2] #2,2,2
 
@@ -180,6 +179,7 @@ func add_card_to_deck(card_resource, on_top=false):
 	card.connect("card_selected", self, "_on_card_selected")
 	card.connect("card_highlighted", self, "_on_card_hovered")
 	card.connect("card_unhighlighted", self, "_on_card_unhovered")
+	card.connect("card_played", self, "_on_card_played")
 
 	if !on_top:
 		draw_pile.append(card)
@@ -309,7 +309,7 @@ func play_card():
 	emit_signal("card_played", selected_card)
 	emit_signal("card_is_hovered", false)
 	var stats = selected_card.card_stats
-	
+	selected_card.play_card_animation($DiscardPile.global_position)
 	# Default next state will be select card but some cards may change this
 	self.turn_state = TurnState.SELECT_CARD
 
@@ -344,12 +344,15 @@ func play_card():
 	if stats.blind:
 		emit_signal("player_blinded")
 	
+	# Wait for card played signal
+
+
+func _on_card_played(card):
 	# Remove from hand and add to discard pile
-	if stats.destroy_after_use:
-		destroy_card(selected_card)
+	if card.card_stats.destroy_after_use:
+		destroy_card(card)
 	else:
-		discard(selected_card)
-	
+		discard(card)
 	reposition_hand_cards()
 
 
@@ -436,6 +439,7 @@ func add_card_to_discard(card):
 	card.connect("card_selected", self, "_on_card_selected")
 	card.connect("card_highlighted", self, "_on_card_hovered")
 	card.connect("card_unhighlighted", self, "_on_card_unhovered")
+	card.connect("card_played", self, "_on_card_played")
 	discard(card)
 
 

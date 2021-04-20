@@ -247,7 +247,7 @@ cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 collision_mask = 6
 format = 1
-tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655373, 0, 0 )
+tile_data = PoolIntArray( 0, 0, 0, 3, 0, 0, 6, 0, 0, 9, 0, 0, 12, 0, 0, 13, 0, 0, 196608, 2, 0, 196612, 2, 0, 196615, 2, 0, 196619, 2, 0, 196620, 2, 0, 393216, 2, 0, 393220, 2, 0, 393224, 2, 0, 393228, 2, 0, 589824, 2, 0, 589828, 2, 0, 589832, 2, 0, 589836, 2, 0, 655360, 0, 0, 655363, 0, 0, 655366, 0, 0, 655369, 0, 0, 655372, 0, 0, 655373, 0, 0, 851968, 2, 0, 851972, 2, 0, 851976, 2, 0, 851980, 2, 0 )
 
 [node name="Enemies" type="Node2D" parent="." groups=[
 "persist",
@@ -299,10 +299,10 @@ position = Vector2( -539.034, -336.757 )
 position = Vector2( 482.966, -336.757 )
 
 [node name="BottomRightLimit" type="Position2D" parent="Camera2D"]
-position = Vector2( 482.966, 450.243 )
+position = Vector2( 482.966, 573.243 )
 
 [node name="BottomLeftLimit" type="Position2D" parent="Camera2D"]
-position = Vector2( -542.034, 450.243 )
+position = Vector2( -540.034, 573.243 )
 
 [node name="OverviewCamera" type="Camera2D" parent="."]
 position = Vector2( 513, 351 )
@@ -313,25 +313,25 @@ stream = ExtResource( 9 )
 bus = "Music"
 [connection signal="button_pressed" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_button_pressed"]
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/Tip" method="_on_Deck_card_played"]
-[connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
 [connection signal="player_blinded" from="CanvasLayer/Deck" to="." method="_on_player_blinded"]
 [connection signal="player_unblinded" from="CanvasLayer/Deck" to="." method="_on_player_unblinded"]
-[connection signal="turn_taken" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_turn_taken"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
+[connection signal="turn_taken" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
 [connection signal="toggled" from="CanvasLayer/MusicButton" to="." method="_on_MusicButton_toggled"]
 [connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]
 [connection signal="completed_tutorial" from="Enemies" to="." method="_on_Enemies_completed_tutorial"]
 [connection signal="enemy_hurt" from="Enemies" to="EventManager" method="_on_Enemies_enemy_hurt"]
-[connection signal="enemy_killed" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_enemy_killed"]
 [connection signal="enemy_killed" from="Enemies" to="EventManager" method="on_enemy_killed"]
+[connection signal="enemy_killed" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_enemy_killed"]
 [connection signal="new_wave_loaded" from="Enemies" to="." method="_on_Enemies_new_wave_loaded"]
 [connection signal="number_enemies_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_number_enemies_changed"]
 [connection signal="turn_taken" from="Enemies" to="." method="_on_turn_taken"]
-[connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
 [connection signal="wave_changed" from="Enemies" to="Player" method="on_new_wave"]
+[connection signal="wave_changed" from="Enemies" to="CanvasLayer/HUD" method="_on_Enemies_wave_changed"]
 [connection signal="wave_complete" from="Enemies" to="CanvasLayer/Deck" method="_on_Enemies_wave_complete"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/HUD" method="_on_Player_health_changed"]
 [connection signal="health_reduced" from="Player" to="CanvasLayer/Tip" method="_on_Player_health_reduced"]

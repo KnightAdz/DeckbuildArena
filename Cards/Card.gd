@@ -9,11 +9,13 @@ var is_face_up = false setget set_face_up
 var is_selected = false
 var ignore_input = true
 var non_highlighted_position = Vector2.ZERO
+var play_pos = 0.5*Vector2(ProjectSettings.get_setting("display/window/size/width"),
+		ProjectSettings.get_setting("display/window/size/height"))
 
 signal card_selected(card)
 signal card_highlighted(card)
 signal card_unhighlighted(card)
-
+signal card_played(card)
 
 func _ready():
 	self.card_stats = card_type
@@ -71,7 +73,7 @@ func set_stats(stats):
 
 func set_target_position(pos):
 	target_position = pos
-	$Tween.interpolate_property(self, "global_position", global_position, target_position, 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "global_position", global_position, target_position, 0.4, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
 
 
@@ -106,7 +108,7 @@ func select_card():
 	if is_face_up and !ignore_input and !is_selected:
 		# play discard animation
 		#self.is_face_up = false
-		self.target_position = self.global_position + Vector2(0,-20)
+#		self.target_position = self.global_position + Vector2(0,-20)
 		self.scale = Vector2(1.1,1.1)
 		$Highlight.visible = false
 		is_selected = true
@@ -122,7 +124,7 @@ func _on_Area2D_input_event(_viewport, event, _shape_idx):
 
 
 func deselect_card():
-	self.target_position = self.global_position + Vector2(0,+20)
+#	self.target_position = self.global_position + Vector2(0,+20)
 	self.scale = Vector2(1,1)
 	is_selected = false
 	
@@ -150,6 +152,9 @@ func animate_sheen():
 
 func _on_SheenAnimation_animation_finished():
 	$SheenAnimation.visible = false
+	if global_position == play_pos:
+		emit_signal("card_played", self)
+
 
 
 func show_discard_indicator(value):
@@ -157,4 +162,26 @@ func show_discard_indicator(value):
 
 
 func play_card_animation(final_pos):
-	pass
+#	$Tween.interpolate_property(self, 
+#								"global_position", 
+#								global_position, 
+#								centre_pos,
+#								0.2,
+#								Tween.TRANS_BACK,
+#								Tween.EASE_IN)
+#	$Tween.start()
+	self.target_position = play_pos
+	$Tween.interpolate_property(self, 
+								"rotation_degrees",
+								rotation_degrees,
+								0,
+								0.15,
+								Tween.TRANS_BACK,
+								Tween.EASE_IN
+								)
+#	$AnimationPlayer.play("playcard")
+
+
+func _on_Tween_tween_completed(object, key):
+	if global_position == play_pos:
+		animate_sheen()
