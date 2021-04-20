@@ -3,6 +3,8 @@ extends Node2D
 var BatScene = preload("res://Enemies/BasicEnemy.tscn")
 var WalkyScene = preload("res://Enemies/Walky.tscn")
 var MageScene = preload("res://Enemies/ProjectileEnemy.tscn")
+var SlimeScene = preload("res://Enemies/Slime.tscn")
+
 var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
 
@@ -224,6 +226,8 @@ func load_wave_from_resource(info):
 				spawn_enemy(WalkyScene,h,d)
 			info.EnemyTypes.MAGE:
 				spawn_enemy(MageScene,h,d)
+			info.EnemyTypes.SLIME:
+				spawn_enemy(SlimeScene,h,d)
 	next_wave_file = info.next_wave
 	self.wave_count = info.wave_number
 	if wave_count == 0:

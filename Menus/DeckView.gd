@@ -41,3 +41,7 @@ func on_card_clicked(event, card):
 
 func _on_CloseButton_pressed():
 	self.queue_free()
+
+
+func hide_close():
+	$CloseButton.visible = false

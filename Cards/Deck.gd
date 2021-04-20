@@ -11,7 +11,8 @@ var turn_state = TurnState.SELECT_CARD setget set_state
 
 var cards_in_deck = [	preload("res://Cards/BasicAttack.tres"),
 						preload("res://Cards/BasicDefend.tres"),
-						preload("res://Cards/BasicMovement.tres")
+						preload("res://Cards/BasicMovement.tres"),
+						preload("res://Cards/Blind.tres")
 						]
 var card_counts = [2,2,2,2,2] #2,2,2
 
@@ -169,7 +170,7 @@ func end_turn():
 	self.turn_state = TurnState.FINISHED
 
 
-func add_card_to_deck(card_resource):
+func add_card_to_deck(card_resource, on_top=false):
 	var card = CardScene.instance()
 	self.add_child(card)
 	card.set_stats(card_resource)
@@ -180,7 +181,10 @@ func add_card_to_deck(card_resource):
 	card.connect("card_highlighted", self, "_on_card_hovered")
 	card.connect("card_unhighlighted", self, "_on_card_unhovered")
 
-	draw_pile.append(card)
+	if !on_top:
+		draw_pile.append(card)
+	else:
+		draw_pile.push_front(card)
 
 
 func create_draw_pile(shuffle=true):
@@ -380,30 +384,52 @@ func _on_Button_pressed():
 
 func _on_MovementButton_pressed():
 	emit_signal("button_pressed")
-	var cards_in_hand = len(hand)
-	while len(hand):
-		discard(hand.back())
+	var cards_in_hand = count_discardable_cards()
+	discard_discardable_cards()
 	player.reset_preview()
 	player.gain_movement(cards_in_hand)
 
 
 func _on_AttackButton_pressed():
 	emit_signal("button_pressed")
-	var cards_in_hand = len(hand)
-	while len(hand):
-		discard(hand.back())
+	var cards_in_hand = count_discardable_cards()
+	discard_discardable_cards()
 	player.reset_preview()
 	player.attack(cards_in_hand)
 
 
 func _on_DefenceButton_pressed():
 	emit_signal("button_pressed")
-	var cards_in_hand = len(hand)
-	while len(hand):
-		discard(hand.back())
+	var cards_in_hand = count_discardable_cards()
+	discard_discardable_cards()
 	player.reset_preview()
 	player.defend(cards_in_hand)
-	
+
+
+func count_discardable_cards():
+	var count = 0
+	for c in hand:
+		if c.card_stats.colour != 'PURPLE':
+			count += 1
+	return count
+
+
+func discard_discardable_cards():
+	var discards = count_discardable_cards()
+	var idx = len(hand)
+	while idx > 0:
+		# Need to not discard purples
+		if hand[idx-1].card_stats.colour != 'PURPLE':
+			discard(hand[idx-1])
+			discards -= 1
+		idx -= 1
+
+
+func indicate_discardable_cards():
+	for c in hand:
+		if c.card_stats.colour != 'PURPLE':
+			c.show_discard_indicator(true)
+
 
 func add_card_to_discard(card):
 	self.add_child(card)
@@ -520,7 +546,7 @@ func enable_buttons():
 
 
 func update_button_labels():
-	var num_cards = len(hand)
+	var num_cards = count_discardable_cards()
 	$Buttons/MovementButton.text = str(num_cards) + " Movement"
 	$Buttons/DefenceButton.text = str(num_cards) + " Defence"
 	$Buttons/AttackButton.text = str(num_cards) + " Damage"
@@ -580,33 +606,39 @@ func load_state(save_dict):
 
 func _on_MovementButton_mouse_entered():
 	# Also focus entered
-	var movement = len(hand)
+	var movement = count_discardable_cards()
 	player.move_preview += movement
-	
-
-func _on_MovementButton_mouse_exited():
-	player.reset_preview()
+	indicate_discardable_cards()
 
 
 func _on_AttackButton_mouse_entered():
 	# Also focus entered
-	var damage = len(hand)
+	var damage = count_discardable_cards()
 	player.set_attack_attribs(damage)
+	indicate_discardable_cards()
 
 
 func _on_DefenceButton_mouse_entered():
 	# Also focus entered
-	var defence = len(hand)
+	var defence = count_discardable_cards()
 	player.defence_preview += defence
-	
+	indicate_discardable_cards()
+
+
+func _on_MovementButton_mouse_exited():
+	player.reset_preview()
+	remove_all_discard_indicators()
+
 
 func _on_DefenceButton_mouse_exited():
 	player.reset_preview()
+	remove_all_discard_indicators()
 
 
 func _on_AttackButton_mouse_exited():
 	# Also focus entered
 	player.reset_preview()
+	remove_all_discard_indicators()
 
 
 func list_cardstats_in_deck():

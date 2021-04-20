@@ -42,22 +42,28 @@ margin_bottom = 129.0
 alignment = 1
 
 [node name="StartGame" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 394.0
-margin_right = 477.0
+margin_left = 343.0
+margin_right = 426.0
 margin_bottom = 20.0
 text = "Start Game"
 
 [node name="HowToPlay" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 481.0
-margin_right = 568.0
+margin_left = 430.0
+margin_right = 517.0
 margin_bottom = 20.0
 text = "How to play"
 
 [node name="Credits" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 572.0
-margin_right = 629.0
+margin_left = 521.0
+margin_right = 578.0
 margin_bottom = 20.0
 text = "Credits"
+
+[node name="ViewAll" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 582.0
+margin_right = 681.0
+margin_bottom = 20.0
+text = "View all cards"
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
 margin_top = 133.0
@@ -77,3 +83,4 @@ text = " A game by KnightAdz "
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StartGame" to="." method="_on_StartGame_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/HowToPlay" to="." method="_on_HowToPlay_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Credits" to="." method="_on_Credits_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ViewAll" to="." method="_on_ViewAll_pressed"]

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
+[ext_resource path="res://Cards/blind.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -25,6 +26,7 @@ damage_multiplier_duration = 1
 blind = true
 paralyze = 0
 actions = [  ]
+image = ExtResource( 2 )
 text = "Cannot be played. Can no longer see enemies, if still in hand by end of turn"
 name = "Blind"
 colour = "PURPLE"

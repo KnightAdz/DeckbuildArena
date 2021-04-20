@@ -31,3 +31,8 @@ func _on_StartTutorial_pressed():
 	main_scene.load_tutorial()
 	get_tree().change_scene_to(main_scene)
 	self.queue_free()
+
+
+func _on_ViewAll_pressed():
+	get_tree().change_scene("res://Menus/ViewAllCards.tscn")
+	self.queue_free()
