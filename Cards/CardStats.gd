@@ -30,7 +30,7 @@ export(int) var damage_multiplier_duration = 1 #num_of_attacks
 
 # Debuffs
 export(bool) var blind = false
-export(int) var paralyze = 0
+export(bool) var slow = false
 
 # Action order, only needed if multiple effects
 export(Array, Resource) var actions = []

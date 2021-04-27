@@ -1,7 +1,7 @@
 extends Resource
 class_name Wave
 
-enum EnemyTypes { BAT, WALKY, MAGE, SLIME }
+enum EnemyTypes { BAT, WALKY, MAGE, SLIME, ROCKY }
 
 export(Array, EnemyTypes) var enemies
 export(int) var health_addition = 0

@@ -9,8 +9,8 @@ var is_face_up = false setget set_face_up
 var is_selected = false
 var ignore_input = true
 var non_highlighted_position = Vector2.ZERO
-var play_pos = 0.5*Vector2(ProjectSettings.get_setting("display/window/size/width"),
-		ProjectSettings.get_setting("display/window/size/height"))
+var play_pos = Vector2(0.5*ProjectSettings.get_setting("display/window/size/width"),
+		0.70*ProjectSettings.get_setting("display/window/size/height"))
 
 signal card_selected(card)
 signal card_highlighted(card)
@@ -91,13 +91,17 @@ func _on_Area2D_mouse_exited():
 
 func highlight_card(bool_value, discard=false):
 	if bool_value:
-		self.non_highlighted_position = global_position
+		#if global_position == target_position:
+		#	self.non_highlighted_position = global_position
+		#self.target_position.y -= 40
 		$Highlight.visible = true
 		self.z_index = 1
 		toggle_tool_tips(true)
 		animate_sheen()
 		show_discard_indicator(discard)
 	else:
+		#if self.non_highlighted_position:
+		#	self.target_position = self.non_highlighted_position
 		$Highlight.visible = false
 		self.z_index = 0
 		toggle_tool_tips(false)
@@ -106,9 +110,6 @@ func highlight_card(bool_value, discard=false):
 
 func select_card():
 	if is_face_up and !ignore_input and !is_selected:
-		# play discard animation
-		#self.is_face_up = false
-#		self.target_position = self.global_position + Vector2(0,-20)
 		self.scale = Vector2(1.1,1.1)
 		$Highlight.visible = false
 		is_selected = true
@@ -162,6 +163,8 @@ func show_discard_indicator(value):
 
 
 func play_card_animation(final_pos):
+	self.ignore_input = true
+	self.z_index = 2
 #	$Tween.interpolate_property(self, 
 #								"global_position", 
 #								global_position, 

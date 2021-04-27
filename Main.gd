@@ -36,11 +36,12 @@ func _process(_delta):
 		take_next_turn()
 
 
-func _input(event):
-	if Input.is_action_pressed("ui_select"):
-		show_overview()
-	else:
-		show_player_camera()
+func _input(_event):
+	if Input.is_action_just_pressed("ui_select"):
+		if $Camera2D.current:
+			show_overview()
+		else:
+			show_player_camera()
 	
 	if Input.is_action_just_pressed("load"):
 		load_state(Globals.save_location)
@@ -108,7 +109,6 @@ func add_to_turn_order(node):
 
 
 func game_over():
-	var wave_num = $Enemies.get_wave()
 	var game_over_screen = preload("res://Menus/GameOverMenu.tscn").instance()
 	get_tree().get_root().add_child(game_over_screen)
 	#game_over_screen.main_scene = self
@@ -143,6 +143,7 @@ func start_next_wave():
 func _on_SkipTutorialButton_pressed():
 	$Enemies.despawn_enemies()
 	$Enemies.load_wave_from_resource(starting_wave)
+	self.save_state(Globals.wave_checkpoint_save)
 #	hide_tutorial()
 
 

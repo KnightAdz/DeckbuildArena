@@ -310,16 +310,18 @@ zoom = Vector2( 1.1, 1.1 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
+autoplay = true
 bus = "Music"
 [connection signal="button_pressed" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_button_pressed"]
 [connection signal="card_is_hovered" from="CanvasLayer/Deck" to="Player" method="_on_Deck_card_is_hovered"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_card_played"]
-[connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
 [connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/Tip" method="_on_Deck_card_played"]
+[connection signal="card_played" from="CanvasLayer/Deck" to="CanvasLayer/HUD" method="_on_Deck_card_played"]
 [connection signal="player_blinded" from="CanvasLayer/Deck" to="." method="_on_player_blinded"]
+[connection signal="player_slowed" from="CanvasLayer/Deck" to="Player" method="_on_Deck_player_slowed"]
 [connection signal="player_unblinded" from="CanvasLayer/Deck" to="." method="_on_player_unblinded"]
-[connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="turn_taken" from="CanvasLayer/Deck" to="EventManager" method="_on_Deck_turn_taken"]
+[connection signal="turn_taken" from="CanvasLayer/Deck" to="." method="_on_turn_taken"]
 [connection signal="pressed" from="CanvasLayer/SkipTutorialButton" to="." method="_on_SkipTutorialButton_pressed"]
 [connection signal="toggled" from="CanvasLayer/MusicButton" to="." method="_on_MusicButton_toggled"]
 [connection signal="advance_tutorial" from="Enemies" to="CanvasLayer/Tip" method="_on_Enemies_advance_tutorial"]

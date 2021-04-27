@@ -1,12 +1,14 @@
-[gd_resource type="Resource" load_steps=3 format=2]
+[gd_resource type="Resource" load_steps=5 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/Shield.png" type="Texture" id=2]
+[ext_resource path="res://Cards/evade.png" type="Texture" id=2]
+[ext_resource path="res://PlayerActions/Move2.tres" type="Resource" id=3]
+[ext_resource path="res://PlayerActions/Defend2.tres" type="Resource" id=4]
 
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
-movement = 0
+movement = 2
 attack = 0
 defence = 2
 healing = 0
@@ -24,9 +26,9 @@ needs_target = false
 damage_multiplier = 1
 damage_multiplier_duration = 1
 blind = false
-slow = false
-actions = [  ]
+paralyze = 0
+actions = [ ExtResource( 4 ), ExtResource( 3 ) ]
 image = ExtResource( 2 )
-text = "Gain 2 defence"
-name = "Defend"
+text = "Gain 2 defence and 2 movement"
+name = "Evade"
 colour = "BLUE"

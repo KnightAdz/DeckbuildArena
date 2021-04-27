@@ -36,6 +36,7 @@ signal card_is_hovered(bool_value)
 signal button_pressed()
 signal player_blinded()
 signal player_unblinded()
+signal player_slowed(value)
 
 func _ready():
 	#set_process(true)
@@ -127,7 +128,9 @@ func set_state(new_state):
 				c.ignore_input = true
 		TurnState.PLAY_CARD:
 			$Turnstate.text = "Play card"
-			play_card()
+			# Can't play corruption cards
+			if selected_card.card_stats.colour != "PURPLE":
+				play_card()
 		TurnState.FINISHED:
 			$Turnstate.text = "Finished"
 			$Buttons/EndTurnButton.visible = false
@@ -142,14 +145,21 @@ func set_state(new_state):
 
 func end_turn():	
 	emit_signal("player_unblinded")
+	emit_signal("player_slowed", false)
 	# Discard any cards in hand
 	# and check for corruption cards
-	for c in hand:
+	var cards_in_hand = len(hand)
+	var i = cards_in_hand-1
+	while i >= 0:
+		var c = hand[i]
 		if c.card_stats.colour == "PURPLE":
 			selected_card = c
-			play_card()
+			play_card(true)
+			# need to wait for animation to play before continuing
+			yield(c, "card_played")
 		else:
 			discard(c)
+		i -= 1
 	
 	last_card_highlighted = null
 	hovered_cards = []
@@ -204,8 +214,8 @@ func draw_hand(new_hand_size=5):
 	var cards_to_draw = new_hand_size - curr_hand_size
 	if cards_to_draw == 0:
 		return
-	for i in range(cards_to_draw):
-		i += curr_hand_size
+	for _i in range(cards_to_draw):
+		#_i += curr_hand_size
 		# If no cards to draw from, shuffle the discard pile in
 		if len(draw_pile) == 0:
 			shuffle_discard_into_draw()
@@ -239,7 +249,7 @@ func reposition_hand_cards():
 		if spacing >= len(hand_positions)-1:
 			spacing = len(hand_positions)-2 # minus 2 to allow rotation calcs later
 		# Set position
-		hand[i].target_position = self.position + hand_positions[spacing]
+		hand[i].target_position = hand_positions[spacing] + self.position 
 		# Set rotation
 		var angle = hand_positions[spacing+1].angle_to_point(hand_positions[spacing])
 		hand[i].rotation = angle
@@ -281,7 +291,6 @@ func send_card_data_to_player(card, undo=false):
 	var modifier = 1
 	if undo:
 		modifier = -1
-	
 
 
 func preview_card_effects(card):
@@ -302,14 +311,16 @@ func unpreview_card_effects():
 	player.reset_preview()
 
 
-func play_card():
+func play_card(play_anim=false):
+	var stats = selected_card.card_stats
+	
 	last_card_highlighted = null
 	hovered_cards = []
 	cards_played_this_turn += 1
 	emit_signal("card_played", selected_card)
 	emit_signal("card_is_hovered", false)
-	var stats = selected_card.card_stats
-	selected_card.play_card_animation($DiscardPile.global_position)
+	if play_anim:
+		selected_card.play_card_animation($DiscardPile.global_position)
 	# Default next state will be select card but some cards may change this
 	self.turn_state = TurnState.SELECT_CARD
 
@@ -337,14 +348,24 @@ func play_card():
 	if stats.cards_to_discard > 0:
 		if len(hand) > 1:
 			self.turn_state = TurnState.CHOOSE_DISCARD
-	if stats.healing > 0:
+	
+	if stats.max_health_change != 0:
+		player.gain_max_health(stats.max_health_change)
+	if stats.healing != 0:
 		player.gain_health(stats.healing)
 	
 	# Debuffs and statuses
 	if stats.blind:
 		emit_signal("player_blinded")
 	
-	# Wait for card played signal
+	if stats.slow:
+		emit_signal("player_slowed", true)
+	
+	if play_anim:
+		# Wait for card played signal
+		return
+	else:
+		_on_card_played(selected_card)
 
 
 func _on_card_played(card):
@@ -366,9 +387,11 @@ func discard(card):
 	discard_pile.append(card)
 	card.show_discard_indicator(false)
 	card.target_position = $DiscardPile.global_position
+	card.non_highlighted_position = null
 	card.is_face_up = false
 	card.is_selected = false
 	card.modulate = Color.white
+	card.z_index = 0
 	$Label.text = str(len(discard_pile))
 	update_button_labels()
 
@@ -452,13 +475,8 @@ func _on_card_selected(card):
 
 
 func set_selected_card(c):
-	# Can't play corruption cards
-	if c.card_stats.colour == 'PURPLE':
-		return
-		
 	# Prevent double playing when 2 cards are clicked at same time
 	if c == last_card_played:
-		TurnState.SELECT_CARD
 		selected_card = null
 		clicked_cards = []
 		#last_card_played = null
@@ -529,6 +547,7 @@ func lose_control():
 		c.ignore_input = true
 		c.z_index = 0
 	disable_buttons()
+	#emit_signal("card_is_hovered", false)
 
 
 func gain_control():

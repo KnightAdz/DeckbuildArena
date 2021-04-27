@@ -28,7 +28,7 @@ func take_turn():
 	pass
 
 
-func _input(event):
+func _input(_event):
 	var cards = $Cards.get_children()
 	
 	if Input.is_action_just_released("ui_accept"):

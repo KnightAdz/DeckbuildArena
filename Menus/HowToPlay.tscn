@@ -29,7 +29,7 @@ __meta__ = {
 
 [node name="Controls" type="RichTextLabel" parent="VBoxContainer"]
 margin_right = 1024.0
-margin_bottom = 188.0
+margin_bottom = 172.0
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
@@ -47,9 +47,9 @@ F5: Revert to start of turn
 "
 
 [node name="Aim" type="RichTextLabel" parent="VBoxContainer"]
-margin_top = 192.0
+margin_top = 176.0
 margin_right = 1024.0
-margin_bottom = 380.0
+margin_bottom = 348.0
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 2 )
 bbcode_enabled = true
@@ -59,7 +59,7 @@ text = "Aim of the game
 Survive for as long as you can against increasingly difficult waves of enemies, using cards to give you abilities to defeat your opponents. Collect cards to upgrade your deck and become ever stronger"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 384.0
+margin_top = 352.0
 margin_right = 1024.0
 margin_bottom = 572.0
 size_flags_horizontal = 3
@@ -71,7 +71,7 @@ __meta__ = {
 
 [node name="Green cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_right = 338.0
-margin_bottom = 188.0
+margin_bottom = 220.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
@@ -85,7 +85,8 @@ Grant movement which will increase your move radius. Click within the green area
 [node name="Red cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_left = 342.0
 margin_right = 681.0
-margin_bottom = 188.0
+margin_bottom = 220.0
+rect_min_size = Vector2( 0, 220 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )
@@ -99,7 +100,7 @@ Allow you to attack at varying ranges and levels of damage. Playing one of these
 [node name="Blue cards" type="RichTextLabel" parent="VBoxContainer/HBoxContainer2"]
 margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 188.0
+margin_bottom = 220.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = SubResource( 1 )

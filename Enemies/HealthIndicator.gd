@@ -12,7 +12,7 @@ var gap = 1
 #	max_health = get_parent().stats.max_health
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	update()
 
 

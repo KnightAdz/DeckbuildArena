@@ -4,6 +4,8 @@ var BatScene = preload("res://Enemies/BasicEnemy.tscn")
 var WalkyScene = preload("res://Enemies/Walky.tscn")
 var MageScene = preload("res://Enemies/ProjectileEnemy.tscn")
 var SlimeScene = preload("res://Enemies/Slime.tscn")
+var RockyScene = preload("res://Enemies/Rocky.tscn")
+
 
 var LootScene = preload("res://Loot/Loot.tscn")
 var OfferScene = preload("res://Dialogs/CardOffer.tscn")
@@ -40,7 +42,8 @@ func take_turn():
 	turn_started = true
 		
 	for c in get_children():
-		c.take_turn()
+		if c.is_in_group("enemy"):
+			c.take_turn()
 
 	var children = get_children()
 	# If all enemies are killed, we've reached the end of the wave
@@ -64,7 +67,7 @@ func spawn_random_enemies():
 		elif wave_count == 3:
 			spawn_walky(1,1, safe_position)
 		else:
-			var enemy_scenes = [BatScene, WalkyScene, MageScene, SlimeScene]
+			var enemy_scenes = [BatScene, WalkyScene, MageScene, SlimeScene, RockyScene]
 			var rand = randi()%len(enemy_scenes)
 			spawn_enemy(enemy_scenes[rand], 
 						enemy_health, 
@@ -206,7 +209,7 @@ func start_next_wave():
 	if wave_count > 2:
 		if wave_count%2:
 			enemy_health += 1
-		else:
+		elif wave_count%4:
 			enemy_damage += 1
 	
 	emit_signal("new_wave_loaded")
@@ -228,6 +231,8 @@ func load_wave_from_resource(info):
 				spawn_enemy(MageScene,h,d)
 			info.EnemyTypes.SLIME:
 				spawn_enemy(SlimeScene,h,d)
+			info.EnemyTypes.ROCKY:
+				spawn_enemy(RockyScene,h,d)
 	next_wave_file = info.next_wave
 	self.wave_count = info.wave_number
 	if wave_count == 0:

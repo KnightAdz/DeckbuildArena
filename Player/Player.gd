@@ -27,6 +27,7 @@ var radius_size = 1 # This gets set in the ready function
 var accept_movement = true
 var last_known_position = Vector2.ZERO
 var in_stealth = false setget set_stealth
+var movement_modifier = 1
 
 # Attack
 var attack_preview_visible = false
@@ -156,6 +157,17 @@ func _unhandled_input(_event):
 				self.state = STATES.ATTACKING
 
 
+func _on_MoveRadius_input_event(viewport, event, shape_idx):
+	if accept_movement:
+		if move_radius > 0 and state == STATES.IDLE:
+			if Input.is_action_just_released("click"):
+				# get coords
+				target_position = self.position + self.get_local_mouse_position()
+				#target_position = event.global_position
+				move_radius = 0
+				self.state = STATES.MOVING
+
+
 func set_attack_attribs(damage=1, ranged=false, area=false, knockback=1, stun=false, attack_duration=0.1):
 	$AttackIndicator/Hitbox.active_time = attack_duration
 	$AttackIndicator/Hitbox.damage = damage
@@ -206,12 +218,17 @@ func set_defence(value):
 
 
 func gain_movement(radius, stealth=false):
-	self.move_radius += radius
+	self.move_radius += radius*movement_modifier
 	self.in_stealth = stealth
 	
 
 func gain_health(value):
 	self.stats.health += value
+
+
+func gain_max_health(value):
+	self.stats.max_health += value
+	emit_signal("max_health_changed", self.stats.max_health)
 
 
 func set_move_radius(value):
@@ -244,17 +261,6 @@ func _draw():
 						Color(0.9,0.0,0.0,0.25),
 						10,
 						false)
-
-
-func _on_MoveRadius_input_event(viewport, event, shape_idx):
-	if accept_movement:
-		if move_radius > 0 and state == STATES.IDLE:
-			if Input.is_action_just_released("click"):
-				# get coords
-				target_position = self.position + self.get_local_mouse_position()
-				#target_position = event.global_position
-				move_radius = 0
-				self.state = STATES.MOVING
 
 
 func accelerate_towards_point(point, delta):
@@ -301,7 +307,7 @@ func set_defence_preview(value):
 	
 
 func set_move_preview(value):
-	move_preview = value
+	move_preview = value*movement_modifier
 	self.move_radius += move_preview
 
 
@@ -467,3 +473,10 @@ func decrement_damage_multipliers():
 
 func _on_Stats_health_reduced():
 	emit_signal("health_reduced")
+
+
+func _on_Deck_player_slowed(value):
+	if value:
+		movement_modifier = 0.5
+	else:
+		movement_modifier = 1

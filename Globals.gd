@@ -20,7 +20,10 @@ var available_cards =  ["res://Cards/Attack&draw1.tres",
 					"res://Cards/StunDart.tres",
 					"res://Cards/Sneak.tres",
 					"res://Cards/DoubleDamage2.tres",
-					"res://Cards/AbsorbHealth.tres"]
+					"res://Cards/AbsorbHealth.tres",
+					"res://Cards/Evade.tres",
+					"res://Cards/Frenzy.tres",
+					"res://Cards/MaxHealthUp.tres"]
 
 var completed_tutorial = false
 
@@ -34,6 +37,7 @@ var wave_checkpoint_save = "user://wavecheckpoint.save"
 var all_cards =  [	"res://Cards/BasicAttack.tres",
 					"res://Cards/BasicDefend.tres",
 					"res://Cards/BasicMovement.tres",
+					# Reward cards
 					"res://Cards/Attack&draw1.tres",
 					"res://Cards/Attack&move.tres",
 					"res://Cards/Attack4.tres",
@@ -49,7 +53,12 @@ var all_cards =  [	"res://Cards/BasicAttack.tres",
 					"res://Cards/StunDart.tres",
 					"res://Cards/Sneak.tres",
 					"res://Cards/DoubleDamage2.tres",
+					"res://Cards/AbsorbHealth.tres",
+					"res://Cards/Evade.tres",
+					"res://Cards/Frenzy.tres",
+					"res://Cards/MaxHealthUp.tres",
+					# Corruption cards last
 					"res://Cards/Blind.tres",
-					"res://Cards/AbsorbHealth.tres"]
+					"res://Cards/Slow.tres"]
 
 var load_wave = false

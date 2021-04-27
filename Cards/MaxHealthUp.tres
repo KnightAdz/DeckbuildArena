@@ -1,16 +1,16 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Cards/CardStats.gd" type="Script" id=1]
-[ext_resource path="res://Cards/Shield.png" type="Texture" id=2]
+[ext_resource path="res://Cards/maxhealthup.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
 focus_cost = 1
 movement = 0
 attack = 0
-defence = 2
-healing = 0
-max_health_change = 0
+defence = 0
+healing = 2
+max_health_change = 2
 stealth = false
 ranged_attack = false
 area_attack = false
@@ -18,15 +18,15 @@ knockback = 1
 stun_enemy = false
 cards_to_draw = 0
 cards_to_discard = 0
-destroy_after_use = false
+destroy_after_use = true
 one_use_per_wave = false
 needs_target = false
 damage_multiplier = 1
 damage_multiplier_duration = 1
 blind = false
-slow = false
+paralyze = 0
 actions = [  ]
 image = ExtResource( 2 )
-text = "Gain 2 defence"
-name = "Defend"
+text = "Gain 2 Max Health and health. Destroyed after use."
+name = "Level Up"
 colour = "BLUE"
