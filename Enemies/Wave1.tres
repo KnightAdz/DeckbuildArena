@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource( 1 )
-enemies = [ 0, 0, 0, 4 ]
+enemies = [ 0, 0, 0 ]
 health_addition = 0
 damage_addition = 0
 next_wave = ExtResource( 2 )
